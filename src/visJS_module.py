@@ -4,6 +4,7 @@
 Authors: 
     - Brin Rosenthal (sbrosenthal@ucsd.edu)
     - Aaron Gary (agary@ucsd.edu)
+    - Mikayla Webster (m1webste@ucsd.edu)
     
 --------------------------------------------------------
 '''
@@ -1025,7 +1026,6 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                          to: python_edges[i].target,
 						 label: python_edges[i].""" + edge_label_field + """,
                          title: python_edges[i].""" + edge_title_field + """,
-                         font: {size: font_size, align: 'middle'},
                          color: {
                             color: python_edges[i].color
 						}
