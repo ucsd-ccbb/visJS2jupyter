@@ -1,0 +1,8 @@
+setup.py
+src/__init__.py
+src/visJS_module.py
+visJS_2_jupyter.egg-info/PKG-INFO
+visJS_2_jupyter.egg-info/README.md
+visJS_2_jupyter.egg-info/SOURCES.txt
+visJS_2_jupyter.egg-info/dependency_links.txt
+visJS_2_jupyter.egg-info/top_level.txt
