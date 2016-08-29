@@ -153,8 +153,7 @@ def visjs_network(nodes_dict, edges_dict,
                            graph_title='',
                            graph_width = 900,
                            graph_height = 800,
-						   time_stamp = 0,
-						   filepath = ""):
+						   time_stamp = 0):
     
     '''
     This function creates an iframe for the input graph 
@@ -170,7 +169,7 @@ def visjs_network(nodes_dict, edges_dict,
     '''
     
     # create a temporary style file
-    fname_temp = filepath+'style_file'+str(time_stamp)+'.html'
+    fname_temp = 'style_file'+str(time_stamp)+'.html'
     
     # check nodes_dict and edges_dict and fill in default values
     nodes_dict = check_nodes_dict(nodes_dict)
