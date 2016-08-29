@@ -4,7 +4,6 @@
 Authors: 
     - Brin Rosenthal (sbrosenthal@ucsd.edu)
     - Aaron Gary (agary@ucsd.edu)
-    - Mikayla Webster (m1webste@ucsd.edu)
     
 --------------------------------------------------------
 '''
@@ -68,7 +67,7 @@ def visjs_network(nodes_dict, edges_dict,
 						   node_label_field = 'id', # field that nodes will be labeled with
 						   node_size_field = 'degree', # field that determines which nodes are more important thus should be scaled bigger
 						   node_size_transform = 'Math.sqrt', # function by which higher value (not node_value) nodes are scaled larger to show importance
-						   node_size_multiplier = 10, # increment by which higher value (not node_value) nodes are scaled larger to show importance
+						   node_size_multiplier = 3, # increment by which higher value (not node_value) nodes are scaled larger to show importance
 						   
 						   # by edge
                            edge_title_field = 'id', # which attribute name to show on edge hover
@@ -154,7 +153,8 @@ def visjs_network(nodes_dict, edges_dict,
                            graph_title='',
                            graph_width = 900,
                            graph_height = 800,
-						   time_stamp = 0):
+						   time_stamp = 0,
+						   filepath = ""):
     
     '''
     This function creates an iframe for the input graph 
@@ -166,15 +166,11 @@ def visjs_network(nodes_dict, edges_dict,
         
     Return:
         - VisJS html network plot (iframe)
-        
-    NOTE: edge_label_size doesn't work right now...
     
     '''
     
     # create a temporary style file
-    fname_temp = 'style_file'+str(time_stamp)+'.html'
-    # fname_temp = 'style_file'+str(time.time())+'.html'
-    #fname_temp = 'style_file.html'
+    fname_temp = filepath+'style_file'+str(time_stamp)+'.html'
     
     # check nodes_dict and edges_dict and fill in default values
     nodes_dict = check_nodes_dict(nodes_dict)

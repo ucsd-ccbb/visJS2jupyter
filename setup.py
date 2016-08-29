@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "visJS-2-jupyter",
-    version = "0.2",
+    version = "0.3",
     description= "visJS_2_jupyter is a tool to bring the interactivity of networks created with vis.js into jupyter notebook cells",
     url = "http://visjs.org/docs/network/",
     author="Brin Rosenthal (sbrosenthal@ucsd.edu), Mikayla Webster (m1webste@ucsd.edu), Aaron Gary (agary@ucsd.edu)",
