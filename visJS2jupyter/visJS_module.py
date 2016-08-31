@@ -14,10 +14,7 @@ from IPython.display import HTML, Javascript
 from json import dumps
 import matplotlib as mpl
 import numpy as np
-import pandas as pd
-import networkx as nx
-import time
-import os
+import math
 
 Javascript("https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.js")
 
@@ -344,9 +341,9 @@ def return_node_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0, co
     - color_max_frac and color_min_frac allow user to set lower and upper ranges for colormap
     '''
     
-	#fixes a divide by zero error when |E|/v gets too high
+    #fixes a divide by zero error when |E|/v gets too high
 	#nodes_with_data = [(n[0],n[1][field_to_map]) for n in G.nodes(data=True)]
-    nodes_with_data = [(n[0], max(n[1][field_to_map], 0.01)) for n in G.nodes(data=True)]
+    nodes_with_data = [(n[0], max(n[1][field_to_map], 0.0000000000000000001)) for n in G.nodes(data=True)]
 
     if color_vals_transform == 'log':
         nodes,data = zip(*nodes_with_data)
@@ -1022,7 +1019,8 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
 						 label: python_edges[i].""" + edge_label_field + """,
                          title: python_edges[i].""" + edge_title_field + """,
                          color: {
-                            color: python_edges[i].color
+                            color: python_edges[i].color,
+                            opacity: """ + str(edge_color_opacity) + """
 						}
             });
        }
