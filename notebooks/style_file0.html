@@ -208,7 +208,7 @@
                          },
                          title: python_nodes[i].title,
                          shape: python_nodes[i].node_shape, 
-                         size: Math.sqrt(python_nodes[i].degree)*10,
+                         size: Math.sqrt(python_nodes[i].degree)*3,
                          x: python_nodes[i].x,
                          y: python_nodes[i].y});
        }
@@ -219,9 +219,9 @@
                          to: python_edges[i].target,
 						 label: python_edges[i].id,
                          title: python_edges[i].id,
-                         font: {size: font_size, align: 'middle'},
                          color: {
-                            color: python_edges[i].color
+                            color: python_edges[i].color,
+                            opacity: 1.0
 						}
             });
        }
