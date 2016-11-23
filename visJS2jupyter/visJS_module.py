@@ -1,10 +1,10 @@
 '''
 --------------------------------------------------------
 
-Authors: 
+Authors:
     - Brin Rosenthal (sbrosenthal@ucsd.edu)
     - Aaron Gary (agary@ucsd.edu)
-    
+
 --------------------------------------------------------
 '''
 
@@ -65,7 +65,7 @@ def visjs_network(nodes_dict, edges_dict,
 						   node_size_field = 'degree', # field that determines which nodes are more important thus should be scaled bigger
 						   node_size_transform = 'Math.sqrt', # function by which higher value (not node_value) nodes are scaled larger to show importance
 						   node_size_multiplier = 3, # increment by which higher value (not node_value) nodes are scaled larger to show importance
-						   
+
 						   # by edge
                            edge_title_field = 'id', # which attribute name to show on edge hover
                            edge_arrow_to = False, # creates a directed edge with arrow head on receiving node
@@ -78,20 +78,20 @@ def visjs_network(nodes_dict, edges_dict,
                            edge_color = '#848484', # if all edges are to be a single color, specify here. Empty string refers edge color to each individual object
                            edge_color_highlight = '#848484', # same but for highlight color
                            edge_color_hover = '#848484', # same but for hover color
-                           edge_color_inherit = 'from', # if edge color is set, must be false. Else inherits color from "to", "from", or "both" connected nodes 
+                           edge_color_inherit = 'from', # if edge color is set, must be false. Else inherits color from "to", "from", or "both" connected nodes
                            edge_color_opacity = 1.0, # number from 0 - 1 that sets opacity of all edge colorsedge_dashes = False # if true, edges will be drawn with a dashed line
                            edge_dashes = False, # if true, edges will be drawn with a dashed line
                            edge_font_color = '#343434', # color of label text
                            edge_font_size = 20, # size of label text
                            edge_font_face = 'ariel', # font of label text
                            edge_font_background = 'rgba(0,0,0,0)', # when given a color string, a background rectangle of that color will be drawn behind the label
-                           edge_font_strokeWidth = 0, # stroke drawn around text 
+                           edge_font_strokeWidth = 0, # stroke drawn around text
 						   edge_font_stroke_color = '#343434',
                            edge_font_align = 'horizontal', # 'horizontal', 'middle', 'top', or 'bottom'
-                           edge_hoverWidth = 0.5, # number to be added to width of edge to determine hovering 
+                           edge_hoverWidth = 0.5, # number to be added to width of edge to determine hovering
                            edge_label_highlight_bold = True, # determines whether label becomes bold when edge is selected
                            edge_length = 'undefined', # when a number is defined the edges' spring length is overridden
-                           edge_scaling_min = 1, # minimum allowed edge width value 
+                           edge_scaling_min = 1, # minimum allowed edge width value
                            edge_scaling_max = 15, # maximum allowed edge width value
                            edge_scaling_label_enabled = False, # when true, the label will scale with the edge width
                            edge_scaling_label_min = 14, # min font size used for labels when scaling
@@ -107,12 +107,12 @@ def visjs_network(nodes_dict, edges_dict,
                            edge_shadow_y = 5, # y offset
                   # if this is set to true and smooth type is not continuous, you will not be able to set the x and y position
                            edge_smooth_enabled = False, # toggle smooted curves
-                           edge_smooth_type = 'dynamic', 
+                           edge_smooth_type = 'dynamic',
                            edge_smooth_force_direction = 'none', # 'horizontal', 'vertical', and 'none'. Only for cubicBezier curves
                            edge_smooth_roundness = 0.5, # number between 0 and 1 that changes roundness of curve except with dynamic curves
                            edge_width = 1, # width of all edges
 						   edge_label_field = "id",
-						   
+
 						   #interaction
 						   drag_nodes = True, # When true, the nodes that are not fixed can be dragged by the user.
 						   drag_view = True, # When true, the view can be dragged around by the user.
@@ -131,13 +131,13 @@ def visjs_network(nodes_dict, edges_dict,
 						   select_connected_edges = True, # When true, on selecting a node, its connecting edges are highlighted.
 						   tooltip_delay = 300, # When nodes or edges have a defined 'title' field, this can be shown as a pop-up tooltip. The tooltip itself is an HTML element that can be fully styled using CSS. The delay is the amount of time in milliseconds it takes before the tooltip is shown.
 						   zoom_view = True, # When true, the user can zoom in.
-						   
+
 						   # configuration
 						   config_enabled = False, # Toggle the configuration interface on or off. This is an optional parameter. If left undefined and any of the other properties of this object are defined, this will be set to true.
-                           config_filter = "nodes,edges", # When a string is supplied, any combination of the following is allowed: nodes, edges, layout, interaction, manipulation, physics, selection, renderer. Feel free to come up with a fun seperating character. Finally, when supplied an array of strings, any of the previously mentioned fields are accepted. 
+                           config_filter = "nodes,edges", # When a string is supplied, any combination of the following is allowed: nodes, edges, layout, interaction, manipulation, physics, selection, renderer. Feel free to come up with a fun seperating character. Finally, when supplied an array of strings, any of the previously mentioned fields are accepted.
                            container = "undefined", # This allows you to put the configure list in another HTML container than below the network.
                            showButton = False, # Show the generate options button at the bottom of the configurator.
-						   
+
 						   # other stuff
 						   border_color='white',
                            physics_enabled=True,
@@ -151,30 +151,30 @@ def visjs_network(nodes_dict, edges_dict,
                            graph_width = 900,
                            graph_height = 800,
 						   time_stamp = 0):
-    
+
     '''
-    This function creates an iframe for the input graph 
-       
+    This function creates an iframe for the input graph
+
     Inputs:
         - nodes_dict: dictionary of nodes and attributes
         - edges_dict: dictionary of edges and attributes
         - visJS_html_file:  path to visJS_html style file (from create_graph_style_file)
-        
+
     Return:
         - VisJS html network plot (iframe)
-    
+
     '''
-    
+
     # create a temporary style file
     fname_temp = 'style_file'+str(time_stamp)+'.html'
-    
+
     # check nodes_dict and edges_dict and fill in default values
     nodes_dict = check_nodes_dict(nodes_dict)
-	
+
     create_graph_style_file(filename = fname_temp,
-	
+
                            # by node
-                           node_border_width = node_border_width, 
+                           node_border_width = node_border_width,
                            node_border_width_selected = node_border_width_selected,
                            node_broken_image = node_broken_image,
                            node_color_border = node_color_border,
@@ -218,7 +218,7 @@ def visjs_network(nodes_dict, edges_dict,
                            node_size_field = node_size_field,
                            node_size_transform = node_size_transform,
                            node_size_multiplier = node_size_multiplier,
-						   
+
 						   # by edge
                            edge_title_field = edge_title_field,
                            edge_arrow_to = edge_arrow_to,
@@ -238,13 +238,13 @@ def visjs_network(nodes_dict, edges_dict,
                            edge_font_size = edge_font_size,
                            edge_font_face = edge_font_face,
                            edge_font_background = edge_font_background,
-                           edge_font_strokeWidth = edge_font_strokeWidth, 
+                           edge_font_strokeWidth = edge_font_strokeWidth,
 						   edge_font_stroke_color = edge_font_stroke_color,
                            edge_font_align = edge_font_align,
                            edge_hoverWidth = edge_hoverWidth,
                            edge_label_highlight_bold = edge_label_highlight_bold,
                            edge_length = edge_length,
-                           edge_scaling_min = edge_scaling_min, 
+                           edge_scaling_min = edge_scaling_min,
                            edge_scaling_max = edge_scaling_max,
                            edge_scaling_label_enabled = edge_scaling_label_enabled,
                            edge_scaling_label_min = edge_scaling_label_min,
@@ -259,12 +259,12 @@ def visjs_network(nodes_dict, edges_dict,
                            edge_shadow_x = edge_shadow_x,
                            edge_shadow_y = edge_shadow_y,
                            edge_smooth_enabled = edge_smooth_enabled,
-                           edge_smooth_type = edge_smooth_type, 
+                           edge_smooth_type = edge_smooth_type,
                            edge_smooth_force_direction = edge_smooth_force_direction,
                            edge_smooth_roundness = edge_smooth_roundness,
                            edge_width = edge_width,
 						   edge_label_field = edge_label_field,
-						   
+
 						   #interaction
 						   drag_nodes = drag_nodes,
 						   drag_view = drag_view,
@@ -283,13 +283,13 @@ def visjs_network(nodes_dict, edges_dict,
 						   select_connected_edges = select_connected_edges,
 						   tooltip_delay = tooltip_delay,
 						   zoom_view = zoom_view,
-						   
+
 						   #configuration
 						   config_enabled = config_enabled,
-                           config_filter = config_filter, 
+                           config_filter = config_filter,
                            container = container,
                            showButton = showButton,
-						   
+
                            # other stuff
 						   border_color = border_color,
                            physics_enabled = physics_enabled,
@@ -303,8 +303,8 @@ def visjs_network(nodes_dict, edges_dict,
                            graph_width = graph_width,
                            graph_height = graph_height
 						   )
-    
-    
+
+
     html_return = HTML(
     '<!doctype html>'
    + '<html>'
@@ -315,17 +315,17 @@ def visjs_network(nodes_dict, edges_dict,
    + '<script type="text/javascript">'
    + 'function setUpFrame() { '
    + '    var frame = window.frames["' + fname_temp.replace('.html','').replace('html/', '') + '"];'
-   + '    frame.runVis(' + dumps(nodes_dict) + ', ' + dumps(edges_dict) + ');' 
+   + '    frame.runVis(' + dumps(nodes_dict) + ', ' + dumps(edges_dict) + ');'
    + '}'
    + '</script>'
-   + '<iframe name="' + fname_temp.replace('.html','').replace('html/', '') 
+   + '<iframe name="' + fname_temp.replace('.html','').replace('html/', '')
    + '" src="' + fname_temp + '" height="1200px" width="100%;"></iframe>'
    + '</body>'
    + '</html>'
    )
-    
+
     #os.remove(fname_temp)
-    
+
     return html_return
 
 
@@ -333,23 +333,28 @@ def visjs_network(nodes_dict, edges_dict,
 
 def return_node_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0, color_vals_transform = None,ceil_val=10,
                         color_max_frac = 1.0,color_min_frac = 0.0):
-    
+
     '''
     Function to return a dictionary mapping nodes (keys) to colors (values), based on the selected field_to_map.
     - field_to_map must be a node attribute
     - cmap must be a valid matplotlib colormap
     - color_max_frac and color_min_frac allow user to set lower and upper ranges for colormap
     '''
-    
+
     #fixes a divide by zero error when |E|/v gets too high
 	#nodes_with_data = [(n[0],n[1][field_to_map]) for n in G.nodes(data=True)]
     nodes_with_data = [(n[0], max(n[1][field_to_map], 0.0000000000000000001)) for n in G.nodes(data=True)]
 
     if color_vals_transform == 'log':
         nodes,data = zip(*nodes_with_data)
-        min_dn0 = min([d for d in data if d>0])
-        data = [np.log(max(d,min_dn0)) for d in data]  # set the zero d values to minimum non0 value
-        data = [(d-np.min(data)) for d in data] # shift so we don't have any negative values
+        nonzero_list = [d for d in data if d>(10**-18)]
+        if not nonzero_list:
+            data = [1 for d in data]
+            print "Warning: All nodes have data value of 0"
+        else:
+            min_dn0 = min([d for d in data if d>(10**-18)])
+            data = [np.log(max(d,min_dn0)) for d in data]  # set the zero d values to minimum non0 value
+            data = [(d-np.min(data)) for d in data] # shift so we don't have any negative values
         nodes_with_data = zip(nodes,data)
 
     elif color_vals_transform == 'sqrt':
@@ -375,30 +380,34 @@ def return_node_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0, co
 
     return node_to_color
 
+
 def return_edge_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0, color_vals_transform = None,ceil_val=10):
-    
-    
+
     '''
     Function to return a dictionary mapping edges (keys) to colors (values), based on the selected field_to_map.
         - field_to_map must be an edge attribute
         - cmap must be a valid matplotlib colormap
-    
+
     '''
-    
+
     edges_with_data = [(e[0],e[1],e[2][field_to_map]) for e in G.edges(data=True)]
-    
-    
+
     if color_vals_transform == 'log':
         edges1,edges2,data = zip(*edges_with_data)
-        data = [np.log(d) for d in data]
-        data = [(d-np.min(data)) for d in data] # shift so we don't have any negative values
+        nonzero_list = [d for d in data if d>(10**-18)]
+        if not nonzero_list:
+            data = [1 for d in data]
+        else:
+            min_dn0 = min([d for d in data if d>(10**-18)])
+            data = [np.log(max(d,min_dn0)) for d in data]  # set the zero d values to minimum non0 value
+            data = [(d-np.min(data)) for d in data] # shift so we don't have any negative values
         edges_with_data = zip(zip(edges1,edges2),data)
-        
+
     elif color_vals_transform == 'sqrt':
         edges1,edges2,data = zip(*edges_with_data)
         data = [np.sqrt(d) for d in data]
         edges_with_data = zip(zip(edges1,edges2),data)
-        
+
     elif color_vals_transform == 'ceil':
         edges1,edges2,data = zip(*edges_with_data)
         data = [max(d,ceil_val) for d in data]
@@ -406,27 +415,27 @@ def return_edge_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0, co
     else:
         edges1,edges2,data = zip(*edges_with_data)
         edges_with_data = zip(zip(edges1,edges2),data)
-        
+
     edge_to_mapField = dict(edges_with_data)
-    
+
     color_list = [np.multiply(cmap(int(float(edge_to_mapField[d])/np.max(edge_to_mapField.values())*256)),256) for d in G.edges()]
-    
+
     color_list = [(int(c[0]),int(c[1]),int(c[2]),alpha) for c in color_list]
-    
+
     edge_to_color = dict(zip(G.edges(),['rgba'+str(c) for c in color_list]))
-    
+
     return edge_to_color
 
 
 def check_nodes_dict(nodes_dict):
     '''
-    
-    - Check nodes_dict to make sure it has some required fields.  
+
+    - Check nodes_dict to make sure it has some required fields.
     - Fill in default values if it is missing them
     - Return updated nodes_dict
-    
+
     '''
-    
+
     node_keys = nodes_dict[0].keys()
     if 'node_shape' not in node_keys:
         for i in range(len(nodes_dict)):
@@ -443,9 +452,9 @@ def check_nodes_dict(nodes_dict):
     if 'degree' not in node_keys:
         for i in range(len(nodes_dict)):
             nodes_dict[i]['degree']=3.0
-            
+
     return nodes_dict
-            
+
 
 def create_graph_style_file(filename = 'visJS_html_file_temp',
 
@@ -494,7 +503,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
 						   node_size_field = 'degree', # field that determines which nodes are more important thus should be scaled bigger
 						   node_size_transform = 'Math.sqrt', # function by which higher value (not node_value) nodes are scaled larger to show importance
 						   node_size_multiplier = 3, # increment by which higher value (not node_value) nodes are scaled larger to show importance
-						   
+
 						   # by edge
                            edge_title_field = 'id', # which attribute to use as label on edge hover
                            edge_arrow_to = False, # creates a directed edge with arrow head on receiving node
@@ -507,20 +516,20 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                            edge_color = '#848484', # if all edges are to be a single color, specify here. Empty string refers edge color to each individual object
                            edge_color_highlight = '#848484', # same but for highlight color
                            edge_color_hover = '#848484', # same but for hover color
-                           edge_color_inherit = 'from', # if edge color is set, must be false. Else inherits color from "to", "from", or "both" connected nodes 
+                           edge_color_inherit = 'from', # if edge color is set, must be false. Else inherits color from "to", "from", or "both" connected nodes
                            edge_color_opacity = 1.0, # number from 0 - 1 that sets opacity of all edge colors
 						   edge_dashes = False, # if true, edges will be drawn with a dashed line
                            edge_font_color = '#343434', # color of label text
                            edge_font_size = 20, # size of label text
                            edge_font_face = 'ariel', # font of label text
                            edge_font_background = 'undefined', # when givn a color string, a background rectangle of that color will be drawn behind the label
-                           edge_font_strokeWidth = 0, # stroke drawn around text 
+                           edge_font_strokeWidth = 0, # stroke drawn around text
 						   edge_font_stroke_color = '#343434',
                            edge_font_align = 'horizontal', # 'horizontal', 'middle', 'top', or 'bottom'
                            edge_hoverWidth = 0.5, # number to be added to width of edge to determine hovering
                            edge_label_highlight_bold = True, # determines whether label becomes bold when edge is selected
                            edge_length = 'undefined', # when a number is defined the edges' spring length is overridden
-                           edge_scaling_min = 1, # minimum allowed edge width value 
+                           edge_scaling_min = 1, # minimum allowed edge width value
                            edge_scaling_max = 15, # maximum allowed edge width value
                            edge_scaling_label_enabled = False, # when true, the label will scale with the edge width
                            edge_scaling_label_min = 14, # min font size used for labels when scaling
@@ -535,12 +544,12 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                            edge_shadow_x = 5, # x offset
                            edge_shadow_y = 5, # y offset
                            edge_smooth_enabled = True, # toggle smooted curves
-                           edge_smooth_type = 'dynamic', 
+                           edge_smooth_type = 'dynamic',
                            edge_smooth_force_direction = 'none', # 'horizontal', 'vertical', and 'none'. Only for cubicBezier curves
                            edge_smooth_roundness = 0.5, # number between 0 and 1 that changes roundness of curve except with dynamic curves
-                           edge_width = 2, # width of all edges 
+                           edge_width = 2, # width of all edges
 						   edge_label_field = "id",
-						   
+
 						   #interaction
 						   drag_nodes = True, # When true, the nodes that are not fixed can be dragged by the user.
 						   drag_view = True, # When true, the view can be dragged around by the user.
@@ -559,13 +568,13 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
 						   select_connected_edges = True, # When true, on selecting a node, its connecting edges are highlighted.
 						   tooltip_delay = 300, # When nodes or edges have a defined 'title' field, this can be shown as a pop-up tooltip. The tooltip itself is an HTML element that can be fully styled using CSS. The delay is the amount of time in milliseconds it takes before the tooltip is shown.
 						   zoom_view = True, # When true, the user can zoom in.
-						   
+
 						   # configuration
 						   config_enabled = False, # Toggle the configuration interface on or off. This is an optional parameter. If left undefined and any of the other properties of this object are defined, this will be set to true.
-                           config_filter = "nodes,edges", # When a string is supplied, any combination of the following is allowed: nodes, edges, layout, interaction, manipulation, physics, selection, renderer. Feel free to come up with a fun seperating character. Finally, when supplied an array of strings, any of the previously mentioned fields are accepted. 
+                           config_filter = "nodes,edges", # When a string is supplied, any combination of the following is allowed: nodes, edges, layout, interaction, manipulation, physics, selection, renderer. Feel free to come up with a fun seperating character. Finally, when supplied an array of strings, any of the previously mentioned fields are accepted.
                            container = "undefined", # This allows you to put the configure list in another HTML container than below the network.
                            showButton = True, # Show the generate options button at the bottom of the configurator.
-						   
+
 						   # other stuff
 						   border_color='white',
                            physics_enabled=True,
@@ -580,53 +589,53 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                            graph_height = 800
 						   ):
 
-                           
-    
+
+
     '''
-    
+
     This function modifies a template of visJS options, based on user input.
-    
+
     Temporary file is saved under name filename, and is loaded by function visjs_network
-    
-    
+
+
     '''
-    
+
     # switch physics_enabled bool from python to JS
     if physics_enabled:
         physics_enabled='true'
     else:
         physics_enabled='false'
-        
+
 	# switch edge_arrow_to bool from python to JS
     if edge_arrow_to:
         edge_arrow_to = 'true'
     else:
         edge_arrow_to = 'false'
-	 
+
 	# switch edge_arrow_from bool from python to JS
     if edge_arrow_from:
         edge_arrow_from = 'true'
     else:
         edge_arrow_from = 'false'
-	 
+
 	# switch edge_arrow_middle bool from python to JS
     if edge_arrow_middle:
         edge_arrow_middle = 'true'
     else:
         edge_arrow_middle = 'false'
-		
+
 	# switch edge_arrow_strikethrough bool from python to JS
     if edge_arrow_strikethrough:
         edge_arrow_strikethrough = 'true'
     else:
         edge_arrow_strikethrough = 'false'
-	
+
 	# switch edge_dashes bool from python to JS
     if edge_dashes:
         edge_dashes = 'true'
     else:
         edge_dashes = 'false'
-	
+
 	# switch edge_label_highlight_bold bool from python to JS
     if edge_label_highlight_bold:
         edge_label_highlight_bold = 'true'
@@ -638,7 +647,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
         edge_scaling_label_enabled = 'true'
     else:
         edge_scaling_label_enabled = 'false'
-	
+
 	# switch edge_shadow_enabled bool from python to JS
     if edge_shadow_enabled:
         edge_shadow_enabled = 'true'
@@ -650,13 +659,13 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
         edge_smooth_enabled = 'true'
     else:
         edge_smooth_enabled = 'false'
-	
+
 	# switch node_fixed_x bool from python to JS
     if node_fixed_x:
         node_fixed_x = 'true'
     else:
-        node_fixed_x = 'false'	
-	
+        node_fixed_x = 'false'
+
 	# switch node_fixed_y bool from python to JS
     if node_fixed_y:
         node_fixed_y = 'true'
@@ -668,135 +677,135 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
         node_label_highlight_bold = 'true'
     else:
         node_label_highlight_bold = 'false'
-	
+
 	# switch node_scaling_label_enabled bool from python to JS
     if node_scaling_label_enabled:
         node_scaling_label_enabled = 'true'
     else:
         node_scaling_label_enabled = 'false'
-	
+
 	# switch node_shadow_enabled bool from python to JS
     if node_shadow_enabled:
         node_shadow_enabled = 'true'
     else:
         node_shadow_enabled = 'false'
-		
+
 	# switch node_shape_border_dashes bool from python to JS
     if node_shape_border_dashes:
         node_shape_border_dashes = 'true'
     else:
         node_shape_border_dashes = 'false'
-	
+
 	# switch node_shape_interpolation bool from python to JS
     if node_shape_interpolation:
         node_shape_interpolation = 'true'
     else:
         node_shape_interpolation = 'false'
-		
+
 	# switch node_shape_use_image_size bool from python to JS
     if node_shape_use_image_size:
         node_shape_use_image_size = 'true'
     else:
         node_shape_use_image_size = 'false'
-	
+
 	# switch node_shape_use_border_with_image bool from python to JS
     if node_shape_use_border_with_image:
         node_shape_use_border_with_image = 'true'
     else:
         node_shape_use_border_with_image = 'false'
-		
+
 	# switch drag_nodes bool from python to JS
     if drag_nodes:
         drag_nodes = 'true'
     else:
         drag_nodes = 'false'
-		
+
 	# switch drag_view bool from python to JS
     if drag_view:
         drag_view = 'true'
     else:
-        drag_view = 'false'	
-		
+        drag_view = 'false'
+
 	# switch hide_edges_on_drag from python to JS
     if hide_edges_on_drag:
         hide_edges_on_drag = 'true'
     else:
-        hide_edges_on_drag = 'false'	
-		
+        hide_edges_on_drag = 'false'
+
 	# switch hide_nodes_on_drag  from python to JS
     if hide_nodes_on_drag:
         hide_nodes_on_drag  = 'true'
     else:
-        hide_nodes_on_drag  = 'false'	
-		
+        hide_nodes_on_drag  = 'false'
+
 	# switch hover from python to JS
     if hover:
         hover  = 'true'
     else:
         hover  = 'false'
-		
+
 	# switch hover_connected_edges from python to JS
     if hover_connected_edges:
         hover_connected_edges  = 'true'
     else:
-        hover_connected_edges  = 'false'					   
-						   
+        hover_connected_edges  = 'false'
+
 	# switch keyboard_enabled from python to JS
     if keyboard_enabled:
         keyboard_enabled  = 'true'
     else:
-        keyboard_enabled  = 'false'		
+        keyboard_enabled  = 'false'
 
 	# switch keyboard_bind_to_window from python to JS
     if keyboard_bind_to_window:
         keyboard_bind_to_window  = 'true'
     else:
-        keyboard_bind_to_window  = 'false'	
-						   
+        keyboard_bind_to_window  = 'false'
+
 	# switch multiselect from python to JS
     if multiselect:
         multiselect  = 'true'
     else:
-        multiselect  = 'false'						   
-						   
+        multiselect  = 'false'
+
 	# switch navigation_buttons from python to JS
     if navigation_buttons:
         navigation_buttons  = 'true'
     else:
-        navigation_buttons  = 'false'					   
-	
+        navigation_buttons  = 'false'
+
 	# switch selectable from python to JS
     if selectable:
         selectable  = 'true'
     else:
         selectable  = 'false'
-		
+
 	# switch select_connected_edges from python to JS
     if select_connected_edges:
         select_connected_edges  = 'true'
     else:
         select_connected_edges  = 'false'
-						   
+
 	# switch zoom_view from python to JS
     if zoom_view:
         zoom_view  = 'true'
     else:
-        zoom_view  = 'false'		
-    
+        zoom_view  = 'false'
+
 	# switch config_enabled from python to JS
     if config_enabled:
         config_enabled  = 'true'
     else:
         config_enabled  = 'false'
-		
+
 	# switch showButton from python to JS
     if showButton:
         showButton  = 'true'
     else:
         showButton  = 'false'
-	
-	
-	
+
+
+
     visJS_to_write = """<!doctype html>
 <html>
 <head>
@@ -839,7 +848,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                from: {enabled: """ + edge_arrow_from + """, scaleFactor:""" + str(edge_arrow_from_scale_factor) + """}
             },
 			arrowStrikethrough: """ + edge_arrow_strikethrough + """,
-            color: { 
+            color: {
                color: '""" + edge_color + """',
                highlight: '""" + edge_color_highlight + """',
                hover: '""" + edge_color_hover + """',
@@ -998,15 +1007,15 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
          node_degree = node_degree < 10 ? 10 : node_degree;
          var font_size = python_nodes[i].degree * 2;
          font_size = font_size < 10 ? 10 : font_size;
-         nodeArray.push({id: i, 
-                         label: python_nodes[i]."""+node_label_field+""", 
+         nodeArray.push({id: i,
+                         label: python_nodes[i]."""+node_label_field+""",
                          borderWidth: python_nodes[i].border_width,
 						 borderWidthSelected: """+str(node_border_width_selected)+""",
                          color: {
-                             background: python_nodes[i].color,  
+                             background: python_nodes[i].color,
                          },
                          title: python_nodes[i].title,
-                         shape: python_nodes[i].node_shape, 
+                         shape: python_nodes[i].node_shape,
                          size: """+node_size_transform+"""(python_nodes[i]."""+node_size_field+""")*"""+str(node_size_multiplier)+""",
                          x: python_nodes[i].x,
                          y: python_nodes[i].y});
@@ -1014,7 +1023,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
        var python_edges = visEdges;
        var edgeArray = [];
        for(var i=0; i<python_edges.length; i++){
-         edgeArray.push({from: python_edges[i].source, 
+         edgeArray.push({from: python_edges[i].source,
                          to: python_edges[i].target,
 						 label: python_edges[i].""" + edge_label_field + """,
                          title: python_edges[i].""" + edge_title_field + """,
@@ -1052,5 +1061,3 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
     f = open(filename, 'w')
     f.write(visJS_to_write)
     f.close()
-
-
