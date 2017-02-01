@@ -48,7 +48,7 @@ def visjs_network(nodes_dict, edges_dict,
 						   node_scaling_max = 30, # max size node can become when it scales up
 						   node_scaling_label_enabled = False, # toggle scaling of label on or off
 						   node_scaling_label_min = 14, # min font size the label can become when it scales down
-						   node_scaling_label_max = 30, # max font size the label can becomme when it scales up
+						   node_scaling_label_max = 30, # max font size the label can become when it scales up
 						   node_scaling_label_max_visible = 30, # font will never be larger than this number at 100% zoom
 						   node_scaling_label_draw_threshold = 5, # lower limit font is drawn as, use this and max visible to control which labels remain visible during zoom out
 						   node_shadow_enabled = True, # whether there is a shadow cast by the nodes
@@ -105,7 +105,7 @@ def visjs_network(nodes_dict, edges_dict,
                            edge_shadow_size = 10, # blur size of shadow
                            edge_shadow_x = 5, # x offset
                            edge_shadow_y = 5, # y offset
-                  # if this is set to true and smooth type is not continuous, you will not be able to set the x and y position
+                           # if this is set to true and smooth type is not continuous, you will not be able to set the x and y position
                            edge_smooth_enabled = False, # toggle smooted curves
                            edge_smooth_type = 'dynamic',
                            edge_smooth_force_direction = 'none', # 'horizontal', 'vertical', and 'none'. Only for cubicBezier curves
@@ -150,6 +150,7 @@ def visjs_network(nodes_dict, edges_dict,
                            graph_title='',
                            graph_width = 900,
                            graph_height = 800,
+                           scaling_factor = 1,
 						   time_stamp = 0):
 
     '''
@@ -301,7 +302,8 @@ def visjs_network(nodes_dict, edges_dict,
                            max_visible = max_visible,
                            graph_title = graph_title,
                            graph_width = graph_width,
-                           graph_height = graph_height
+                           graph_height = graph_height,
+                           scaling_factor = scaling_factor
 						   )
 
 
@@ -586,7 +588,8 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                            max_visible=10,
                            graph_title='',
                            graph_width = 900,
-                           graph_height = 800
+                           graph_height = 800,
+                           scaling_factor = 1
 						   ):
 
 
@@ -804,6 +807,8 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
     else:
         showButton  = 'false'
 
+    graph_width = scaling_factor * graph_width
+    graph_height = scaling_factor * graph_height
 
 
     visJS_to_write = """<!doctype html>
@@ -858,7 +863,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
 			dashes: """ + edge_dashes + """,
             font: {
 				color: '""" + edge_font_color + """',
-				size: """ + str(edge_font_size) + """,
+				size: """ + str(edge_font_size) + """*""" + str(scaling_factor) + """,
 				face: '""" + edge_font_face + """',
 				background: '""" + edge_font_background + """',
 				strokeWidth: """ + str(edge_font_strokeWidth) + """,
@@ -867,15 +872,15 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
 			},
             hoverWidth: """ + str(edge_hoverWidth) + """,
             labelHighlightBold: """ + edge_label_highlight_bold + """,
-            length: """ + str(edge_length) + """,
+            length: """ + str(edge_length) + """*""" + str(scaling_factor) + """,
             scaling:{
                min: """ + str(edge_scaling_min) + """,
                max: """ + str(edge_scaling_max) + """,
                label: {
                   enabled: """ + edge_scaling_label_enabled + """,
                   min: """ + str(edge_scaling_label_min) + """,
-                  max: """ + str(edge_scaling_label_max) + """,
-                  maxVisible: """ + str(edge_scaling_label_max_visible) + """,
+                  max: """ + str(edge_scaling_label_max) + """*"""+str(scaling_factor)+""",
+                  maxVisible: """ + str(edge_scaling_label_max_visible) + """*"""+str(scaling_factor)+""",
                   drawThreshold: """ + str(edge_scaling_label_draw_threshold) + """,
                }
             },
@@ -894,7 +899,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                forceDirection: '""" + edge_smooth_force_direction + """',
                roundness: """ + str(edge_smooth_roundness) + """
             },
-            width: """+str(edge_width)+""",
+            width: """+str(edge_width)+"""*"""+str(scaling_factor)+""",
 		  },
 		  interaction:{
 			dragNodes: """ + drag_nodes + """,
@@ -942,7 +947,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
 			  },
               font: {
 				 color: '""" + node_font_color + """',
-				 size: """ + str(node_font_size) + """,
+				 size: """ + str(node_font_size) + """*""" + str(scaling_factor) + """,
 				 face: '""" + node_font_face + """',
 				 background: '""" + node_font_background + """',
 				 strokeWidth: """ + str(node_font_stroke_width) + """,
@@ -963,8 +968,8 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
 				 label: {
 					 enabled: """ + node_scaling_label_enabled + """,
 					 min: """ + str(node_scaling_label_min) + """,
-					 max: """ + str(node_scaling_label_max) + """,
-					 maxVisible: """ + str(node_scaling_label_max_visible) + """,
+					 max: """ + str(node_scaling_label_max) + """*"""+str(scaling_factor)+""",
+					 maxVisible: """ + str(node_scaling_label_max_visible) + """*"""+str(scaling_factor)+""",
 					 drawThreshold: """ + str(node_scaling_label_draw_threshold) + """
 				 }
               },
@@ -1013,12 +1018,16 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
 						 borderWidthSelected: """+str(node_border_width_selected)+""",
                          color: {
                              background: python_nodes[i].color,
+                             border: python_nodes[i].border_color,
+                             hover: {
+                                border: python_nodes[i].border_color_hover,
+                             },
                          },
                          title: python_nodes[i].title,
                          shape: python_nodes[i].node_shape,
-                         size: """+node_size_transform+"""(python_nodes[i]."""+node_size_field+""")*"""+str(node_size_multiplier)+""",
-                         x: python_nodes[i].x,
-                         y: python_nodes[i].y});
+                         size: """+node_size_transform+"""(python_nodes[i]."""+node_size_field+""")*"""+str(node_size_multiplier)+"""*"""+str(scaling_factor)+""",
+                         x: python_nodes[i].x * """+str(scaling_factor)+""",
+                         y: python_nodes[i].y * """+str(scaling_factor)+"""});
        }
        var python_edges = visEdges;
        var edgeArray = [];

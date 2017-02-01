@@ -194,28 +194,32 @@ def draw_heat_prop(G, seed_nodes, node_cmap=mpl.cm.autumn_r, edge_cmap=mpl.cm.au
         - physics_enabled: boolean, optional, default: True for graphs of 100 nodes, False otherwise
         - num_nodes: the number of the hottest nodes to graph, default: None (all nodes will be graphed)
     Returns:
-        - VisJS html network plot (iframe) of the graph union.
+        - VisJS html network plot (iframe) of the heat propagation.
     '''
+
     # check for invalid nodes in seed_nodes
-    invalid_nodes = (node for node in seed_nodes if node not in G.nodes())
+    invalid_nodes = [node for node in seed_nodes if node not in G.nodes()]
     for node in invalid_nodes:
         print "Node %s not in graph" % node
+    if invalid_nodes:
         return
 
-    nodes = G.nodes()
-    edges = G.edges()
     Wprime = normalized_adj_matrix(G)
     prop_graph = network_propagation(G, Wprime, seed_nodes).to_dict()
     nx.set_node_attributes(G, 'node_heat', prop_graph)
 
     # if the user set num_nodes, get the top num_nodes hottest nodes to graph
-    if num_nodes != None and num_nodes < len(nodes):
-        node_heat = [(node[0], node[1]['node_heat']) for node in G.nodes(data=True)]
-        nodes_sorted = sorted(node_heat, key=lambda x: x[1], reverse=True)
-        top_hottest_nodes = [nodes_sorted[i][0] for i in range(num_nodes)]
-        G = G.subgraph(top_hottest_nodes)
-        nodes = G.nodes()
-        edges = G.edges()
+    G = set_num_nodes(G,num_nodes)
+    nodes = G.nodes()
+    edges = G.edges()
+
+    # check for empty nodes and edges after getting subgraph of G
+    if not nodes:
+        print "There are no nodes in the graph. Try increasing num_nodes."
+        return
+    if not edges:
+        print "There are no edges in the graph. Try increasing num_nodes."
+        return
 
     node_to_color = visJS_module.return_node_to_color(G,
                                                       field_to_map = 'node_heat',
@@ -246,16 +250,146 @@ def draw_heat_prop(G, seed_nodes, node_cmap=mpl.cm.autumn_r, edge_cmap=mpl.cm.au
                    for node in G.nodes(data=True)]
     node_titles = dict(zip(G.nodes(),node_titles))
     pos = nx.spring_layout(G)
-    border_width = [2 if n in seed_nodes else 0 for n in nodes]
+    border_width = {n:(2 if n in seed_nodes else 0) for n in nodes}
+
+    nodes_shape=[]
+    for node in G.nodes():
+        if node in seed_nodes:
+            nodes_shape.append('triangle')
+        else:
+            nodes_shape.append('dot')
+    node_to_nodeShape=dict(zip(G.nodes(),nodes_shape))
 
     nodes_dict = [{"id":n,
                    "degree":G.degree(n),
                    "color":node_to_color[n],
                    "node_size":30,
+                   "node_shape":node_to_nodeShape[n],
                    "title":node_titles[n],
                    "x":pos[n][0]*1000,
                    "y":pos[n][1]*1000,
-                   "border_width":border_width[n]} for n in nodes] #border_width
+                   "border_width":border_width[n]} for n in nodes]
+
+    node_map = dict(zip(nodes, range(len(nodes))))
+    edges_dict = [{"source":node_map[edges[i][0]],
+                   "target":node_map[edges[i][1]],
+                   "color":edge_to_color[edges[i]]} for i in range(len(edges))]
+
+    # set node_size_multiplier to increase node size as graph gets smaller
+    if len(nodes) > 500:
+        node_size_multiplier = 1
+    elif len(nodes) > 200:
+        node_size_multiplier = 3
+    else:
+        node_size_multiplier = 5
+
+    physics_enabled = set_physics_enabled(physics_enabled, len(nodes))
+
+    return visJS_module.visjs_network(nodes_dict, edges_dict,
+                                      node_size_field='node_size',
+                                      node_size_multiplier=node_size_multiplier,
+                                      physics_enabled=physics_enabled,
+                                      node_color_hover_background='black',
+                                      **kwargs)
+
+
+def draw_colocalization(G,seed_nodes_1, seed_nodes_2, node_cmap=mpl.cm.autumn_r,
+                        edge_cmap=mpl.cm.autumn_r, physics_enabled=None,
+                        num_nodes=None, **kwargs):
+    '''
+    Implements and displays the network propagation for a given graph and two
+    sets of seed nodes.
+    Additional kwargs are passed to visJS_module.
+
+    Inputs:
+        - G: a networkX graph
+        - seed_nodes_1: first set of nodes on which to initialize the simulation
+        - seed_nodes_2: second set of nodes on which to initialize the simulation
+        - node_cmap: matplotlib colormap for nodes, optional, default: matplotlib.cm.autumn_r
+        - edge_cmap: matplotlib colormap for edges, optional, default: matplotlib.cm.autumn_r
+        - physics_enabled: boolean, optional, default: True for graphs of 100 nodes, False otherwise
+        - num_nodes: the number of the hottest nodes to graph, default: None (all nodes will be graphed)
+    Returns:
+        - VisJS html network plot (iframe) of the colocalization.
+    '''
+
+    # check for invalid nodes in seed_nodes
+    invalid_nodes = [(node,'seed_nodes_1') for node in seed_nodes_1 if node not in G.nodes()]
+    invalid_nodes.extend([(node,'seed_nodes_2') for node in seed_nodes_2 if node not in G.nodes()])
+    for node in invalid_nodes:
+        print "Node %s in %s not in graph" % (node[0], node[1])
+    if invalid_nodes:
+        return
+
+    Wprime = normalized_adj_matrix(G)
+    prop_graph_1 = network_propagation(G, Wprime, seed_nodes_1).to_dict()
+    prop_graph_2 = network_propagation(G, Wprime, seed_nodes_2).to_dict()
+    prop_graph = {node:(prop_graph_1[node]*prop_graph_2[node]) for node in prop_graph_1}
+    nx.set_node_attributes(G, 'node_heat', prop_graph)
+
+    # if the user set num_nodes, get the top num_nodes hottest nodes to graph
+    G = set_num_nodes(G,num_nodes)
+    nodes = G.nodes()
+    edges = G.edges()
+
+    # check for empty nodes and edges after getting subgraph of G
+    if not nodes:
+        print "There are no nodes in the graph. Try increasing num_nodes."
+        return
+    if not edges:
+        print "There are no edges in the graph. Try increasing num_nodes."
+        return
+
+    node_to_color = visJS_module.return_node_to_color(G,
+                                                      field_to_map = 'node_heat',
+                                                      cmap = node_cmap,
+                                                      color_vals_transform = 'log')
+
+    # set heat value of edge based off hottest connecting node's value
+    node_attr = nx.get_node_attributes(G,'node_heat')
+    edge_weights = {}
+    for e in edges:
+        if node_attr[e[0]] > node_attr[e[1]]:
+            edge_weights[e] = node_attr[e[0]]
+        else:
+            edge_weights[e] = node_attr[e[1]]
+
+    nx.set_edge_attributes(G, 'edge_weight', edge_weights)
+
+    edge_to_color = visJS_module.return_edge_to_color(G,
+                                                      field_to_map = 'edge_weight',
+                                                      cmap=edge_cmap,
+                                                      color_vals_transform = 'log')
+
+    # add a field for node labels
+    node_blank_labels = ['']*len(nodes)
+    node_labels = dict(zip(nodes,node_blank_labels))
+
+    node_titles = [str(node[0]) + '<br/>heat = ' + str(round(node[1]['node_heat'],10))
+                   for node in G.nodes(data=True)]
+    node_titles = dict(zip(nodes,node_titles))
+    pos = nx.spring_layout(G)
+    border_width = {n:(3 if n in seed_nodes_1 or n in seed_nodes_2 else 0) for n in nodes}
+
+    nodes_shape=[]
+    for node in G.nodes():
+        if node in seed_nodes_1:
+            nodes_shape.append('triangle')
+        elif node in seed_nodes_2:
+            nodes_shape.append('square')
+        else:
+            nodes_shape.append('dot')
+    node_to_nodeShape=dict(zip(G.nodes(),nodes_shape))
+
+    nodes_dict = [{"id":n,
+                   "degree":G.degree(n),
+                   "color":node_to_color[n],
+                   "node_size":30,
+                   "node_shape":node_to_nodeShape[n],
+                   "title":node_titles[n],
+                   "x":pos[n][0]*1000,
+                   "y":pos[n][1]*1000,
+                   "border_width":border_width[n]} for n in nodes]
 
     node_map = dict(zip(nodes, range(len(nodes))))
     edges_dict = [{"source":node_map[edges[i][0]],
@@ -376,3 +510,24 @@ def set_physics_enabled(physics_enabled, num_nodes):
             return True
         else:
             return False
+
+
+def set_num_nodes(G, num_nodes):
+    '''
+    Sets whether the graph should be physics-enabled or not. It is set for
+    graphs of fewer than 100 nodes.
+    Inputs:
+        - G: a networkX graph
+        - num_nodes: the number of the hottest nodes to graph
+
+    Outputs:
+        - networkX graph that is the subgraph of G with the num_nodes hottest
+          nodes
+    '''
+
+    if num_nodes != None and num_nodes < len(G.nodes()):
+        node_heat = [(node[0], node[1]['node_heat']) for node in G.nodes(data=True)]
+        nodes_sorted = sorted(node_heat, key=lambda x: x[1], reverse=True)
+        top_hottest_nodes = [nodes_sorted[i][0] for i in range(num_nodes)]
+        return G.subgraph(top_hottest_nodes)
+    return G
