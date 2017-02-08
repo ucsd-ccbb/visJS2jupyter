@@ -423,6 +423,8 @@ def normalized_adj_matrix(G,conserve_heat=True,weighted=False):
         - conserve_heat:
             - True: Heat will be conserved (sum of heat vector = 1).  Graph asymmetric
             - False:  Heat will not be conserved.  Graph symmetric.
+    Returns:
+        - numpy array of the normalized adjacency matrix.
     '''
 
     wvec=[]
@@ -461,15 +463,16 @@ def normalized_adj_matrix(G,conserve_heat=True,weighted=False):
 def network_propagation(G,Wprime,seed_nodes,alpha=.5, num_its=20):
     '''
     This function implements network propagation, as detailed in:
-    Vanunu, Oron, et al. 'Associating genes and protein complexes with disease via network propagation.'
+    Vanunu, Oron, et al. 'Associating genes and protein complexes with disease
+    via network propagation.'
+
     Inputs:
         - G: NetworkX graph on which to run simulation
         - Wprime:  Normalized adjacency matrix (from normalized_adj_matrix)
         - seed_nodes:  Genes on which to initialize the simulation.
         - alpha:  Heat dissipation coefficient.  Default = 0.5
         - num_its:  Number of iterations (Default = 20.  Convergence usually happens within 10)
-
-    Outputs:
+    Returns:
         - Fnew: heat vector after propagation
     '''
 
@@ -497,11 +500,11 @@ def set_physics_enabled(physics_enabled, num_nodes):
     '''
     Sets whether the graph should be physics-enabled or not. It is set for
     graphs of fewer than 100 nodes.
+
     Inputs:
         - physics-enabled: boolean value user passed in for physics-enabled
         - num_nodes: integer value for number of nodes in the graph
-
-    Outputs:
+    Returns:
         - True if graph has fewer than 100 nodes, False otherwise.
     '''
 
@@ -510,17 +513,18 @@ def set_physics_enabled(physics_enabled, num_nodes):
             return True
         else:
             return False
+    return physics_enabled
 
 
 def set_num_nodes(G, num_nodes):
     '''
     Sets whether the graph should be physics-enabled or not. It is set for
     graphs of fewer than 100 nodes.
+
     Inputs:
         - G: a networkX graph
         - num_nodes: the number of the hottest nodes to graph
-
-    Outputs:
+    Returns:
         - networkX graph that is the subgraph of G with the num_nodes hottest
           nodes
     '''

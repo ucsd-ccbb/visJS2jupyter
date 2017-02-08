@@ -166,6 +166,10 @@ def visjs_network(nodes_dict, edges_dict,
 
     '''
 
+    # turn off physics simulation if scaling graph
+    if scaling_factor > 1:
+        physics_enabled = False
+
     # create a temporary style file
     fname_temp = 'style_file'+str(time_stamp)+'.html'
 
@@ -809,7 +813,8 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
 
     graph_width = scaling_factor * graph_width
     graph_height = scaling_factor * graph_height
-
+    if edge_length != 'undefined':
+        edge_length *= scaling_factor
 
     visJS_to_write = """<!doctype html>
 <html>
@@ -862,17 +867,17 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
             },
 			dashes: """ + edge_dashes + """,
             font: {
-				color: '""" + edge_font_color + """',
-				size: """ + str(edge_font_size) + """*""" + str(scaling_factor) + """,
-				face: '""" + edge_font_face + """',
-				background: '""" + edge_font_background + """',
-				strokeWidth: """ + str(edge_font_strokeWidth) + """,
-				strokeColor: '""" + edge_font_stroke_color + """',
-				align:'""" + edge_font_align + """'
-			},
+                color: '""" + edge_font_color + """',
+                size: """ + str(edge_font_size) + """*""" + str(scaling_factor) + """,
+                face: '""" + edge_font_face + """',
+                background: '""" + edge_font_background + """',
+                strokeWidth: """ + str(edge_font_strokeWidth) + """,
+                strokeColor: '""" + edge_font_stroke_color + """',
+                align:'""" + edge_font_align + """'
+            },
             hoverWidth: """ + str(edge_hoverWidth) + """,
             labelHighlightBold: """ + edge_label_highlight_bold + """,
-            length: """ + str(edge_length) + """*""" + str(scaling_factor) + """,
+            length: """ + str(edge_length) + """,
             scaling:{
                min: """ + str(edge_scaling_min) + """,
                max: """ + str(edge_scaling_max) + """,
@@ -946,14 +951,14 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                  }
 			  },
               font: {
-				 color: '""" + node_font_color + """',
-				 size: """ + str(node_font_size) + """*""" + str(scaling_factor) + """,
-				 face: '""" + node_font_face + """',
-				 background: '""" + node_font_background + """',
-				 strokeWidth: """ + str(node_font_stroke_width) + """,
-				 strokeColor: '""" + node_font_stroke_color + """',
-				 align: '""" + node_font_align + """'
-			  },
+                 color: '""" + node_font_color + """',
+                 size: """ + str(node_font_size) + """*""" + str(scaling_factor) + """,
+                 face: '""" + node_font_face + """',
+                 background: '""" + node_font_background + """',
+                 strokeWidth: """ + str(node_font_stroke_width) + """,
+                 strokeColor: '""" + node_font_stroke_color + """',
+                 align: '""" + node_font_align + """'
+              },
 			  icon: {
 				 face: '""" + node_icon_face + """',
 				 code: """ + node_icon_code + """,
@@ -966,12 +971,12 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
 				 min: """ + str(node_scaling_min) + """,
 				 max: """ + str(node_scaling_max) + """,
 				 label: {
-					 enabled: """ + node_scaling_label_enabled + """,
-					 min: """ + str(node_scaling_label_min) + """,
-					 max: """ + str(node_scaling_label_max) + """*"""+str(scaling_factor)+""",
-					 maxVisible: """ + str(node_scaling_label_max_visible) + """*"""+str(scaling_factor)+""",
-					 drawThreshold: """ + str(node_scaling_label_draw_threshold) + """
-				 }
+                     enabled: """ + node_scaling_label_enabled + """,
+                     min: """ + str(node_scaling_label_min) + """,
+                     max: """ + str(node_scaling_label_max) + """*"""+str(scaling_factor)+""",
+                     maxVisible: """ + str(node_scaling_label_max_visible) + """*"""+str(scaling_factor)+""",
+                     drawThreshold: """ + str(node_scaling_label_draw_threshold) + """
+                 }
               },
               shadow:{
 				 enabled: """ + node_shadow_enabled + """,
@@ -1014,8 +1019,8 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
          font_size = font_size < 10 ? 10 : font_size;
          nodeArray.push({id: i,
                          label: python_nodes[i]."""+node_label_field+""",
-                         borderWidth: python_nodes[i].border_width,
-						 borderWidthSelected: """+str(node_border_width_selected)+""",
+                         borderWidth: python_nodes[i].border_width * """ + str(scaling_factor) + """,
+                         borderWidthSelected: """+str(node_border_width_selected)+""",
                          color: {
                              background: python_nodes[i].color,
                              border: python_nodes[i].border_color,
@@ -1028,7 +1033,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                          size: """+node_size_transform+"""(python_nodes[i]."""+node_size_field+""")*"""+str(node_size_multiplier)+"""*"""+str(scaling_factor)+""",
                          x: python_nodes[i].x * """+str(scaling_factor)+""",
                          y: python_nodes[i].y * """+str(scaling_factor)+"""});
-       }
+         }
        var python_edges = visEdges;
        var edgeArray = [];
        for(var i=0; i<python_edges.length; i++){
