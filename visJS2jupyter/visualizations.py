@@ -16,11 +16,11 @@ import matplotlib as mpl
 import math
 import visJS_module as visJS_module
 
-def draw_graph_union(G1, G2, node_cmap=mpl.cm.autumn, edge_cmap=mpl.cm.coolwarm,
-                     node_name_1="graph 1", node_name_2="graph 2",
-                     physics_enabled=None, **kwargs):
+def draw_graph_overlap(G1, G2, node_cmap=mpl.cm.autumn, edge_cmap=mpl.cm.coolwarm,
+                       node_name_1="graph 1", node_name_2="graph 2",
+                       physics_enabled=None, **kwargs):
     '''
-    Takes two networkX graphs and displays their union, where intersecting nodes
+    Takes two networkX graphs and displays their overlap, where intersecting nodes
     are triangles. Additional kwargs are passed to visjs_module.
 
     Inputs:
@@ -32,56 +32,56 @@ def draw_graph_union(G1, G2, node_cmap=mpl.cm.autumn, edge_cmap=mpl.cm.coolwarm,
         - node_name_2: string to name second graph's nodes, optional, default: "graph 2"
         - physics_enabled: boolean, optional, default: True for graphs of 100 nodes, False otherwise
     Returns:
-        - VisJS html network plot (iframe) of the graph union.
+        - VisJS html network plot (iframe) of the graph overlap.
     '''
 
-    G_union = create_graph_union(G1, G2, node_name_1, node_name_2)
+    G_overlap = create_graph_overlap(G1, G2, node_name_1, node_name_2)
 
     # create nodes dict and edges dict for input to visjs
-    nodes = G_union.nodes()
+    nodes = G_overlap.nodes()
     numnodes = len(nodes)
-    edges = G_union.edges()
+    edges = G_overlap.edges()
     numedges = len(edges)
 
-    pos = nx.spring_layout(G_union, weight="edge_weight")
+    pos = nx.spring_layout(G_overlap, weight="edge_weight")
 
     # set node_size to degree
-    degree = G_union.degree()
+    degree = G_overlap.degree()
     node_size = [int(float(n)/np.max(degree.values())*25+1) for n in degree.values()]
     node_to_nodeSize = dict(zip(degree.keys(),node_size))
 
     # add nodes to highlight (none for now)
-    nodes_HL = pd.Series(0,index=G_union.nodes())
+    nodes_HL = pd.Series(0,index=G_overlap.nodes())
     nodes_HL = dict(nodes_HL)
 
     nodes_shape=[]
-    for node in G_union.nodes(data=True):
+    for node in G_overlap.nodes(data=True):
         if node[1]['node_overlap']==0:
             nodes_shape.append('dot')
         elif node[1]['node_overlap']==2:
             nodes_shape.append('square')
         elif node[1]['node_overlap']==1:
             nodes_shape.append('triangle')
-    node_to_nodeShape=dict(zip(G_union.nodes(),nodes_shape))
+    node_to_nodeShape=dict(zip(G_overlap.nodes(),nodes_shape))
 
     # add a field for node labels
-    node_blank_labels = ['']*len(G_union.nodes())
+    node_blank_labels = ['']*len(G_overlap.nodes())
 
-    node_labels = dict(zip(G_union.nodes(),node_blank_labels))
+    node_labels = dict(zip(G_overlap.nodes(),node_blank_labels))
 
-    node_titles = [ node[1]['node_name_membership']+'<br/>'+str(node[0]) for node in G_union.nodes(data=True)]
-    node_titles = dict(zip(G_union.nodes(),node_titles))
+    node_titles = [ node[1]['node_name_membership']+'<br/>'+str(node[0]) for node in G_overlap.nodes(data=True)]
+    node_titles = dict(zip(G_overlap.nodes(),node_titles))
 
     # set plotting parameters
     field_to_map='node_overlap'
     label_field = 'id'
 
-    node_to_color = visJS_module.return_node_to_color(G_union,field_to_map=field_to_map,cmap=node_cmap,alpha = 1,
+    node_to_color = visJS_module.return_node_to_color(G_overlap,field_to_map=field_to_map,cmap=node_cmap,alpha = 1,
                                                       color_max_frac = .9,color_min_frac = .1)
 
-    edge_to_color = visJS_module.return_edge_to_color(G_union,field_to_map = 'weight',cmap=edge_cmap,alpha=.3)
+    edge_to_color = visJS_module.return_edge_to_color(G_overlap,field_to_map = 'weight',cmap=edge_cmap,alpha=.3)
 
-    nodes_dict = [{"id":n,"degree":G_union.degree(n),"color":node_to_color[n],
+    nodes_dict = [{"id":n,"degree":G_overlap.degree(n),"color":node_to_color[n],
                    "node_size":30,'border_width':nodes_HL[n],
                    "node_label":node_labels[n],
                    "edge_label":'',
@@ -113,10 +113,10 @@ def draw_graph_union(G1, G2, node_cmap=mpl.cm.autumn, edge_cmap=mpl.cm.coolwarm,
                                       **kwargs)
 
 
-def create_graph_union(G1,G2,node_name_1,node_name_2):
+def create_graph_overlap(G1,G2,node_name_1,node_name_2):
     '''
-    Create and return a union of two graphs, with node attributes indicating overlap,
-    and weight indicating edge overlap.
+    Create and return the overlap of two graphs, with node attributes
+    indicating overlap, and weight indicating edge overlap.
 
     Inputs:
         - G1: a networkX graph
@@ -124,10 +124,10 @@ def create_graph_union(G1,G2,node_name_1,node_name_2):
         - node_name_1: string to name first graph's nodes
         - node_name_2: string to name second graph's nodes
     Returns:
-        - A networkX graph that is the union of G1 and G2.
+        - A networkX graph that is the overlap of G1 and G2.
     '''
 
-    union_graph = nx.Graph()
+    overlap_graph = nx.Graph()
     node_union = list(np.union1d(G1.nodes(),G2.nodes()))
     node_intersect = list(np.intersect1d(G1.nodes(),G2.nodes()))
     nodes_1only = np.setdiff1d(G1.nodes(),node_intersect)
@@ -136,7 +136,7 @@ def create_graph_union(G1,G2,node_name_1,node_name_2):
     edges_total = G1.edges()
     edges_total.extend(G2.edges())
 
-    union_graph.add_nodes_from(node_union)
+    overlap_graph.add_nodes_from(node_union)
 
     # set a node attribute to True if the node belongs to both graphs, otherwise False
     node_overlap=[]
@@ -153,11 +153,11 @@ def create_graph_union(G1,G2,node_name_1,node_name_2):
             node_overlap.append(1)
             node_name_membership.append(node_name_1+' + '+node_name_2)
 
-    nx.set_node_attributes(union_graph,'node_overlap',dict(zip(node_union,node_overlap)))
-    nx.set_node_attributes(union_graph,'node_name_membership',dict(zip(node_union,node_name_membership)))
+    nx.set_node_attributes(overlap_graph,'node_overlap',dict(zip(node_union,node_overlap)))
+    nx.set_node_attributes(overlap_graph,'node_name_membership',dict(zip(node_union,node_name_membership)))
 
-    nodes_12 = union_graph.nodes()
-    intersecting_edge_val = int(math.floor(math.log10(len(nodes_12)))) * 10
+    nodes_total = overlap_graph.nodes()
+    intersecting_edge_val = int(math.floor(math.log10(len(nodes_total)))) * 10
 
     # set the edge weights: intersecting_edge_val if edge is found in both graphs, 1 otherwise
     edge_weights = {}
@@ -174,10 +174,10 @@ def create_graph_union(G1,G2,node_name_1,node_name_2):
     weights = edge_weights.values()
     edges = zip(v1,v2,weights)
 
-    union_graph.add_weighted_edges_from(edges)
-    nx.set_edge_attributes(union_graph, 'edge_weight', edge_weights)
+    overlap_graph.add_weighted_edges_from(edges)
+    nx.set_edge_attributes(overlap_graph, 'edge_weight', edge_weights)
 
-    return union_graph
+    return overlap_graph
 
 
 def draw_heat_prop(G, seed_nodes, node_cmap=mpl.cm.autumn_r, edge_cmap=mpl.cm.autumn_r,
