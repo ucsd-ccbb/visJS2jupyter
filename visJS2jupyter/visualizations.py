@@ -181,7 +181,8 @@ def create_graph_overlap(G1,G2,node_name_1,node_name_2):
 
 
 def draw_heat_prop(G, seed_nodes, node_cmap=mpl.cm.autumn_r, edge_cmap=mpl.cm.autumn_r,
-                   physics_enabled=None, num_nodes=None, **kwargs):
+                   physics_enabled=None, num_nodes=None, Wprime=None, k=None,
+                   largest_connected_component=False, **kwargs):
     '''
     Implements and displays the network propagation for a given graph and seed nodes.
     Additional kwargs are passed to visJS_module.
@@ -193,6 +194,10 @@ def draw_heat_prop(G, seed_nodes, node_cmap=mpl.cm.autumn_r, edge_cmap=mpl.cm.au
         - edge_cmap: matplotlib colormap for edges, optional, default: matplotlib.cm.autumn_r
         - physics_enabled: boolean, optional, default: True for graphs of 100 nodes, False otherwise
         - num_nodes: the number of the hottest nodes to graph, default: None (all nodes will be graphed)
+        - Wprime: normalized adjacency matrix (from function normalized_adj_matrix())
+        - k: float, optional, optimal distance between nodes for nx.spring_layout(), default: None
+        - largest_connected_component: boolean, optional, whether or not to display largest_connected_component,
+                                       default: False
     Returns:
         - VisJS html network plot (iframe) of the heat propagation.
     '''
@@ -204,12 +209,15 @@ def draw_heat_prop(G, seed_nodes, node_cmap=mpl.cm.autumn_r, edge_cmap=mpl.cm.au
     if invalid_nodes:
         return
 
-    Wprime = normalized_adj_matrix(G)
+    if Wprime is None:
+        Wprime = normalized_adj_matrix(G)
     prop_graph = network_propagation(G, Wprime, seed_nodes).to_dict()
     nx.set_node_attributes(G, 'node_heat', prop_graph)
 
     # if the user set num_nodes, get the top num_nodes hottest nodes to graph
     G = set_num_nodes(G,num_nodes)
+    if largest_connected_component:
+        G = max(nx.connected_component_subgraphs(G), key=len)
     nodes = G.nodes()
     edges = G.edges()
 
@@ -249,8 +257,12 @@ def draw_heat_prop(G, seed_nodes, node_cmap=mpl.cm.autumn_r, edge_cmap=mpl.cm.au
     node_titles = [str(node[0]) + '<br/>heat = ' + str(round(node[1]['node_heat'],5))
                    for node in G.nodes(data=True)]
     node_titles = dict(zip(G.nodes(),node_titles))
-    pos = nx.spring_layout(G)
     border_width = {n:(2 if n in seed_nodes else 0) for n in nodes}
+
+    if k == None:
+        pos = nx.spring_layout(G)
+    else:
+        pos = nx.spring_layout(G,k=k)
 
     nodes_shape=[]
     for node in G.nodes():
@@ -295,7 +307,8 @@ def draw_heat_prop(G, seed_nodes, node_cmap=mpl.cm.autumn_r, edge_cmap=mpl.cm.au
 
 def draw_colocalization(G,seed_nodes_1, seed_nodes_2, node_cmap=mpl.cm.autumn_r,
                         edge_cmap=mpl.cm.autumn_r, physics_enabled=None,
-                        num_nodes=None, **kwargs):
+                        num_nodes=None, Wprime=None, k=None,
+                        largest_connected_component=False, **kwargs):
     '''
     Implements and displays the network propagation for a given graph and two
     sets of seed nodes.
@@ -309,6 +322,10 @@ def draw_colocalization(G,seed_nodes_1, seed_nodes_2, node_cmap=mpl.cm.autumn_r,
         - edge_cmap: matplotlib colormap for edges, optional, default: matplotlib.cm.autumn_r
         - physics_enabled: boolean, optional, default: True for graphs of 100 nodes, False otherwise
         - num_nodes: the number of the hottest nodes to graph, default: None (all nodes will be graphed)
+        - Wprime:  Normalized adjacency matrix (from normalized_adj_matrix)
+        - k: float, optional, optimal distance between nodes for nx.spring_layout(), default: None
+        - largest_connected_component: boolean, optional, whether or not to display largest_connected_component,
+                                       default: False
     Returns:
         - VisJS html network plot (iframe) of the colocalization.
     '''
@@ -321,7 +338,8 @@ def draw_colocalization(G,seed_nodes_1, seed_nodes_2, node_cmap=mpl.cm.autumn_r,
     if invalid_nodes:
         return
 
-    Wprime = normalized_adj_matrix(G)
+    if Wprime is None:
+        Wprime = normalized_adj_matrix(G)
     prop_graph_1 = network_propagation(G, Wprime, seed_nodes_1).to_dict()
     prop_graph_2 = network_propagation(G, Wprime, seed_nodes_2).to_dict()
     prop_graph = {node:(prop_graph_1[node]*prop_graph_2[node]) for node in prop_graph_1}
@@ -329,6 +347,8 @@ def draw_colocalization(G,seed_nodes_1, seed_nodes_2, node_cmap=mpl.cm.autumn_r,
 
     # if the user set num_nodes, get the top num_nodes hottest nodes to graph
     G = set_num_nodes(G,num_nodes)
+    if largest_connected_component:
+        G = max(nx.connected_component_subgraphs(G), key=len)
     nodes = G.nodes()
     edges = G.edges()
 
@@ -368,8 +388,12 @@ def draw_colocalization(G,seed_nodes_1, seed_nodes_2, node_cmap=mpl.cm.autumn_r,
     node_titles = [str(node[0]) + '<br/>heat = ' + str(round(node[1]['node_heat'],10))
                    for node in G.nodes(data=True)]
     node_titles = dict(zip(nodes,node_titles))
-    pos = nx.spring_layout(G)
     border_width = {n:(3 if n in seed_nodes_1 or n in seed_nodes_2 else 0) for n in nodes}
+
+    if k == None:
+        pos = nx.spring_layout(G)
+    else:
+        pos = nx.spring_layout(G,k=k)
 
     nodes_shape=[]
     for node in G.nodes():

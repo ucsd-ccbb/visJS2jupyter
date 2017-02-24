@@ -12,6 +12,7 @@ Authors:
 # import some packages
 from IPython.display import HTML, Javascript
 from json import dumps
+import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
 import math
@@ -151,8 +152,8 @@ def visjs_network(nodes_dict, edges_dict,
                            graph_width = 900,
                            graph_height = 800,
                            scaling_factor = 1,
-						   time_stamp = 0,   # use graph_id for defining several graphs in a notebook
-                           graph_id = 0):
+						   time_stamp = 0,   # deprecated: use graph_id
+                           graph_id = 0):    # To draw multiple graphs in the same notebook, give each a different id
 
     '''
     This function creates an iframe for the input graph
