@@ -80,14 +80,14 @@ def visjs_network(nodes_dict, edges_dict,
                            edge_color_highlight = '#848484', # same but for highlight color
                            edge_color_hover = '#848484', # same but for hover color
                            edge_color_inherit = 'from', # if edge color is set, must be false. Else inherits color from "to", "from", or "both" connected nodes
-                           edge_color_opacity = 1.0, # number from 0 - 1 that sets opacity of all edge colorsedge_dashes = False # if true, edges will be drawn with a dashed line
+                           edge_color_opacity = 1.0, # number from 0 - 1 that sets opacity of all edge colors
                            edge_dashes = False, # if true, edges will be drawn with a dashed line
                            edge_font_color = '#343434', # color of label text
                            edge_font_size = 20, # size of label text
                            edge_font_face = 'ariel', # font of label text
                            edge_font_background = 'rgba(0,0,0,0)', # when given a color string, a background rectangle of that color will be drawn behind the label
                            edge_font_strokeWidth = 0, # stroke drawn around text
-						   edge_font_stroke_color = '#343434',
+						   edge_font_stroke_color = '#343434', # color of stroke
                            edge_font_align = 'horizontal', # 'horizontal', 'middle', 'top', or 'bottom'
                            edge_hoverWidth = 0.5, # number to be added to width of edge to determine hovering
                            edge_label_highlight_bold = True, # determines whether label becomes bold when edge is selected
@@ -107,7 +107,7 @@ def visjs_network(nodes_dict, edges_dict,
                            edge_shadow_x = 5, # x offset
                            edge_shadow_y = 5, # y offset
                            # if this is set to true and smooth type is not continuous, you will not be able to set the x and y position
-                           edge_smooth_enabled = False, # toggle smooted curves
+                           edge_smooth_enabled = False, # toggle smoothed curves
                            edge_smooth_type = 'dynamic',
                            edge_smooth_force_direction = 'none', # 'horizontal', 'vertical', and 'none'. Only for cubicBezier curves
                            edge_smooth_roundness = 0.5, # number between 0 and 1 that changes roundness of curve except with dynamic curves

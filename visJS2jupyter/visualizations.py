@@ -31,6 +31,7 @@ def draw_graph_overlap(G1, G2, node_cmap=mpl.cm.autumn, edge_cmap=mpl.cm.coolwar
         - node_name_1: string to name first graph's nodes, optional, default: "graph 1"
         - node_name_2: string to name second graph's nodes, optional, default: "graph 2"
         - physics_enabled: boolean, optional, default: True for graphs of 100 nodes, False otherwise
+
     Returns:
         - VisJS html network plot (iframe) of the graph overlap.
     '''
@@ -94,7 +95,7 @@ def draw_graph_overlap(G1, G2, node_cmap=mpl.cm.autumn, edge_cmap=mpl.cm.coolwar
     node_map = dict(zip(nodes,range(numnodes)))  # map to indices for source/target in edges
 
     edges_dict = [{"source":node_map[edges[i][0]], "target":node_map[edges[i][1]],
-                   "color":edge_to_color[edges[i]],"title":'test'} for i in range(numedges)]
+                   "color":edge_to_color[edges[i]],"title":''} for i in range(numedges)]
 
     # set node_size_multiplier to increase node size as graph gets smaller
     if numnodes > 500:
@@ -123,6 +124,7 @@ def create_graph_overlap(G1,G2,node_name_1,node_name_2):
         - G2: a networkX graph
         - node_name_1: string to name first graph's nodes
         - node_name_2: string to name second graph's nodes
+
     Returns:
         - A networkX graph that is the overlap of G1 and G2.
     '''
@@ -180,9 +182,17 @@ def create_graph_overlap(G1,G2,node_name_1,node_name_2):
     return overlap_graph
 
 
-def draw_heat_prop(G, seed_nodes, node_cmap=mpl.cm.autumn_r, edge_cmap=mpl.cm.autumn_r,
-                   physics_enabled=None, num_nodes=None, Wprime=None, k=None,
-                   largest_connected_component=False, **kwargs):
+def draw_heat_prop(G, seed_nodes,
+                   edge_cmap=mpl.cm.autumn_r,
+                   highlight_nodes=None,
+                   k=None,
+                   largest_connected_component=False,
+                   node_cmap=mpl.cm.autumn_r,
+                   node_size=10,
+                   num_nodes=None,
+                   physics_enabled=None,
+                   Wprime=None,
+                   **kwargs):
     '''
     Implements and displays the network propagation for a given graph and seed nodes.
     Additional kwargs are passed to visJS_module.
@@ -190,14 +200,17 @@ def draw_heat_prop(G, seed_nodes, node_cmap=mpl.cm.autumn_r, edge_cmap=mpl.cm.au
     Inputs:
         - G: a networkX graph
         - seed_nodes: nodes on which to initialize the simulation
-        - node_cmap: matplotlib colormap for nodes, optional, default: matplotlib.cm.autumn_r
-        - edge_cmap: matplotlib colormap for edges, optional, default: matplotlib.cm.autumn_r
-        - physics_enabled: boolean, optional, default: True for graphs of 100 nodes, False otherwise
-        - num_nodes: the number of the hottest nodes to graph, default: None (all nodes will be graphed)
-        - Wprime: normalized adjacency matrix (from function normalized_adj_matrix())
-        - k: float, optional, optimal distance between nodes for nx.spring_layout(), default: None
-        - largest_connected_component: boolean, optional, whether or not to display largest_connected_component,
+        - edge_cmap: matplotlib colormap for edges, default: matplotlib.cm.autumn_r
+        - highlight_nodes: list of nodes to place borders around, default: None
+        - k: float, optimal distance between nodes for nx.spring_layout(), default: None
+        - largest_connected_component: boolean, whether or not to display largest_connected_component,
                                        default: False
+        - node_cmap: matplotlib colormap for nodes, default: matplotlib.cm.autumn_r
+        - node_size: size of nodes, default: 10
+        - num_nodes: the number of the hottest nodes to graph, default: None (all nodes will be graphed)
+        - physics_enabled: boolean, default: True for graphs of 100 nodes, False otherwise
+        - Wprime: normalized adjacency matrix (from function normalized_adj_matrix())
+
     Returns:
         - VisJS html network plot (iframe) of the heat propagation.
     '''
@@ -251,13 +264,36 @@ def draw_heat_prop(G, seed_nodes, node_cmap=mpl.cm.autumn_r, edge_cmap=mpl.cm.au
                                                       color_vals_transform = 'log')
 
     # add a field for node labels
-    node_blank_labels = ['']*len(G.nodes())
-    node_labels = dict(zip(G.nodes(),node_blank_labels))
+    if highlight_nodes:
+        node_labels = {}
+        for node in nodes:
+            if node in seed_nodes:
+                node_labels[node] = node
+            elif node in highlight_nodes:
+                node_labels[node] = node
+            else:
+                node_labels[node] = ''
+    else:
+        node_labels = {n:n for n in nodes}
+        # node_blank_labels = ['']*len(G.nodes())
+        # node_labels = dict(zip(G.nodes(),node_blank_labels))
 
     node_titles = [str(node[0]) + '<br/>heat = ' + str(round(node[1]['node_heat'],5))
                    for node in G.nodes(data=True)]
     node_titles = dict(zip(G.nodes(),node_titles))
-    border_width = {n:(2 if n in seed_nodes else 0) for n in nodes}
+
+    # set the border width of nodes
+    if 'node_border_width' not in kwargs.keys():
+        kwargs['node_border_width'] = 2
+
+    border_width = {}
+    for n in nodes:
+        if n in seed_nodes:
+            border_width[n] = kwargs['node_border_width']
+        elif highlight_nodes is not None and n in highlight_nodes:
+            border_width[n] = kwargs['node_border_width']
+        else:
+            border_width[n] = 0
 
     if k == None:
         pos = nx.spring_layout(G)
@@ -272,41 +308,50 @@ def draw_heat_prop(G, seed_nodes, node_cmap=mpl.cm.autumn_r, edge_cmap=mpl.cm.au
             nodes_shape.append('dot')
     node_to_nodeShape=dict(zip(G.nodes(),nodes_shape))
 
-    nodes_dict = [{"id":n,
-                   "degree":G.degree(n),
-                   "color":node_to_color[n],
-                   "node_size":30,
-                   "node_shape":node_to_nodeShape[n],
-                   "title":node_titles[n],
-                   "x":pos[n][0]*1000,
-                   "y":pos[n][1]*1000,
-                   "border_width":border_width[n]} for n in nodes]
+    nodes_dict = [{'id':n,
+                   'border_width':border_width[n],
+                   'degree':G.degree(n),
+                   'color':node_to_color[n],
+                   'node_label':node_labels[n],
+                   'node_size':node_size,
+                   'node_shape':node_to_nodeShape[n],
+                   'title':node_titles[n],
+                   'x':pos[n][0]*1000,
+                   'y':pos[n][1]*1000} for n in nodes]
 
     node_map = dict(zip(nodes, range(len(nodes))))
     edges_dict = [{"source":node_map[edges[i][0]],
                    "target":node_map[edges[i][1]],
                    "color":edge_to_color[edges[i]]} for i in range(len(edges))]
 
-    # set node_size_multiplier to increase node size as graph gets smaller
-    if len(nodes) > 500:
-        node_size_multiplier = 1
-    elif len(nodes) > 200:
-        node_size_multiplier = 3
-    else:
-        node_size_multiplier = 5
+    if 'node_size_multiplier' not in kwargs.keys():
+        # set node_size_multiplier to increase node size as graph gets smaller
+        if len(nodes) > 500:
+            kwargs['node_size_multiplier'] = 3
+        elif len(nodes) > 200:
+            kwargs['node_size_multiplier'] = 5
+        else:
+            kwargs['node_size_multiplier'] = 7
 
-    physics_enabled = set_physics_enabled(physics_enabled, len(nodes))
+    kwargs['physics_enabled'] = set_physics_enabled(physics_enabled, len(nodes))
 
-    return visJS_module.visjs_network(nodes_dict, edges_dict,
-                                      node_size_field='node_size',
-                                      node_size_multiplier=node_size_multiplier,
-                                      physics_enabled=physics_enabled,
-                                      node_color_hover_background='black',
-                                      **kwargs)
+    # if node hovering color not set, set default to black
+    if 'node_color_hover_background' not in kwargs.keys():
+        kwargs['node_color_hover_background'] = 'black'
+
+    # node size determined by size in nodes_dict, not by id
+    if 'node_size_field' not in kwargs.keys():
+        kwargs['node_size_field'] = 'node_size'
+
+    # node label determined by value in nodes_dict
+    if 'node_label_field' not in kwargs.keys():
+        kwargs['node_label_field'] = 'node_label'
+
+    return visJS_module.visjs_network(nodes_dict,edges_dict,**kwargs)
 
 
 def draw_colocalization(G,seed_nodes_1, seed_nodes_2, node_cmap=mpl.cm.autumn_r,
-                        edge_cmap=mpl.cm.autumn_r, physics_enabled=None,
+                        edge_cmap=mpl.cm.autumn_r, physics_enabled=None, node_size=10,
                         num_nodes=None, Wprime=None, k=None,
                         largest_connected_component=False, **kwargs):
     '''
@@ -321,6 +366,7 @@ def draw_colocalization(G,seed_nodes_1, seed_nodes_2, node_cmap=mpl.cm.autumn_r,
         - node_cmap: matplotlib colormap for nodes, optional, default: matplotlib.cm.autumn_r
         - edge_cmap: matplotlib colormap for edges, optional, default: matplotlib.cm.autumn_r
         - physics_enabled: boolean, optional, default: True for graphs of 100 nodes, False otherwise
+        - node_size: size of nodes, default: 10
         - num_nodes: the number of the hottest nodes to graph, default: None (all nodes will be graphed)
         - Wprime:  Normalized adjacency matrix (from normalized_adj_matrix)
         - k: float, optional, optimal distance between nodes for nx.spring_layout(), default: None
@@ -408,7 +454,7 @@ def draw_colocalization(G,seed_nodes_1, seed_nodes_2, node_cmap=mpl.cm.autumn_r,
     nodes_dict = [{"id":n,
                    "degree":G.degree(n),
                    "color":node_to_color[n],
-                   "node_size":30,
+                   "node_size":node_size,
                    "node_shape":node_to_nodeShape[n],
                    "title":node_titles[n],
                    "x":pos[n][0]*1000,
@@ -420,22 +466,30 @@ def draw_colocalization(G,seed_nodes_1, seed_nodes_2, node_cmap=mpl.cm.autumn_r,
                    "target":node_map[edges[i][1]],
                    "color":edge_to_color[edges[i]]} for i in range(len(edges))]
 
-    # set node_size_multiplier to increase node size as graph gets smaller
-    if len(nodes) > 500:
-        node_size_multiplier = 1
-    elif len(nodes) > 200:
-        node_size_multiplier = 3
-    else:
-        node_size_multiplier = 5
+    if 'node_size_multiplier' not in kwargs.keys():
+        # set node_size_multiplier to increase node size as graph gets smaller
+        if len(nodes) > 500:
+            kwargs['node_size_multiplier'] = 1
+        elif len(nodes) > 200:
+            kwargs['node_size_multiplier'] = 3
+        else:
+            kwargs['node_size_multiplier'] = 5
 
-    physics_enabled = set_physics_enabled(physics_enabled, len(nodes))
+    kwargs['physics_enabled'] = set_physics_enabled(physics_enabled, len(nodes))
 
-    return visJS_module.visjs_network(nodes_dict, edges_dict,
-                                      node_size_field='node_size',
-                                      node_size_multiplier=node_size_multiplier,
-                                      physics_enabled=physics_enabled,
-                                      node_color_hover_background='black',
-                                      **kwargs)
+    # if node hovering color not set, set default to black
+    if 'node_color_hover_background' not in kwargs.keys():
+        kwargs['node_color_hover_background'] = 'black'
+
+    # node size determined by size in nodes_dict, not by id
+    if 'node_size_field' not in kwargs.keys():
+        kwargs['node_size_field'] = 'node_size'
+
+    # node label determined by value in nodes_dict
+    if 'node_label_field' not in kwargs.keys():
+        kwargs['node_label_field'] = 'node_label'
+
+    return visJS_module.visjs_network(nodes_dict,edges_dict,**kwargs)
 
 
 def normalized_adj_matrix(G,conserve_heat=True,weighted=False):
