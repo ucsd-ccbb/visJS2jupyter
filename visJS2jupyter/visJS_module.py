@@ -144,10 +144,10 @@ def visjs_network(nodes_dict, edges_dict,
                            physics_enabled=True,
                            min_velocity=2,
                            max_velocity=8,
-                           draw_threshold=15,
-                           min_label_size=4,
-                           max_label_size=10,
-                           max_visible=10,
+                           draw_threshold=None,
+                           min_label_size=None,
+                           max_label_size=None,
+                           max_visible=None,
                            graph_title='',
                            graph_width = 900,
                            graph_height = 800,
@@ -172,8 +172,25 @@ def visjs_network(nodes_dict, edges_dict,
     if scaling_factor > 1:
         physics_enabled = False
 
+    # checking for deprecated arguments
     if time_stamp > 0:
         graph_id = time_stamp
+
+    if draw_threshold is not None:
+        node_scaling_label_draw_threshold = draw_threshold
+        edge_scaling_label_draw_threshold = draw_threshold
+
+    if min_label_size is not None:
+        node_scaling_label_min = min_label_size
+        edge_scaling_label_min = min_label_size
+
+    if max_label_size is not None:
+        node_scaling_label_max = max_label_size
+        edge_scaling_label_max = max_label_size
+
+    if max_visible is not None:
+        node_scaling_label_max_visible = max_visible
+        edge_scaling_label_max_visible = max_visible
 
     # create a temporary style file
     fname_temp = 'style_file'+str(graph_id)+'.html'
@@ -342,8 +359,8 @@ def visjs_network(nodes_dict, edges_dict,
 
 
 
-def return_node_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0, color_vals_transform = None,ceil_val=10,
-                        color_max_frac = 1.0,color_min_frac = 0.0):
+def return_node_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0,color_vals_transform = None,ceil_val=10,
+                         color_max_frac = 1.0,color_min_frac = 0.0):
 
     '''
     Function to return a dictionary mapping nodes (keys) to colors (values), based on the selected field_to_map.
@@ -353,7 +370,6 @@ def return_node_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0, co
     '''
 
     #fixes a divide by zero error when |E|/v gets too high
-	#nodes_with_data = [(n[0],n[1][field_to_map]) for n in G.nodes(data=True)]
     nodes_with_data = [(n[0], max(n[1][field_to_map], 0.0000000000000000001)) for n in G.nodes(data=True)]
 
     if color_vals_transform == 'log':
@@ -392,7 +408,7 @@ def return_node_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0, co
     return node_to_color
 
 
-def return_edge_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0, color_vals_transform = None,ceil_val=10):
+def return_edge_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0,color_vals_transform = None,ceil_val=10):
 
     '''
     Function to return a dictionary mapping edges (keys) to colors (values), based on the selected field_to_map.
