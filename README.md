@@ -21,6 +21,8 @@ pip install py2cytoscape
 
 ### Installing
 
+visJS2jupyter supports both Python 2.7 and 3.4.
+
 You can install visJS2jupyter using pip:
 
 ```

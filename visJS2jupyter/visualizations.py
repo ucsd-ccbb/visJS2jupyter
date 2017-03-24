@@ -8,13 +8,14 @@ Authors:
 --------------------------------------------------------
 '''
 
-import pandas as pd
-from py2cytoscape import util
+from __future__ import print_function
 import json
 import math
 import matplotlib as mpl
 import networkx as nx
 import numpy as np
+import pandas as pd
+from py2cytoscape import util
 import visJS_module as visJS_module
 
 def draw_graph_overlap(G1, G2,
@@ -97,11 +98,11 @@ def draw_graph_overlap(G1, G2,
         node_labels = {}
         for node in nodes:
             if node in highlight_nodes:
-                node_labels[node] = node
+                node_labels[node] = str(node)
             else:
                 node_labels[node] = ''
     else:
-        node_labels = {n:n for n in nodes}
+        node_labels = {n:np.int64(n).item() for n in nodes}
 
     nx.set_node_attributes(G_overlap,'nodeLabel',node_labels)
 
@@ -125,7 +126,7 @@ def draw_graph_overlap(G1, G2,
                                                       alpha=.3)
 
     # create the nodes_dict with all relevant fields
-    nodes_dict = [{'id':n,
+    nodes_dict = [{'id':np.int64(n).item(),
                    'border_width':border_width[n],
                    'color':node_to_color[n],
                    'degree':G_overlap.degree(n),
@@ -133,8 +134,8 @@ def draw_graph_overlap(G1, G2,
                    'node_shape':node_to_shape[n],
                    'node_size':node_size,
                    'title':node_titles[n],
-                   'x':pos[n][0]*1000,
-                   'y':pos[n][1]*1000}
+                   'x':np.float64(pos[n][0]).item()*1000,
+                   'y':np.float64(pos[n][1]).item()*1000}
                   for n in nodes]
 
     # map nodes to indices for source/target in edges
@@ -155,7 +156,7 @@ def draw_graph_overlap(G1, G2,
         else:
             kwargs['node_size_multiplier'] = 7
 
-    kwargs['physics_enabled'] = set_physics_enabled(physics_enabled, len(nodes))
+    kwargs['physics_enabled'] = set_physics_enabled(physics_enabled,len(nodes))
 
     # if node hovering color not set, set default to black
     if 'node_color_hover_background' not in kwargs.keys():
@@ -289,7 +290,7 @@ def draw_heat_prop(G, seed_nodes,
     # check for invalid nodes in seed_nodes
     invalid_nodes = [node for node in seed_nodes if node not in G.nodes()]
     for node in invalid_nodes:
-        print 'Node %s not in graph' % node
+        print ('Node {} not in graph'.format(node))
     if invalid_nodes:
         return
 
@@ -308,10 +309,10 @@ def draw_heat_prop(G, seed_nodes,
 
     # check for empty nodes and edges after getting subgraph of G
     if not nodes:
-        print 'There are no nodes in the graph. Try increasing num_nodes.'
+        print ('There are no nodes in the graph. Try increasing num_nodes.')
         return
     if not edges:
-        print 'There are no edges in the graph. Try increasing num_nodes.'
+        print ('There are no edges in the graph. Try increasing num_nodes.')
         return
 
     # set the position of each node
@@ -360,7 +361,7 @@ def draw_heat_prop(G, seed_nodes,
             else:
                 node_labels[node] = ''
     else:
-        node_labels = {n:n for n in nodes}
+        node_labels = {n:np.int64(n).item() for n in nodes}
 
     nx.set_node_attributes(G,'nodeLabel',node_labels)
 
@@ -394,7 +395,7 @@ def draw_heat_prop(G, seed_nodes,
                                                       color_vals_transform='log')
 
     # create the nodes_dict with all relevant fields
-    nodes_dict = [{'id':n,
+    nodes_dict = [{'id':np.int64(n).item(),
                    'border_width':border_width[n],
                    'degree':G.degree(n),
                    'color':node_to_color[n],
@@ -402,8 +403,8 @@ def draw_heat_prop(G, seed_nodes,
                    'node_size':node_size,
                    'node_shape':node_to_shape[n],
                    'title':node_titles[n],
-                   'x':pos[n][0]*1000,
-                   'y':pos[n][1]*1000} for n in nodes]
+                   'x':np.float64(pos[n][0]).item()*1000,
+                   'y':np.float64(pos[n][1]).item()*1000} for n in nodes]
 
     # map nodes to indices for source/target in edges
     node_map = dict(zip(nodes, range(len(nodes))))
@@ -422,7 +423,7 @@ def draw_heat_prop(G, seed_nodes,
         else:
             kwargs['node_size_multiplier'] = 7
 
-    kwargs['physics_enabled'] = set_physics_enabled(physics_enabled, len(nodes))
+    kwargs['physics_enabled'] = set_physics_enabled(physics_enabled,len(nodes))
 
     # if node hovering color not set, set default to black
     if 'node_color_hover_background' not in kwargs.keys():
@@ -489,7 +490,7 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
     invalid_nodes = [(node,'seed_nodes_1') for node in seed_nodes_1 if node not in G.nodes()]
     invalid_nodes.extend([(node,'seed_nodes_2') for node in seed_nodes_2 if node not in G.nodes()])
     for node in invalid_nodes:
-        print 'Node %s in %s not in graph' % (node[0], node[1])
+        print ('Node {} in {} not in graph'.format(node[0], node[1]))
     if invalid_nodes:
         return
 
@@ -510,10 +511,10 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
 
     # check for empty nodes and edges after getting subgraph of G
     if not nodes:
-        print 'There are no nodes in the graph. Try increasing num_nodes.'
+        print ('There are no nodes in the graph. Try increasing num_nodes.')
         return
     if not edges:
-        print 'There are no edges in the graph. Try increasing num_nodes.'
+        print ('There are no edges in the graph. Try increasing num_nodes.')
         return
 
     # set position of each node
@@ -564,7 +565,7 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
             else:
                 node_labels[node] = ''
     else:
-        node_labels = {n:n for n in nodes}
+        node_labels = {n:np.int64(n).item() for n in nodes}
 
     nx.set_node_attributes(G,'nodeLabel',node_labels)
 
@@ -598,7 +599,7 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
                                                       color_vals_transform = 'log')
 
     # create the nodes_dict with all relevant fields
-    nodes_dict = [{'id':n,
+    nodes_dict = [{'id':np.int64(n).item(),
                    'border_width':border_width[n],
                    'degree':G.degree(n),
                    'color':node_to_color[n],
@@ -606,8 +607,8 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
                    'node_size':node_size,
                    'node_shape':node_to_shape[n],
                    'title':node_titles[n],
-                   'x':pos[n][0]*1000,
-                   'y':pos[n][1]*1000} for n in nodes]
+                   'x':np.float64(pos[n][0]).item()*1000,
+                   'y':np.float64(pos[n][1]).item()*1000} for n in nodes]
 
     # map nodes to indices for source/target in edges
     node_map = dict(zip(nodes, range(len(nodes))))
@@ -626,7 +627,7 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
         else:
             kwargs['node_size_multiplier'] = 5
 
-    kwargs['physics_enabled'] = set_physics_enabled(physics_enabled, len(nodes))
+    kwargs['physics_enabled'] = set_physics_enabled(physics_enabled,len(nodes))
 
     # if node hovering color not set, set default to black
     if 'node_color_hover_background' not in kwargs.keys():
@@ -813,8 +814,8 @@ def map_node_to_color(G,field_to_map):
 
     node_to_field = dict([(n[0], n[1][field_to_map])
                           for n in G.nodes(data=True)])
-    min_val = np.min(node_to_field.values())
-    max_val = np.max(node_to_field.values()) - min_val
+    min_val = np.min(list(node_to_field.values()))
+    max_val = np.max(list(node_to_field.values())) - min_val
     color_list = [float(node_to_field[n]-min_val)/max_val for n in G.nodes()]
     return dict(zip(G.nodes(),color_list))
 
@@ -836,7 +837,7 @@ def map_edge_to_color(G,field_to_map):
     edges1,edges2,data = zip(*edges_data)
     edges_data = zip(zip(edges1,edges2),data)
     edge_to_field = dict(edges_data)
-    min_val = np.min(edge_to_field.values())
-    max_val = np.max(edge_to_field.values()) - min_val
+    min_val = np.min(list(edge_to_field.values()))
+    max_val = np.max(list(edge_to_field.values())) - min_val
     color_list = [float(edge_to_field[e]-min_val)/max_val for e in G.edges()]
     return dict(zip(G.edges(),color_list))

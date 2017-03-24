@@ -10,6 +10,7 @@ Authors:
 
 
 # import some packages
+from __future__ import print_function
 from IPython.display import HTML, Javascript
 from json import dumps
 import matplotlib.pyplot as plt
@@ -333,6 +334,24 @@ def visjs_network(nodes_dict, edges_dict,
 						   )
 
 
+    # for n in nodes_dict:
+    #     #print(n)
+    #     print(type(n['node_label']))
+    #     print(type(n['border_width']))
+    #     print(type(n['x']))
+    #     print(type(n['id']))
+    #     print(type(n['color']))
+    #     print(type(n['degree']))
+    #     print(type(n['node_shape']))
+    #     print(type(n['node_size']))
+    #     print(type(n['title']))
+    #     print(type(n['y']))
+        # print(type(np.int64(n['node_label']).item()))
+        # print(type(n['border_width']))
+        # print(type(np.float64(n['x']).item()))
+
+    dumps(nodes_dict)
+
     html_return = HTML(
     '<!doctype html>'
    + '<html>'
@@ -377,7 +396,7 @@ def return_node_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0,col
         nonzero_list = [d for d in data if d>(10**-18)]
         if not nonzero_list:
             data = [1 for d in data]
-            print "Warning: All nodes have data value of 0"
+            print ("Warning: All nodes have data value of 0")
         else:
             min_dn0 = min([d for d in data if d>(10**-18)])
             data = [np.log(max(d,min_dn0)) for d in data]  # set the zero d values to minimum non0 value
@@ -445,7 +464,8 @@ def return_edge_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0,col
 
     edge_to_mapField = dict(edges_with_data)
 
-    color_list = [np.multiply(cmap(int(float(edge_to_mapField[d])/np.max(edge_to_mapField.values())*256)),256) for d in G.edges()]
+    # color_list = [np.multiply(cmap(int(float(edge_to_mapField[d])/np.max(edge_to_mapField.values())*256)),256) for d in G.edges()]
+    color_list = [np.multiply(cmap(int(float(edge_to_mapField[d])/np.max(list(edge_to_mapField.values()))*256)),256) for d in G.edges()]
 
     color_list = [(int(c[0]),int(c[1]),int(c[2]),alpha) for c in color_list]
 
