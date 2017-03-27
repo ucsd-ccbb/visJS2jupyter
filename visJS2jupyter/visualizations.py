@@ -16,7 +16,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 from py2cytoscape import util
-import visJS_module as visJS_module
+import visJS2jupyter.visJS_module as visJS_module
 
 def draw_graph_overlap(G1, G2,
                        edge_cmap=mpl.cm.coolwarm,
