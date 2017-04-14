@@ -6,10 +6,10 @@
 ## Table of contents
 
 1. [Analysis of TCGA mutation data](#TCGA_analysis)  
-2. [Visualizations](#visualizations)
-  2.1 [Graph Overlap](#graph_overlap)
-  2.2 [Heat propagation](#heat_prop)
-  2.3 [Co-localization](#colocalization)
+2. [Visualizations](#visualizations)  
+  2.1 [Graph Overlap](#graph_overlap)   
+  2.2 [Heat propagation](#heat_prop)  
+  2.3 [Co-localization](#colocalization)  
 
 
 <a id='TCGA_analysis'></a>
