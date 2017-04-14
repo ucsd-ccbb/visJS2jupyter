@@ -10,19 +10,19 @@
   2.1 [Graph Overlap](#graph_overlap)   
   2.2 [Heat propagation](#heat_prop)  
   2.3 [Co-localization](#colocalization) 
-3. [Tips on usage](#usage_tips)
-  3.1 [Multiple networks in the same notebook](#graphid)
-  3.2 [Mapping colors to nodes and edges](#map_colors)
-  3.3 [High resolution images](#high_res)
-  3.4 [Exporting to Cytoscape compatible format](#cytoscape)
-4. [Validating network propagation with known Autism risk genes](#asd_validation)
-5. [Arguments](#arguments)
-  5.1 [Required arguments](#required)
-  5.2 [Node-specific arguments](#node_specific)
-  5.3 [Edge-specific arguments](#edge_specific)
-  5.4 [Interaction-specific arguments](#interaction_specific)
-  5.5 [Configuration-specific arguments](#configuration_specific)
-  5.6 [Miscellaneous arguments](#miscellaneous)
+3. [Tips on usage](#usage_tips)  
+  3.1 [Multiple networks in the same notebook](#graphid)  
+  3.2 [Mapping colors to nodes and edges](#map_colors)  
+  3.3 [High resolution images](#high_res)  
+  3.4 [Exporting to Cytoscape compatible format](#cytoscape)  
+4. [Validating network propagation with known Autism risk genes](#asd_validation)  
+5. [Arguments](#arguments)  
+  5.1 [Required arguments](#required)  
+  5.2 [Node-specific arguments](#node_specific)  
+  5.3 [Edge-specific arguments](#edge_specific)  
+  5.4 [Interaction-specific arguments](#interaction_specific)  
+  5.5 [Configuration-specific arguments](#configuration_specific)  
+  5.6 [Miscellaneous arguments](#miscellaneous)  
   
 
 
@@ -61,25 +61,40 @@ Co-localization works similarly to heat propagation but requires two sets of see
 <a id='usage_tips'></a>
 ## 3. Tips on usage
 
+
+
 [Table of contents](#toc)
 <a id='graphid'></a>
 ### 3.1 Multiple networks in the same notebook
+visJS2jupyter takes parameters specified by the user and then creates an HTML file that contains the vis.js code to draw the network visualization. Each graph generates its own HTML file. The Jupyter notebook cell then renders this HTML file to produce the visualization. To create multiple graphs in one notebook, use the graph_id argument to specify an identification for the graph. Each different graph_id will generate a different HTML file.
 
-[Table of contents](#toc)
+
+
 <a id='map_colors'></a>
 ### 3.2 Mapping colors to nodes and edges
+Color-coding nodes and edges is a common way of mapping complex layers of information to a graph. The functions return_node_to_color and return_edge_to_color included in the package provide the means with which to do this. The return_node_to_color function creates a dictionary mapping of nodes to color values based on the specified colormap and node attribute to map. Similarly, return_edge_to_color creates a dictionary mapping of edges to color values. Any node or edge level property can be mapped to node color or edge color, as long as it is represented numerically, and added as a node/edge attribute. Use the argument field_to_map to specify this property. The user can also utilize the argument cmap to specify which matplotlib colormap to use for the color mapping. 
 
-[Table of contents](#toc)
+
 <a id='high_res'></a>
 ### 3.3 High resolution images
+In order to save high resolution images, we include the ‘scaling_factor’ argument, which scales up each graph element and increase its resolution. To save the image, right-click on the notebook cell and select ‘save as’.  For most graphs an adequately high-resolution image is obtained from setting the scaling_factor between three and five. 
 
-[Table of contents](#toc)
+
+
 <a id='cytoscape'></a>
 ### 3.4 Exporting to cytoscape compatible format
+
+To export to a cytoscape compatible format, set the ‘export_network’ argument to True in the visualization functions.  The network, with attributes, will be saved in a Cytoscape compatible JSON format.  To change the default file name, set the ‘export_file’ argument to the desired name.  Once the network has been saved, open Cytoscape and load the file.  To reproduce the network as it looked in the Jupyter cell, load the corresponding Cytoscape style file (provided where in the GitHub repository https://github.com/ucsd-ccbb/visJS2jupyter/tree/master/cytoscape_styles), and apply it to the network.
 
 [Table of contents](#toc)
 <a id='ASD_validation'></a>
 ## 4. Validating network propagation with known Autism risk genes
+
+We validate the network propagation technique as a method for prioritizing disease risk genes, from a set of genes known to be involved in the disease.  We start with the large set of genes known to be involved in Autism, as our set of seed genes, and the STRING (REF) interactome as our background network for propagation.  
+
+To test if the network propagation function will be useful for gene prioritization, we randomly select a subset of n genes from the total list of 859, run the network propagation function from these n genes on the STRING interactome, and then count the number of withheld Autism genes which appear in the top N hottest genes.  If the method works, we will find many withheld Autism genes in the top set, because we expect disease-related genes to be near other disease-related genes, in network space.  To establish a baseline, we run a control condition.  We randomly select 859 control genes, C from the genome, and repeat the prioritization test on this set.  That is, we randomly select n genes from the control set C to use as seeds for the network propagation, and measure the number of withheld control genes which are recovered in the top N hottest genes.  This experiment is repeated k=100 times for each value of N (Figure ??, where we plot the fraction of recovered withheld disease risk genes recovered for Autism (red) and Control (black)).  Consistently we recover many more Autism genes than Control genes, in the simulation, indicating that the network propagation method works as a prioritization technique, as expected.
+
+Analysis for this result may be found in Jupyter notebook form (HERE). 
 
 [Table of contents](#toc)
 <a id='arguments'></a>
