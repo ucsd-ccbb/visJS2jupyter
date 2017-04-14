@@ -87,7 +87,7 @@ In order to save high resolution images, we include the ‘scaling_factor’ arg
 To export to a cytoscape compatible format, set the ‘export_network’ argument to True in the visualization functions.  The network, with attributes, will be saved in a Cytoscape compatible JSON format.  To change the default file name, set the ‘export_file’ argument to the desired name.  Once the network has been saved, open Cytoscape and load the file.  To reproduce the network as it looked in the Jupyter cell, load the corresponding Cytoscape style file (provided where in the GitHub repository https://github.com/ucsd-ccbb/visJS2jupyter/tree/master/cytoscape_styles), and apply it to the network.
 
 [Table of contents](#toc)
-<a id='ASD_validation'></a>
+<a id='asd_validation'></a>
 ## 4. Validating network propagation with known Autism risk genes
 
 We validate the network propagation technique as a method for prioritizing disease risk genes, from a set of genes known to be involved in the disease.  We start with the large set of genes known to be involved in Autism, as our set of seed genes, and the STRING (REF) interactome as our background network for propagation.  
