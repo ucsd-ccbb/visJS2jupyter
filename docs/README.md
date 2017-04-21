@@ -62,8 +62,6 @@ A simple use example with default parameters may be found here http://bl.ocks.or
 
 For an example of how more complex styles may be added to a network, see http://bl.ocks.org/brinrosenthal/raw/658325f6e0db7419625a31c883313e9b/. Nodes and edges may be styled with properties available from vis.js networks (see http://visjs.org/docs/network/ for a list and description of properties).  The main function is 'visjs_network', which requires two inputs which describe the nodes and edges in the network- 'nodes_dict', and edges_dict'.  The other arguments are optional, and apply general styles to the graph, such as sizes, highlight colors, and physics properties of the graph.
 
-For full documentation of the tool, see https://ucsd-ccbb.github.io/visJS2jupyter/
-
 An interactive use example of visJS2jupyter may be found [here](http://bl.ocks.org/brinrosenthal/raw/89ef33bebbf2d360099029666b1e8bea/) (scroll to the bottom to see the network).  In this example, we display the bipartite network composed of diseases in [The Cancer Genome Atlas](http://cancergenome.nih.gov/) and the top 25 most common mutations in each disease.  We also overlay information about drugs which target those mutations.  Genes which have a drug targeting them are displayed with a bold black outline.  The user may hover over each gene to get a list of associated drugs.
 
 #### Visualizations
