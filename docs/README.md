@@ -16,10 +16,10 @@ visJS2jupyter is a tool to bring the interactivity of networks created with vis.
 ## Table of contents
 
 1. [Getting started](getting_started)
-2. [Features and examples](examples)
-3. [Supplemental Information](SI)  
+2. [Features and examples](#examples)
+3. [Supplemental Information](#SI)  
   3.1. [Tips on usage](#usage_tips)    
-    3.1.1 [Multiple networks in the same notebook](#graphid)  
+    &nbsp;&nbsp;&nbsp;&nbsp;3.1.1 [Multiple networks in the same notebook](#graphid)  
     3.1.2 [Mapping colors to nodes and edges](#map_colors)  
     3.1.3 [High resolution images](#high_res)  
     3.1.4 [Exporting to Cytoscape compatible format](#cytoscape)  
