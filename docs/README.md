@@ -131,13 +131,26 @@ Because of the way visJS2jupyter interprets node and edge data, before creating 
 node_map = dict(zip(nodes, range(len(nodes))))
 ```
 
+where nodes refers to the list of all nodes in the graph. Then, edges_dict can be created with the following:
 
+```python
+edges_dict = [{“source”:node_map[edges[i][0], 
+“target”:node_map[edges[i][1]} 
+for i in range(len(edges))]
 
+```
+where edges refers to the list of all edges in the graph.
+
+**Note**: Many of the following arguments are customized features that come directly from vis.js. To view a more comprehensive description for these arguments, the full documentation can be found at http://visjs.org/docs/network/.
 
 
 [Table of contents](#toc)
 <a id='node_specific'></a>
 ### 5.2 Node-specific arguments
+
+node_border_width: integer (default = 2)
+&nbsp;&nbsp;Node border width when not hovered on or selected.
+
 
 [Table of contents](#toc)
 <a id='edge_specific'></a>
