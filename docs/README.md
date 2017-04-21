@@ -5,31 +5,47 @@
 <a id='toc'></a>
 ## Table of contents
 
-1. [Analysis of TCGA mutation data](#TCGA_analysis)  
+1. [Tips on usage](#usage_tips)  
+  1.1 [Multiple networks in the same notebook](#graphid)  
+  1.2 [Mapping colors to nodes and edges](#map_colors)  
+  1.3 [High resolution images](#high_res)  
+  1.4 [Exporting to Cytoscape compatible format](#cytoscape)  
 2. [Visualizations](#visualizations)  
   2.1 [Graph Overlap](#graph_overlap)   
   2.2 [Heat propagation](#heat_prop)  
   2.3 [Co-localization](#colocalization) 
-3. [Tips on usage](#usage_tips)  
-  3.1 [Multiple networks in the same notebook](#graphid)  
-  3.2 [Mapping colors to nodes and edges](#map_colors)  
-  3.3 [High resolution images](#high_res)  
-  3.4 [Exporting to Cytoscape compatible format](#cytoscape)  
-4. [Validating network propagation with known Autism risk genes](#asd_validation)  
-5. [Arguments](#arguments)  
-  5.1 [Required arguments](#required)  
-  5.2 [Node-specific arguments](#node_specific)  
-  5.3 [Edge-specific arguments](#edge_specific)  
-  5.4 [Interaction-specific arguments](#interaction_specific)  
-  5.5 [Configuration-specific arguments](#configuration_specific)  
-  5.6 [Miscellaneous arguments](#miscellaneous)  
+3. [Validating network propagation with known Autism risk genes](#asd_validation)  
+4. [Arguments](#arguments)  
+  4.1 [Required arguments](#required)  
+  4.2 [Node-specific arguments](#node_specific)  
+  4.3 [Edge-specific arguments](#edge_specific)  
+  4.4 [Interaction-specific arguments](#interaction_specific)  
+  4.5 [Configuration-specific arguments](#configuration_specific)  
+  4.6 [Miscellaneous arguments](#miscellaneous)  
   
+<a id='graphid'></a>
+### 1.1 Multiple networks in the same notebook
+visJS2jupyter takes parameters specified by the user and then creates an HTML file that contains the vis.js code to draw the network visualization. Each graph generates its own HTML file. The Jupyter notebook cell then renders this HTML file to produce the visualization. To create multiple graphs in one notebook, use the graph_id argument to specify an identification for the graph. Each different graph_id will generate a different HTML file.
 
 
-<a id='TCGA_analysis'></a>
-## 1. Analysis of TCGA mutation data 
-As an example of the type of systems biology network analysis enabled by our tool, we display a mutation-disease network built from cancer data. In this analysis, we load the top 25 most mutated genes from 35 TCGA cancer types.  We then create a bipartite network from these data, where one node set is composed of TCGA diseases (triangles), and the other is made up of commonly mutated genes (circles).  Links are drawn between genes and diseases when a gene is commonly mutated in that disease.  This network allows for inspection of mutations which are found almost universally across tumor types, located near the center, including TP53, MUC16, and TTN.  Additionally, we see from this network that there are some mutations which are specific to one disease, or a set of diseases.  These disease-specific mutations are found near the periphery of the graph, and have only a small number of connections.  Genes that have relevant drug targets are outlined in black, and the user may hover over each gene for a list of DrugBank IDs, as well as the number of diseases in which the gene is commonly mutated. The user may click on nodes to see connections, and zoom pan and drag nodes for further inspection of the network.  
 
+<a id='map_colors'></a>
+### 1.2 Mapping colors to nodes and edges
+Color-coding nodes and edges is a common way of mapping complex layers of information to a graph. The functions return_node_to_color and return_edge_to_color included in the package provide the means with which to do this. The return_node_to_color function creates a dictionary mapping of nodes to color values based on the specified colormap and node attribute to map. Similarly, return_edge_to_color creates a dictionary mapping of edges to color values. Any node or edge level property can be mapped to node color or edge color, as long as it is represented numerically, and added as a node/edge attribute. Use the argument field_to_map to specify this property. The user can also utilize the argument cmap to specify which matplotlib colormap to use for the color mapping. 
+
+
+<a id='high_res'></a>
+### 1.3 High resolution images
+In order to save high resolution images, we include the ‘scaling_factor’ argument, which scales up each graph element and increase its resolution. To save the image, right-click on the notebook cell and select ‘save as’.  For most graphs an adequately high-resolution image is obtained from setting the scaling_factor between three and five. 
+
+
+
+<a id='cytoscape'></a>
+### 1.4 Exporting to cytoscape compatible format
+
+To export to a cytoscape compatible format, set the ‘export_network’ argument to True in the visualization functions.  The network, with attributes, will be saved in a Cytoscape compatible JSON format.  To change the default file name, set the ‘export_file’ argument to the desired name.  Once the network has been saved, open Cytoscape and load the file.  To reproduce the network as it looked in the Jupyter cell, load the corresponding Cytoscape style file (provided where in the GitHub repository https://github.com/ucsd-ccbb/visJS2jupyter/tree/master/cytoscape_styles), and apply it to the network.
+
+  
 
 <a id='visualizations'></a>
 ## 2.  Visualizations
@@ -74,31 +90,10 @@ Co-localization works similarly to heat propagation but requires two sets of see
 
 
 [Table of contents](#toc)
-<a id='graphid'></a>
-### 3.1 Multiple networks in the same notebook
-visJS2jupyter takes parameters specified by the user and then creates an HTML file that contains the vis.js code to draw the network visualization. Each graph generates its own HTML file. The Jupyter notebook cell then renders this HTML file to produce the visualization. To create multiple graphs in one notebook, use the graph_id argument to specify an identification for the graph. Each different graph_id will generate a different HTML file.
-
-
-
-<a id='map_colors'></a>
-### 3.2 Mapping colors to nodes and edges
-Color-coding nodes and edges is a common way of mapping complex layers of information to a graph. The functions return_node_to_color and return_edge_to_color included in the package provide the means with which to do this. The return_node_to_color function creates a dictionary mapping of nodes to color values based on the specified colormap and node attribute to map. Similarly, return_edge_to_color creates a dictionary mapping of edges to color values. Any node or edge level property can be mapped to node color or edge color, as long as it is represented numerically, and added as a node/edge attribute. Use the argument field_to_map to specify this property. The user can also utilize the argument cmap to specify which matplotlib colormap to use for the color mapping. 
-
-
-<a id='high_res'></a>
-### 3.3 High resolution images
-In order to save high resolution images, we include the ‘scaling_factor’ argument, which scales up each graph element and increase its resolution. To save the image, right-click on the notebook cell and select ‘save as’.  For most graphs an adequately high-resolution image is obtained from setting the scaling_factor between three and five. 
-
-
-
-<a id='cytoscape'></a>
-### 3.4 Exporting to cytoscape compatible format
-
-To export to a cytoscape compatible format, set the ‘export_network’ argument to True in the visualization functions.  The network, with attributes, will be saved in a Cytoscape compatible JSON format.  To change the default file name, set the ‘export_file’ argument to the desired name.  Once the network has been saved, open Cytoscape and load the file.  To reproduce the network as it looked in the Jupyter cell, load the corresponding Cytoscape style file (provided where in the GitHub repository https://github.com/ucsd-ccbb/visJS2jupyter/tree/master/cytoscape_styles), and apply it to the network.
 
 [Table of contents](#toc)
 <a id='asd_validation'></a>
-## 4. Validating network propagation with known Autism risk genes
+## 3. Validating network propagation with known Autism risk genes
 
 We validate the network propagation technique as a method for prioritizing disease risk genes, from a set of genes known to be involved in the disease.  We start with the large set of genes known to be involved in Autism, as our set of seed genes, and the STRING (REF) interactome as our background network for propagation.  
 
@@ -108,10 +103,10 @@ Analysis for this result may be found in Jupyter notebook form (HERE).
 
 [Table of contents](#toc)
 <a id='arguments'></a>
-## 5. Arguments
+## 4. Arguments
 
 <a id='required'></a>
-### 5.1 Required arguments
+### 4.1 Required arguments
 **nodes_dict**: A list of information about each node. Each node should have its own dictionary that must include ‘id’, the id of the node; ‘x’, the node x position; and ‘y’, the node y position. Other optional properties can be included to customize each individual node. The following is the current list of properties that can be modified at the node level:  
 * ‘border_width’  
 * ‘color’  
@@ -146,7 +141,7 @@ where edges refers to the list of all edges in the graph.
 
 [Table of contents](#toc)
 <a id='node_specific'></a>
-### 5.2 Node-specific arguments
+### 4.2 Node-specific arguments
 
 node_border_width: integer (default = 2)  
 &nbsp;&nbsp;&nbsp;&nbsp;Node border width when not hovered on or selected.
@@ -284,7 +279,7 @@ node_size_multiplier: integer (default = 3)
 
 [Table of contents](#toc)
 <a id='edge_specific'></a>
-### 5.3 Edge-specific arguments
+### 4.3 Edge-specific arguments
 
 edge_title_field: string (default = 'id')  
 &nbsp;&nbsp;&nbsp;&nbsp;The name of the attribute to show on edge hover.
@@ -421,7 +416,7 @@ edge_label_field: string (default = ‘id’)
 
 [Table of contents](#toc)
 <a id='interaction_specific'></a>
-### 5.4 Interaction-specific arguments
+### 4.4 Interaction-specific arguments
 
 drag_nodes: boolean (default = True)  
 &nbsp;&nbsp;&nbsp;&nbsp;When True, the nodes that are not fixed can be dragged by the user.
@@ -477,7 +472,7 @@ zoom_view: boolean (default = True)
 
 [Table of contents](#toc)
 <a id='configuration_specific'></a>
-### 5.5 Configuration-specific arguments
+### 4.5 Configuration-specific arguments
 
 config_enabled: boolean (default = False)  
 &nbsp;&nbsp;&nbsp;&nbsp;Toggle the configuration interface on or off. This is an optional parameter. If left undefined and any of the other configuration properties are defined, this will be set to True.
@@ -495,7 +490,7 @@ showButton: boolean (default = False)
 
 [Table of contents](#toc)
 <a id='miscellaneous'></a>
-### 5.6 Miscellaneous arguments
+### 4.6 Miscellaneous arguments
 
 border_color: string (default = 'white')  
 &nbsp;&nbsp;&nbsp;&nbsp;Border color of the network image element.
