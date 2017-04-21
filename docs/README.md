@@ -286,15 +286,258 @@ node_size_multiplier: integer (default = 3)
 <a id='edge_specific'></a>
 ### 5.3 Edge-specific arguments
 
+edge_title_field: string (default = 'id')  
+&nbsp;&nbsp;&nbsp;&nbsp;The name of the attribute to show on edge hover.
+                           
+edge_arrow_to: boolean (default = False)  
+&nbsp;&nbsp;&nbsp;&nbsp;Creates a directed edge with arrow head on receiving node.
+                           
+edge_arrow_from: boolean (default = False)  
+&nbsp;&nbsp;&nbsp;&nbsp;Creates a directed edge with the arrow head coming from the delivering node.
+                           
+edge_arrow_middle: boolean (default = False)  
+&nbsp;&nbsp;&nbsp;&nbsp;Creates a directed edge where arrow is in center of edge.
+                           
+edge_arrow_to_scale_factor: integer (default = 1)  
+&nbsp;&nbsp;&nbsp;&nbsp;Changes size of “to” arrow head.
+                           
+edge_arrow_from_scale_factor: integer (default = 1)  
+&nbsp;&nbsp;&nbsp;&nbsp;Changes size of “from” arrow head.
+                           
+edge_arrow_middle_scale_factor: integer (default = 1)  
+&nbsp;&nbsp;&nbsp;&nbsp;Changes size of middle arrow head.
+                           
+edge_arrow_strikethrough: boolean (default = True)  
+&nbsp;&nbsp;&nbsp;&nbsp;When False, edge stops at arrow.
+                           
+edge_color: string (default = '#848484')  
+&nbsp;&nbsp;&nbsp;&nbsp;If all edges are to be a single color, specify here. Empty string refers edge color to each individual object.
+                           
+edge_color_highlight: string (default = '#848484')  
+&nbsp;&nbsp;&nbsp;&nbsp;If all edge highlights are to be a single color, specify here. Empty string refers edge color highlight to each individual object.
+                           
+edge_color_hover: string (default = '#848484')  
+&nbsp;&nbsp;&nbsp;&nbsp;If all edge hover color are to be a single color, specify here. Empty string refers edge hover color to each individual object.
+                           
+edge_color_inherit: string (default = 'from')  
+&nbsp;&nbsp;&nbsp;&nbsp;If edge color is set, must be false. Otherwise, inherits color from "to", "from", or "both" connected node.
+                           
+edge_color_opacity: float (default = 1.0)  
+&nbsp;&nbsp;&nbsp;&nbsp;Number from 0 - 1 that sets opacity of all edge colors.
+                           
+edge_dashes: boolean (default = False)  
+&nbsp;&nbsp;&nbsp;&nbsp;If true, edges will be drawn with a dashed line.
+                          
+edge_font_color: string (default = '#343434')  
+&nbsp;&nbsp;&nbsp;&nbsp;Color of label text.
+                           
+edge_font_size: integer (default = 20)  
+&nbsp;&nbsp;&nbsp;&nbsp;Size of label text.
+                          
+edge_font_face: string (default = 'arial')  
+&nbsp;&nbsp;&nbsp;&nbsp;Font of label text.
+
+edge_font_background: string (default = 'rgba(0,0,0,0)')  
+&nbsp;&nbsp;&nbsp;&nbsp;When given a color string, a background rectangle of that color will be drawn behind the label.
+                           
+edge_font_strokeWidth: integer (default = 0)    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Width of stroke drawn around text.
+						   
+edge_font_stroke_color: string (default = '#343434')  
+&nbsp;&nbsp;&nbsp;&nbsp;Color of stroke.
+                           
+edge_font_align: string (default = 'horizontal')  
+&nbsp;&nbsp;&nbsp;&nbsp;Alignment of font. Options are 'horizontal', 'middle', 'top', or 'bottom'.
+                           
+edge_hoverWidth: float (default = 0.5)  
+&nbsp;&nbsp;&nbsp;&nbsp;The value to be added to the edge width when the user hovers over the edge with the mouse.
+                           
+edge_label_highlight_bold: boolean (default = True)  
+&nbsp;&nbsp;&nbsp;&nbsp;Determines whether label becomes bold when edge is selected.
+                           
+edge_length: string (default = 'undefined')  
+&nbsp;&nbsp;&nbsp;&nbsp;When a number is defined, the edges’ spring length is overridden.
+                           
+edge_scaling_min: integer (default = 1)  
+&nbsp;&nbsp;&nbsp;&nbsp;Minimum allowed edge width value.
+                           
+edge_scaling_max: integer (default = 15)  
+&nbsp;&nbsp;&nbsp;&nbsp;Maximum allowed edge width value.
+                           
+edge_scaling_label_enabled: boolean (default = False)  
+&nbsp;&nbsp;&nbsp;&nbsp;When true, the label will scale with the edge width.
+                           
+edge_scaling_label_min: integer (default = 14)  
+&nbsp;&nbsp;&nbsp;&nbsp;Minimum font size used for labels when scaling.
+                           
+edge_scaling_label_max: integer (default = 30)  
+&nbsp;&nbsp;&nbsp;&nbsp;Maximum font size used for labels when scaling.
+                           
+edge_scaling_label_max_visible: integer (default = 30)  
+&nbsp;&nbsp;&nbsp;&nbsp;Maximum font size of label will zoom in.
+                           
+edge_scaling_label_draw_threshold: integer (default = 5)  
+&nbsp;&nbsp;&nbsp;&nbsp;Minimum font size of label when zooming out.
+                           
+edge_selection_width: integer (default = 1)  
+&nbsp;&nbsp;&nbsp;&nbsp;The value to be added to the edge width when the edge is selected.
+                           
+edge_selfReferenceSize: integer (default = 10)  
+&nbsp;&nbsp;&nbsp;&nbsp;When there is a self-loop, this is the radius of that circle.
+                           
+edge_shadow_enabled: boolean (default = False)  
+&nbsp;&nbsp;&nbsp;&nbsp;Whether or not a shadow is cast.
+                           
+edge_shadow_color: string (default = 'rgba(0,0,0,0.5)')  
+&nbsp;&nbsp;&nbsp;&nbsp;Color of shadow as a string.
+                           
+edge_shadow_size: integer (default = 10)  
+&nbsp;&nbsp;&nbsp;&nbsp;Blur size of shadow.
+                           
+edge_shadow_x: integer (default = 5)  
+&nbsp;&nbsp;&nbsp;&nbsp;The x offset of the edge shadow.
+                           
+edge_shadow_y: integer (default = 5)  
+&nbsp;&nbsp;&nbsp;&nbsp;The y offset of the edge shadow.
+                           
+edge_smooth_enabled: boolean (default = False)  
+&nbsp;&nbsp;&nbsp;&nbsp;Toggle smoothed curves. If this is set to True and smooth type is not continuous, you will not be able to set the x and y position.
+                           
+edge_smooth_type: string (default = 'dynamic')  
+&nbsp;&nbsp;&nbsp;&nbsp;The type of smooth curve drawn. Options include ‘dynamic’, ‘continuous’, ‘discrete’, ‘diagonalCross’, ‘straightCross’, ‘horizontal’, ‘vertical’, ‘curvedCCW’, and ‘cubicBezier’.
+                           
+edge_smooth_force_direction: string (default = 'none')  
+&nbsp;&nbsp;&nbsp;&nbsp;Only for cubicBezier curves. Options are 'horizontal', 'vertical', and 'none'.                            
+
+edge_smooth_roundness: float (default = 0.5)  
+&nbsp;&nbsp;&nbsp;&nbsp;Number between 0 and 1 that changes roundness of curve, except with dynamic curves.
+                           
+edge_width: integer (default = 1)  
+&nbsp;&nbsp;&nbsp;&nbsp;Width of all edges.
+						   
+edge_label_field: string (default = ‘id’)  
+&nbsp;&nbsp;&nbsp;&nbsp;Field that edges will be labeled with.
+
+
 [Table of contents](#toc)
 <a id='interaction_specific'></a>
 ### 5.4 Interaction-specific arguments
+
+drag_nodes: boolean (default = True)  
+&nbsp;&nbsp;&nbsp;&nbsp;When True, the nodes that are not fixed can be dragged by the user.
+						   
+drag_view: boolean (default = True)  
+&nbsp;&nbsp;&nbsp;&nbsp;When true, the view can be dragged around by the user.
+						   
+hide_edges_on_drag: boolean (default = False)  
+&nbsp;&nbsp;&nbsp;&nbsp;When True, the edges are not drawn when dragging the view. This can greatly speed up responsiveness on dragging, improving user experience.
+						   
+hide_nodes_on_drag: boolean (default = False)  
+&nbsp;&nbsp;&nbsp;&nbsp;When True, the nodes are not drawn when dragging the view. This can greatly speed up responsiveness on dragging, improving user experience.
+						   
+hover: boolean (default = True)  
+&nbsp;&nbsp;&nbsp;&nbsp;When True, the nodes use their hover colors when the mouse moves over them.
+						   
+hover_connected_edges: boolean (default = True)  
+&nbsp;&nbsp;&nbsp;&nbsp;When True, on hovering over a node, its connecting edges are highlighted.
+						   
+keyboard_enabled: boolean (default = False)  
+&nbsp;&nbsp;&nbsp;&nbsp;Toggle the usage of the keyboard shortcuts. If this option is not defined but any of the other keyboard related options are, it is set to True.
+						   
+keyboard_speed_x: integer (default = 10)  
+&nbsp;&nbsp;&nbsp;&nbsp;The speed at which the view moves in the x direction on pressing a key or pressing a navigation button.
+						   
+keyboard_speed_y: integer (default = 10)  
+&nbsp;&nbsp;&nbsp;&nbsp;The speed at which the view moves in the y direction on pressing a key or pressing a navigation button.
+						   
+keyboard_speed_zoom: float (default = 0.02)  
+&nbsp;&nbsp;&nbsp;&nbsp;The speed at which the view zooms in or out pressing a key or pressing a navigation button.
+						   
+keyboard_bind_to_window: boolean (default = True)  
+&nbsp;&nbsp;&nbsp;&nbsp;When binding the keyboard shortcuts to the window, they will work regardless of which DOM object has the focus. If you have multiple networks on your page, you could set this to false, making sure the keyboard shortcuts only work on the network that has the focus.
+						   
+multiselect: boolean (default = False)  
+&nbsp;&nbsp;&nbsp;&nbsp;When True, a longheld click (or touch) as well as a control-click will add to the selection.
+						  
+navigation_buttons: boolean (default = False)  
+&nbsp;&nbsp;&nbsp;&nbsp;When True, navigation buttons are drawn on the network canvas. These are HTML buttons and can be completely customized using CSS.
+						   
+selectable: boolean (default = True)  
+&nbsp;&nbsp;&nbsp;&nbsp;When True, the nodes and edges can be selected by the user.
+						   
+select_connected_edges: boolean (default = True)  
+&nbsp;&nbsp;&nbsp;&nbsp;When True, on selecting a node, its connecting edges are highlighted.
+						   
+tooltip_delay: integer (default = 300)  
+&nbsp;&nbsp;&nbsp;&nbsp;When nodes or edges have a defined 'title' field, this can be shown as a pop-up tooltip. The tooltip itself is an HTML element that can be fully styled using CSS. The delay is the amount of time in milliseconds it takes before the tooltip is shown.
+						   
+zoom_view: boolean (default = True)  
+&nbsp;&nbsp;&nbsp;&nbsp;When True, the user can zoom in.
+
 
 [Table of contents](#toc)
 <a id='configuration_specific'></a>
 ### 5.5 Configuration-specific arguments
 
+config_enabled: boolean (default = False)  
+&nbsp;&nbsp;&nbsp;&nbsp;Toggle the configuration interface on or off. This is an optional parameter. If left undefined and any of the other configuration properties are defined, this will be set to True.
+                           
+config_filter: string (default = ‘nodes,edges’)  
+&nbsp;&nbsp;&nbsp;&nbsp;When a string is supplied, any combination of the following is allowed: nodes, edges, layout, interaction, manipulation, physics, selection, renderer. Feel free to come up with a fun separating character. Finally, when supplied an array of strings, any of the previously mentioned fields are accepted.
+                           
+container: string (default = ‘undefined’)  
+&nbsp;&nbsp;&nbsp;&nbsp;This allows you to put the configure list in another HTML container than below the network.
+                           
+showButton: boolean (default = False)  
+&nbsp;&nbsp;&nbsp;&nbsp;Show the generate options button at the bottom of the configurator.
+
+
+
 [Table of contents](#toc)
 <a id='miscellaneous'></a>
 ### 5.6 Miscellaneous arguments
+
+border_color: string (default = 'white')  
+&nbsp;&nbsp;&nbsp;&nbsp;Border color of the network image element.
+                           
+physics_enabled: boolean (default = True)  
+&nbsp;&nbsp;&nbsp;&nbsp;Toggle the physics system simulation on or off.
+                           
+min_velocity: integer (default = 2)  
+&nbsp;&nbsp;&nbsp;&nbsp;Set the minimum velocity of nodes in the physics simulation. Once all nodes reach this velocity, the network is assumed to be stabilized and the simulation stops.
+                           
+max_velocity: integer (default = 8)  
+&nbsp;&nbsp;&nbsp;&nbsp;Set the maximum velocity of nodes in the physics simulation.
+                           
+draw_threshold: integer (default = None)  
+&nbsp;&nbsp;&nbsp;&nbsp;Deprecated argument: use node_scaling_label_draw_threshold and edge_scaling_label_draw_threshold. If used, node_scaling_label_draw_threshold and edge_scaling_label_draw_threshold are assigned the value of draw_threshold.
+                           
+min_label_size: integer (default = None)  
+&nbsp;&nbsp;&nbsp;&nbsp;Deprecated argument: use node_scaling_label_min and edge_scaling_label_min. If used, node_scaling_label_min and edge_scaling_label_min are assigned the value of min_label_size.
+                           
+max_label_size: integer (default = None)  
+&nbsp;&nbsp;&nbsp;&nbsp;Deprecated argument: use node_scaling_label_max and edge_scaling_label_max. If used, node_scaling_label_max and edge_scaling_label_max are assigned the value of max_label_size.
+                           
+max_visible: integer (default = None)  
+&nbsp;&nbsp;&nbsp;&nbsp;Deprecated argument: use node_scaling_label_max_visible
+ and edge_scaling_label_max_visible. If used, node_scaling_label_max_visible and edge_scaling_label_max_visible are assigned the value of max_visible.
+                           
+graph_title: string (default = ' ’)  
+&nbsp;&nbsp;&nbsp;&nbsp;Sets the title of the graph network.
+                           
+graph_width: integer (default = 900)  
+&nbsp;&nbsp;&nbsp;&nbsp;Sets the width of the canvas.
+                           
+graph_height: integer (default = 800)  
+&nbsp;&nbsp;&nbsp;&nbsp;Sets the height of the canvas.
+                           
+scaling_factor: integer (default = 1)  
+&nbsp;&nbsp;&nbsp;&nbsp;To scale the image up, the graph network will scale up by the value provided. This argument is helpful when wanting to save a high resolution image of the network.
+						 
+time_stamp: integer (default = 0)  
+&nbsp;&nbsp;&nbsp;&nbsp;Deprecated argument: use graph_id. If used, graph_id is assigned the value of time_stamp.
+                           
+graph_id: integer (default = 0)      
+&nbsp;&nbsp;&nbsp;&nbsp;To draw multiple graphs in the same notebook, you must use this argument to give each graph a different id.
+
 [Table of contents](#toc)
