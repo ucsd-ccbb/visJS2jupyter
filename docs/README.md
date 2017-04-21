@@ -42,6 +42,7 @@ Visualizations is a supplementary module that calls visJS_module to perform oper
 
 When working with networks, it is often useful to consider how similar two networks are. The function draw_graph_overlap introduces a network overlap visualization function to allow comparisons between networks. This function takes in two NetworkX graphs and displays a single graph of their union. Intersecting nodes are triangles and non-intersecting nodes are either circles or squares, depending on which graph they belong to. A simple example can be found at https://bl.ocks.org/julialen/raw/d21c9d378cb09b5a7181497101996727/.
 
+*Figure S2: Graph of the overlap between two networks using draw_graph_overlap. Nodes in the intersection of the networks are orange triangles, while edges in the intersection are colored red.*
 ![Graph overlap](https://github.com/ucsd-ccbb/visJS2jupyter/blob/master/docs/graph_overlap.png?raw=true)
 
 
@@ -53,12 +54,18 @@ We implement the network propagation method developed in (Vanunu et al. 2010), w
 
 Heat propagation is useful for visualizing network propagation from a set of seed nodes. The function draw_heat_prop draws this visualization when provided with a NetworkX graph and a list of seed nodes. Using the list of seed nodes, it calculates the heat value of each node based on how connected it is to the seed nodes. Seed nodes are depicted with a triangular shape to distinguish them from other nodes. By default, hot nodes are colored red with cooler nodes gradually fading to yellow. The edges are also colored from red to yellow, depending on the heat of the nodes they are connecting. The overall effect is a clear visualization of how the heat from the seed nodes spreads throughout the network. If including all nodes in the graph produces a cluttered network, draw_heat_prop provides the argument ‘num_nodes’ to specify how many nodes the network should include. This argument finds the num_nodes number of hottest nodes and only graphs those. An example of a network drawn by draw_heat_prop can be found at https://bl.ocks.org/julialen/raw/82c316048ade650effbff3fd9eaddccd/.
 
+*Figure S3: Network propagation of a three-cluster network with two seed nodes using draw_heat_prop. Seed nodes are red triangles.* 
+![heat_prop](https://github.com/ucsd-ccbb/visJS2jupyter/blob/master/docs/heat_prop.png?raw=true)
+
 
 
 <a id='colocalization'></a>
 ### 2.3 Co-localization
 
 Co-localization works similarly to heat propagation but requires two sets of seed nodes instead of one. The function draw_colocalization creates a network visualization of this propagation. Seed nodes belonging to one set are shaped as triangles while seed nodes belonging to the other set are shaped as squares. Heat values are calculated by running a heat propagation simulation with one set of seed nodes and then a different propagation using the other set of seed nodes. The product of the heat values in each simulation becomes each node’s heat value in the final graph. An example can be found at https://bl.ocks.org/julialen/raw/a82040bdc8b5ba3ca866489db795af74/.
+
+*Figure S4: Co-localization of network from two sets of seed nodes using draw_colocalization. Seed nodes from one set are red squares, while seed nodes from the other set are red triangles. *
+![colocalization](https://github.com/ucsd-ccbb/visJS2jupyter/blob/master/docs/colocalization.png?raw=true)
 
 [Table of contents](#toc)
 <a id='usage_tips'></a>
