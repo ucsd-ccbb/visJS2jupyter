@@ -114,15 +114,15 @@ Analysis for this result may be found in Jupyter notebook form (HERE).
 ### 5.1 Required arguments
 nodes_dict  
 * A list of information about each node. Each node should have its own dictionary that must include ‘id’, the id of the node; ‘x’, the node x position; and ‘y’, the node y position. Other optional properties can be included to customize each individual node. The following is the current list of properties that can be modified at the node level:  
- * ‘border_width’  
- * ‘color’  
- * ‘degree’  
- * ‘node_label’: the label given to each node  
- * ‘node_shape’: The possible options are ‘ellipse’, ‘circle’, ‘database’, ‘box’, ‘text’, ‘image’, ‘circularImage’, ‘diamond’, ‘dot’, ‘star’, ‘triangle’, ‘triangleDown’, ‘square’, and ‘icon’.  
- * ‘node_size’  
- * ‘title’: the hover information of the node  
- * ‘x’: x-coordinate of the node within the graph  
- * ‘y’: y-coordinate of the node within the graph  
+  * ‘border_width’  
+  * ‘color’  
+  * ‘degree’  
+  * ‘node_label’: the label given to each node  
+  * ‘node_shape’: The possible options are ‘ellipse’, ‘circle’, ‘database’, ‘box’, ‘text’, ‘image’, ‘circularImage’, ‘diamond’, ‘dot’, ‘star’, ‘triangle’, ‘triangleDown’, ‘square’, and ‘icon’.  
+  * ‘node_size’  
+  * ‘title’: the hover information of the node  
+  * ‘x’: x-coordinate of the node within the graph  
+  * ‘y’: y-coordinate of the node within the graph  
 
 
 [Table of contents](#toc)
