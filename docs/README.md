@@ -135,8 +135,8 @@ where nodes refers to the list of all nodes in the graph. Then, edges_dict can b
 
 ```python
 edges_dict = [{“source”:node_map[edges[i][0], 
-“target”:node_map[edges[i][1]} 
-for i in range(len(edges))]
+             “target”:node_map[edges[i][1]} 
+             for i in range(len(edges))]
 
 ```
 where edges refers to the list of all edges in the graph.
@@ -148,7 +148,7 @@ where edges refers to the list of all edges in the graph.
 <a id='node_specific'></a>
 ### 5.2 Node-specific arguments
 
-node_border_width: integer (default = 2)
+node_border_width: integer (default = 2)  
 &nbsp;&nbsp;Node border width when not hovered on or selected.
 
 
