@@ -12,7 +12,32 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 visJS2jupyter is a tool to bring the interactivity of networks created with vis.js into jupyter notebook cells, authored by members of the [UCSD Center for Computational Biology & Bioinformatics](http://compbio.ucsd.edu)
 
-## Getting Started
+<a id='toc'></a>
+## Table of contents
+
+1. [Getting started](getting_started)
+2. [Features and examples](examples)
+3. [Supplemental Information](SI))
+  3.1. [Tips on usage](#usage_tips)  
+    3.1.1 [Multiple networks in the same notebook](#graphid)  
+    3.1.2 [Mapping colors to nodes and edges](#map_colors)  
+    3.1.3 [High resolution images](#high_res)  
+    3.1.4 [Exporting to Cytoscape compatible format](#cytoscape)  
+  3.2. [Visualizations](#visualizations)  
+    3.2.1 [Graph Overlap](#graph_overlap)   
+    3.2.2 [Heat propagation](#heat_prop)  
+    3.2.3 [Co-localization](#colocalization) 
+  3.3. [Validating network propagation with known Autism risk genes](#asd_validation)  
+  3.4. [Arguments](#arguments)  
+    3.4.1 [Required arguments](#required)  
+    3.4.2 [Node-specific arguments](#node_specific)  
+    3.4.3 [Edge-specific arguments](#edge_specific)  
+    3.4.4 [Interaction-specific arguments](#interaction_specific)  
+    3.4.5 [Configuration-specific arguments](#configuration_specific)  
+    3.4.6 [Miscellaneous arguments](#miscellaneous)  
+
+<a id='getting_started'></a>
+## Getting started
 
 These instructions will get you a copy of the package up and running on your local machine.
 
@@ -57,7 +82,8 @@ To import visualizations, use the following:
 import visJS2jupyter.visualizations
 ```
 
-## Features and Examples
+<a id='examples'></a>
+## Features and examples
 A simple use example with default parameters may be found here http://bl.ocks.org/brinrosenthal/raw/cfb0e12f113d55551a45d530527baedf/.  In the example provided, we show how to display a graph created with NetworkX using visJS2jupyter.  The networks displayed within Jupyter notebook cells may be dragged, clicked, and hovered on, and zooming is enabled within the window.  
 
 For an example of how more complex styles may be added to a network, see http://bl.ocks.org/brinrosenthal/raw/658325f6e0db7419625a31c883313e9b/. Nodes and edges may be styled with properties available from vis.js networks (see http://visjs.org/docs/network/ for a list and description of properties).  The main function is 'visjs_network', which requires two inputs which describe the nodes and edges in the network- 'nodes_dict', and edges_dict'.  The other arguments are optional, and apply general styles to the graph, such as sizes, highlight colors, and physics properties of the graph.
@@ -73,63 +99,46 @@ Supplementary module, containing frequently used network visualizations
 
 3) **draw_colocalization** similarly draws the heat propagation of the graph but with two sets of seed nodes. Another interactive example can be found [here](https://bl.ocks.org/julialen/raw/a82040bdc8b5ba3ca866489db795af74/).
 
-
-
+[Table of contents](#toc)
+<a id='SI'></a>
 # Supplemental Information
 
-<a id='toc'></a>
-## Table of contents
 
-1. [Tips on usage](#usage_tips)  
-  1.1 [Multiple networks in the same notebook](#graphid)  
-  1.2 [Mapping colors to nodes and edges](#map_colors)  
-  1.3 [High resolution images](#high_res)  
-  1.4 [Exporting to Cytoscape compatible format](#cytoscape)  
-2. [Visualizations](#visualizations)  
-  2.1 [Graph Overlap](#graph_overlap)   
-  2.2 [Heat propagation](#heat_prop)  
-  2.3 [Co-localization](#colocalization) 
-3. [Validating network propagation with known Autism risk genes](#asd_validation)  
-4. [Arguments](#arguments)  
-  4.1 [Required arguments](#required)  
-  4.2 [Node-specific arguments](#node_specific)  
-  4.3 [Edge-specific arguments](#edge_specific)  
-  4.4 [Interaction-specific arguments](#interaction_specific)  
-  4.5 [Configuration-specific arguments](#configuration_specific)  
-  4.6 [Miscellaneous arguments](#miscellaneous)  
-  
+<a id='usage_tips'></a>
+## 3.1 Tips on usage
+
 <a id='graphid'></a>
-### 1.1 Multiple networks in the same notebook
+### 3.1.1 Multiple networks in the same notebook
 visJS2jupyter takes parameters specified by the user and then creates an HTML file that contains the vis.js code to draw the network visualization. Each graph generates its own HTML file. The Jupyter notebook cell then renders this HTML file to produce the visualization. To create multiple graphs in one notebook, use the graph_id argument to specify an identification for the graph. Each different graph_id will generate a different HTML file.
 
 
 
 <a id='map_colors'></a>
-### 1.2 Mapping colors to nodes and edges
+### 3.1.2 Mapping colors to nodes and edges
 Color-coding nodes and edges is a common way of mapping complex layers of information to a graph. The functions return_node_to_color and return_edge_to_color included in the package provide the means with which to do this. The return_node_to_color function creates a dictionary mapping of nodes to color values based on the specified colormap and node attribute to map. Similarly, return_edge_to_color creates a dictionary mapping of edges to color values. Any node or edge level property can be mapped to node color or edge color, as long as it is represented numerically, and added as a node/edge attribute. Use the argument field_to_map to specify this property. The user can also utilize the argument cmap to specify which matplotlib colormap to use for the color mapping. 
 
 
 <a id='high_res'></a>
-### 1.3 High resolution images
+### 3.1.3 High resolution images
 In order to save high resolution images, we include the ‘scaling_factor’ argument, which scales up each graph element and increase its resolution. To save the image, right-click on the notebook cell and select ‘save as’.  For most graphs an adequately high-resolution image is obtained from setting the scaling_factor between three and five. 
 
 
 
 <a id='cytoscape'></a>
-### 1.4 Exporting to cytoscape compatible format
+### 3.1.4 Exporting to cytoscape compatible format
 
 To export to a cytoscape compatible format, set the ‘export_network’ argument to True in the visualization functions.  The network, with attributes, will be saved in a Cytoscape compatible JSON format.  To change the default file name, set the ‘export_file’ argument to the desired name.  Once the network has been saved, open Cytoscape and load the file.  To reproduce the network as it looked in the Jupyter cell, load the corresponding Cytoscape style file (provided where in the GitHub repository https://github.com/ucsd-ccbb/visJS2jupyter/tree/master/cytoscape_styles), and apply it to the network.
 
   
-
+[Table of contents](#toc)
 <a id='visualizations'></a>
-## 2.  Visualizations
+## 3.2.  Visualizations
 
 Visualizations is a supplementary module that calls visJS_module to perform operations on graphs, and to visualize their results.  These functions include the overlap of two graphs, heat propagation, and co-localization. Users simply provide a network in NetworkX format, and when called, the function performs the desired operation. The function then visualizes the output in the notebook cell. Many customizations are possible for the graph, such as the color maps used for nodes and edges. Furthermore, users can customize the physics simulation of their networks. The physics simulation provides another interactive element of the graph that enables users to view the connectivity of nodes when dragging them. By default, the physics simulation is turned on for networks of fewer than 100 nodes and turned off otherwise. All arguments available in visJS_module for network customization are also available in visualizations. 
 
 
 <a id='graph_overlap'></a>
-### 2.1 Graph overlap
+### 3.2.1 Graph overlap
 
 When working with networks, it is often useful to consider how similar two networks are. The function draw_graph_overlap introduces a network overlap visualization function to allow comparisons between networks. This function takes in two NetworkX graphs and displays a single graph of their union. Intersecting nodes are triangles and non-intersecting nodes are either circles or squares, depending on which graph they belong to. A simple example can be found at https://bl.ocks.org/julialen/raw/d21c9d378cb09b5a7181497101996727/.
 
@@ -139,7 +148,7 @@ When working with networks, it is often useful to consider how similar two netwo
 
 
 <a id='heat_prop'></a>
-### 2.2 Heat propagation
+### 3.2.2 Heat propagation
 
 We implement the network propagation method developed in (Vanunu et al. 2010), which simulates how heat would diffuse, with loss, through the network by traversing the edges, starting from an initially hot set of ‘seed’ nodes.  At each step, one unit of heat is added to the seed nodes, and is then spread to the neighbor nodes.  A constant fraction of heat is then removed from each node, so that heat is conserved in the system.  After a number of iterations, the heat on the nodes converges to a stable value.  This final heat vector is a proxy for how close each node is to the seed set.  For example, if a node was between two initially hot nodes, it would have an extremely high final heat value, and alternatively if a node was quite far from the initially hot seed nodes, it would have a very low final heat value. This process is described in (Vanunu et al. 2010):
 
@@ -151,24 +160,18 @@ Heat propagation is useful for visualizing network propagation from a set of see
 
 
 <a id='colocalization'></a>
-### 2.3 Co-localization
+### 3.2.3 Co-localization
 
 Co-localization works similarly to heat propagation but requires two sets of seed nodes instead of one. The function draw_colocalization creates a network visualization of this propagation. Seed nodes belonging to one set are shaped as triangles while seed nodes belonging to the other set are shaped as squares. Heat values are calculated by running a heat propagation simulation with one set of seed nodes and then a different propagation using the other set of seed nodes. The product of the heat values in each simulation becomes each node’s heat value in the final graph. An example can be found at https://bl.ocks.org/julialen/raw/a82040bdc8b5ba3ca866489db795af74/.
 
 *Figure S4: Co-localization of network from two sets of seed nodes using draw_colocalization. Seed nodes from one set are red squares, while seed nodes from the other set are red triangles.*
 ![colocalization](https://github.com/ucsd-ccbb/visJS2jupyter/blob/master/docs/colocalization.png?raw=true)
 
-[Table of contents](#toc)
-<a id='usage_tips'></a>
-## 3. Tips on usage
 
-
-
-[Table of contents](#toc)
 
 [Table of contents](#toc)
 <a id='asd_validation'></a>
-## 3. Validating network propagation with known Autism risk genes
+## 3.3. Validating network propagation with known Autism risk genes
 
 We validate the network propagation technique as a method for prioritizing disease risk genes, from a set of genes known to be involved in the disease.  We start with the large set of genes known to be involved in Autism, as our set of seed genes, and the STRING (REF) interactome as our background network for propagation.  
 
@@ -178,10 +181,10 @@ Analysis for this result may be found in Jupyter notebook form (HERE).
 
 [Table of contents](#toc)
 <a id='arguments'></a>
-## 4. Arguments
+## 3.4. Arguments
 
 <a id='required'></a>
-### 4.1 Required arguments
+### 3.4.1 Required arguments
 **nodes_dict**: A list of information about each node. Each node should have its own dictionary that must include ‘id’, the id of the node; ‘x’, the node x position; and ‘y’, the node y position. Other optional properties can be included to customize each individual node. The following is the current list of properties that can be modified at the node level:  
 * ‘border_width’  
 * ‘color’  
@@ -216,7 +219,7 @@ where edges refers to the list of all edges in the graph.
 
 [Table of contents](#toc)
 <a id='node_specific'></a>
-### 4.2 Node-specific arguments
+### 3.4.2 Node-specific arguments
 
 node_border_width: integer (default = 2)  
 &nbsp;&nbsp;&nbsp;&nbsp;Node border width when not hovered on or selected.
@@ -354,7 +357,7 @@ node_size_multiplier: integer (default = 3)
 
 [Table of contents](#toc)
 <a id='edge_specific'></a>
-### 4.3 Edge-specific arguments
+### 3.4.3 Edge-specific arguments
 
 edge_title_field: string (default = 'id')  
 &nbsp;&nbsp;&nbsp;&nbsp;The name of the attribute to show on edge hover.
@@ -491,7 +494,7 @@ edge_label_field: string (default = ‘id’)
 
 [Table of contents](#toc)
 <a id='interaction_specific'></a>
-### 4.4 Interaction-specific arguments
+### 3.4.4 Interaction-specific arguments
 
 drag_nodes: boolean (default = True)  
 &nbsp;&nbsp;&nbsp;&nbsp;When True, the nodes that are not fixed can be dragged by the user.
@@ -547,7 +550,7 @@ zoom_view: boolean (default = True)
 
 [Table of contents](#toc)
 <a id='configuration_specific'></a>
-### 4.5 Configuration-specific arguments
+### 3.4.5 Configuration-specific arguments
 
 config_enabled: boolean (default = False)  
 &nbsp;&nbsp;&nbsp;&nbsp;Toggle the configuration interface on or off. This is an optional parameter. If left undefined and any of the other configuration properties are defined, this will be set to True.
@@ -565,7 +568,7 @@ showButton: boolean (default = False)
 
 [Table of contents](#toc)
 <a id='miscellaneous'></a>
-### 4.6 Miscellaneous arguments
+### 3.4.6 Miscellaneous arguments
 
 border_color: string (default = 'white')  
 &nbsp;&nbsp;&nbsp;&nbsp;Border color of the network image element.
