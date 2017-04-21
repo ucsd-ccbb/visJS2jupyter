@@ -15,7 +15,7 @@ visJS2jupyter is a tool to bring the interactivity of networks created with vis.
 <a id='toc'></a>
 ## Table of contents
 
-1. [Getting started](getting_started)
+1. [Getting started](#getting_started)
 2. [Features and examples](#examples)
 3. [Supplemental Information](#SI)  
   3.1. [Tips on usage](#usage_tips)    
