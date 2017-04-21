@@ -112,17 +112,27 @@ Analysis for this result may be found in Jupyter notebook form (HERE).
 
 <a id='required'></a>
 ### 5.1 Required arguments
-nodes_dict  
-* A list of information about each node. Each node should have its own dictionary that must include ‘id’, the id of the node; ‘x’, the node x position; and ‘y’, the node y position. Other optional properties can be included to customize each individual node. The following is the current list of properties that can be modified at the node level:  
-  * ‘border_width’  
-  * ‘color’  
-  * ‘degree’  
-  * ‘node_label’: the label given to each node  
-  * ‘node_shape’: The possible options are ‘ellipse’, ‘circle’, ‘database’, ‘box’, ‘text’, ‘image’, ‘circularImage’, ‘diamond’, ‘dot’, ‘star’, ‘triangle’, ‘triangleDown’, ‘square’, and ‘icon’.  
-  * ‘node_size’  
-  * ‘title’: the hover information of the node  
-  * ‘x’: x-coordinate of the node within the graph  
-  * ‘y’: y-coordinate of the node within the graph  
+**nodes_dict**: A list of information about each node. Each node should have its own dictionary that must include ‘id’, the id of the node; ‘x’, the node x position; and ‘y’, the node y position. Other optional properties can be included to customize each individual node. The following is the current list of properties that can be modified at the node level:  
+* ‘border_width’  
+* ‘color’  
+* ‘degree’  
+* ‘node_label’: the label given to each node  
+* ‘node_shape’: The possible options are ‘ellipse’, ‘circle’, ‘database’, ‘box’, ‘text’, ‘image’, ‘circularImage’, ‘diamond’, ‘dot’, ‘star’, ‘triangle’, ‘triangleDown’, ‘square’, and ‘icon’.  
+* ‘node_size’  
+* ‘title’: the hover information of the node  
+* ‘x’: x-coordinate of the node within the graph  
+* ‘y’: y-coordinate of the node within the graph  
+  
+**edges_dict**: A list of information about each edge. Each edge should have its own dictionary that must include ‘source’ and ‘target’, which refer to the integer ids of the source and target nodes. Other customizations for each edge can also be specified, such as ‘color’ and ‘title’.
+
+Because of the way visJS2jupyter interprets node and edge data, before creating edges_dict, it is useful to create a node map that maps the names of nodes to integers. This can be done with the following line of code:
+
+```python
+node_map = dict(zip(nodes, range(len(nodes))))
+```
+
+
+
 
 
 [Table of contents](#toc)
