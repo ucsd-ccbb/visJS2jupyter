@@ -41,19 +41,19 @@ pip install visJS2jupyter
 
 In your Jupyter notebook, first import matplotlib:
 
-```
+```python
 import matplotlib
 ```
 
 To import visJS_module, use the following:
 
-```
+```python
 import visJS2jupyter.visJS_module
 ```
 
 To import visualizations, use the following:
 
-```
+```python
 import visJS2jupyter.visualizations
 ```
 
