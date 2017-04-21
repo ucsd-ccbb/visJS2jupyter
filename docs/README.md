@@ -64,7 +64,7 @@ Heat propagation is useful for visualizing network propagation from a set of see
 
 Co-localization works similarly to heat propagation but requires two sets of seed nodes instead of one. The function draw_colocalization creates a network visualization of this propagation. Seed nodes belonging to one set are shaped as triangles while seed nodes belonging to the other set are shaped as squares. Heat values are calculated by running a heat propagation simulation with one set of seed nodes and then a different propagation using the other set of seed nodes. The product of the heat values in each simulation becomes each node’s heat value in the final graph. An example can be found at https://bl.ocks.org/julialen/raw/a82040bdc8b5ba3ca866489db795af74/.
 
-*Figure S4: Co-localization of network from two sets of seed nodes using draw_colocalization. Seed nodes from one set are red squares, while seed nodes from the other set are red triangles. *
+*Figure S4: Co-localization of network from two sets of seed nodes using draw_colocalization. Seed nodes from one set are red squares, while seed nodes from the other set are red triangles.*
 ![colocalization](https://github.com/ucsd-ccbb/visJS2jupyter/blob/master/docs/colocalization.png?raw=true)
 
 [Table of contents](#toc)
@@ -112,6 +112,18 @@ Analysis for this result may be found in Jupyter notebook form (HERE).
 
 <a id='required'></a>
 ### 5.1 Required arguments
+nodes_dict
+   A list of information about each node. Each node should have its own dictionary that must include ‘id’, the id of the node; ‘x’, the node x position; and ‘y’, the node y position. Other optional properties can be included to customize each individual node. The following is the current list of properties that can be modified at the node level:
+    * ‘border_width’
+    * ‘color’
+    * ‘degree’
+    * ‘node_label’: the label given to each node
+    * ‘node_shape’: The possible options are ‘ellipse’, ‘circle’, ‘database’, ‘box’, ‘text’, ‘image’, ‘circularImage’, ‘diamond’, ‘dot’, ‘star’, ‘triangle’, ‘triangleDown’, ‘square’, and ‘icon’.
+    * ‘node_size’
+    * ‘title’: the hover information of the node
+    * ‘x’: x-coordinate of the node within the graph
+    * ‘y’: y-coordinate of the node within the graph
+
 
 [Table of contents](#toc)
 <a id='node_specific'></a>
