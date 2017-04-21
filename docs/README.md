@@ -149,7 +149,137 @@ where edges refers to the list of all edges in the graph.
 ### 5.2 Node-specific arguments
 
 node_border_width: integer (default = 2)  
-&nbsp;&nbsp;Node border width when not hovered on or selected.
+&nbsp;&nbsp;&nbsp;&nbsp;Node border width when not hovered on or selected.
+
+node_border_width_selected: integer (default = 2)
+&nbsp;&nbsp;&nbsp;&nbsp;Node border width once clicked.
+
+node_broken_image: string (default = 'undefined')
+&nbsp;&nbsp;&nbsp;&nbsp;Name of backup image in case a node image doesn't successfully load.
+
+node_color_border: string (default = 'black')
+Creates border around node shape in specified color.
+
+node_color_highlight_border: string (default = '#2B7CE9')
+Node border color when selected.
+
+node_color_highlight_background: string (default = 'orange')
+Border color when selected.
+
+node_color_hover_border: string (default = '#2B7CE9') 
+Color of node border when mouse hovers but does not click.
+
+node_color_hover_background: string (default = 'orange')
+Color of node when mouse hovers but does not click.
+
+node_fixed_x: boolean (default = False)
+Node does not move in x direction but is still calculated into physics.
+
+node_fixed_y: boolean (default = False)
+Node does not move in y direction but is still calculated into physics.
+
+node_font_color: string (default = '#343434')
+Color of label text.
+
+node_font_size: integer (default = 14)
+Size of label text.
+
+node_font_face: string (default = 'arial')
+Font face of label text.
+
+node_font_background: string (default = "rgba(0,0,0,0)")
+When defined with color string, a background rectangle will be drawn around text.
+						   
+node_font_stroke_width: integer (default = 0) 
+Width of stroke. If zero, no stroke is drawn.
+						   
+node_font_stroke_color: string (default = ‘#ffffff’)
+Color of stroke.
+						   
+node_font_align: string (default = 'center')
+Alignment of node font. Other option is 'left'.
+						  
+node_icon_face: string (default = 'FontAwesome')
+Only used when shape is set to icon. Options are 'FontAwesome' and 'Ionicons'.
+						   
+node_icon_code: string (default = 'undefined')
+Code used to define which icon to use.
+						   
+node_icon_size: integer (default = 50)
+Size of icon.
+						   
+node_icon_color: string (default = '#2B7CE9')
+Color of icon.
+						   
+node_image: string (default = 'undefined')
+When shape set to 'image' or 'circularImage', then the URL image designated here will be used.
+						   
+node_label_highlight_bold: boolean (default = True)
+Determines if label emboldens when node is selected.
+						   
+node_scaling_min: integer (default = 10)
+Minimum size node can become when it scales down.
+						   
+node_scaling_max: integer (default = 30)
+Maximum size node can become when it scales up.
+						   
+node_scaling_label_enabled: boolean (default = False)
+Toggle scaling of label on or off.
+						   
+node_scaling_label_min: integer (default = 14)
+Minimum font size the label can become when it scales down.
+						   
+node_scaling_label_max: integer (default = 30)
+Maximum font size the label can become when it scales up.
+						   
+node_scaling_label_max_visible: integer (default = 30)
+Font will never be larger than this number at 100% zoom.
+						   
+node_scaling_label_draw_threshold: integer (default = 5)
+The lower limit of what the font is drawn as. Use this and node_scaling_label_max_visible to control which labels remain visible during zoom out.
+						   
+node_shadow_enabled: boolean (default = True)
+Whether there is a shadow cast by the nodes.
+						   
+node_shadow_color: string (default = 'rgba(0,0,0,0.5)')
+Shadow color.
+						   
+node_shadow_size: integer (default = 10)
+Shadow blur size.
+						   
+node_shadow_x: integer (default = 5)
+Shadow x offset from node.
+						   
+node_shadow_y: integer (default = 5)
+Shadow y offset from node.
+						   
+node_shape_border_dashes: boolean (default = False)
+Makes dashed border around node.
+						   
+node_shape_border_radius: integer (default = 6)
+Determines roundness of node shape (only for "box" shape).
+						   
+node_shape_interpolation: boolean (default = True)
+Only for image and circular image. Image resamples when scaling down.
+						   
+node_shape_use_image_size: boolean (default = False)
+Only for image and circular image. True means use image size, and False means use the defined node size.
+						   
+node_shape_use_border_with_image: boolean (default = False)
+Only for image. Draws border around image icon.
+						   
+node_label_field: string (default = 'id')
+Field that nodes will be labeled with.
+						   
+node_size_field: string (default = 'degree')
+Field that determines which nodes are more important and thus should be scaled bigger.
+
+node_size_transform: string (default = 'Math.sqrt')
+Function by which higher value (not node_value) nodes are scaled larger to show importance.
+						   
+node_size_multiplier: integer (default = 3)
+Increment by which higher value (not node_value) nodes are scaled larger to show importance.
+
 
 
 [Table of contents](#toc)
