@@ -42,6 +42,8 @@ Visualizations is a supplementary module that calls visJS_module to perform oper
 
 When working with networks, it is often useful to consider how similar two networks are. The function draw_graph_overlap introduces a network overlap visualization function to allow comparisons between networks. This function takes in two NetworkX graphs and displays a single graph of their union. Intersecting nodes are triangles and non-intersecting nodes are either circles or squares, depending on which graph they belong to. A simple example can be found at https://bl.ocks.org/julialen/raw/d21c9d378cb09b5a7181497101996727/.
 
+![Graph overlap](https://github.com/ucsd-ccbb/visJS2jupyter/tree/master/docs/graph_overlap.png)
+
 
 <a id='heat_prop'></a>
 ### 2.2 Heat propagation
