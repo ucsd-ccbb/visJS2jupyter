@@ -102,7 +102,7 @@ def draw_graph_overlap(G1, G2,
             else:
                 node_labels[node] = ''
     else:
-        node_labels = {n:np.int64(n).item() for n in nodes}
+        node_labels = {n:str(n) for n in nodes}
 
     nx.set_node_attributes(G_overlap,'nodeLabel',node_labels)
 
@@ -126,7 +126,7 @@ def draw_graph_overlap(G1, G2,
                                                       alpha=.3)
 
     # create the nodes_dict with all relevant fields
-    nodes_dict = [{'id':np.int64(n).item(),
+    nodes_dict = [{'id':str(n),
                    'border_width':border_width[n],
                    'color':node_to_color[n],
                    'degree':G_overlap.degree(n),
@@ -355,13 +355,13 @@ def draw_heat_prop(G, seed_nodes,
         node_labels = {}
         for node in nodes:
             if node in seed_nodes:
-                node_labels[node] = node
+                node_labels[node] = str(node)
             elif node in highlight_nodes:
-                node_labels[node] = node
+                node_labels[node] = str(node)
             else:
                 node_labels[node] = ''
     else:
-        node_labels = {n:np.int64(n).item() for n in nodes}
+        node_labels = {n:str(n) for n in nodes}
 
     nx.set_node_attributes(G,'nodeLabel',node_labels)
 
@@ -395,7 +395,7 @@ def draw_heat_prop(G, seed_nodes,
                                                       color_vals_transform='log')
 
     # create the nodes_dict with all relevant fields
-    nodes_dict = [{'id':np.int64(n).item(),
+    nodes_dict = [{'id':str(n),
                    'border_width':border_width[n],
                    'degree':G.degree(n),
                    'color':node_to_color[n],
@@ -407,7 +407,7 @@ def draw_heat_prop(G, seed_nodes,
                    'y':np.float64(pos[n][1]).item()*1000} for n in nodes]
 
     # map nodes to indices for source/target in edges
-    node_map = dict(zip(nodes, range(len(nodes))))
+    node_map = dict(zip(nodes,range(len(nodes))))
 
     # create the edges_dict with all relevant fields
     edges_dict = [{'source':node_map[edges[i][0]],
@@ -559,13 +559,13 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
         node_labels = {}
         for node in nodes:
             if node in seed_nodes_1 or n in seed_nodes_2:
-                node_labels[node] = node
+                node_labels[node] = str(node)
             elif node in highlight_nodes:
-                node_labels[node] = node
+                node_labels[node] = str(node)
             else:
                 node_labels[node] = ''
     else:
-        node_labels = {n:np.int64(n).item() for n in nodes}
+        node_labels = {n:str(n) for n in nodes}
 
     nx.set_node_attributes(G,'nodeLabel',node_labels)
 
@@ -599,7 +599,7 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
                                                       color_vals_transform = 'log')
 
     # create the nodes_dict with all relevant fields
-    nodes_dict = [{'id':np.int64(n).item(),
+    nodes_dict = [{'id':str(n),
                    'border_width':border_width[n],
                    'degree':G.degree(n),
                    'color':node_to_color[n],
