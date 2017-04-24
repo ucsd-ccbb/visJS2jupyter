@@ -67,10 +67,11 @@ Supplementary module, containing frequently used network visualizations
 
 ## Authors
 
-* **Brin Rosenthal** (sbrosenthal@ucsd.edu)
+* **Brin Rosenthal, PhD** (sbrosenthal@ucsd.edu)
 * **Julia Len** (jlen@ucsd.edu)
 * **Mikayla Webster** (m1webste@ucsd.edu)
 * **Aaron Gary** (agary@ucsd.edu)
+* **Kathleen Fisch, PhD** (kfisch@ucsd.edu)
 
 ## License
 
