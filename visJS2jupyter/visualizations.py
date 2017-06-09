@@ -28,7 +28,7 @@ def draw_graph_overlap(G1, G2,
                        node_name_1='graph 1',
                        node_name_2='graph 2',
                        node_size=10,
-                       physics_enabled=None,
+                       physics_enabled=False,
                        **kwargs):
     '''
     Takes two networkX graphs and displays their overlap, where intersecting
@@ -46,7 +46,7 @@ def draw_graph_overlap(G1, G2,
         - node_name_1: string to name first graph's nodes, default: 'graph 1'
         - node_name_2: string to name second graph's nodes, default: 'graph 2'
         - node_size: size of nodes, default: 10
-        - physics_enabled: enable physics simulation, default: True for graphs of less than 100 nodes
+        - physics_enabled: enable physics simulation, default: False
 
     Returns:
         - VisJS html network plot (iframe) of the graph overlap.
@@ -156,7 +156,7 @@ def draw_graph_overlap(G1, G2,
         else:
             kwargs['node_size_multiplier'] = 7
 
-    kwargs['physics_enabled'] = set_physics_enabled(physics_enabled,len(nodes))
+    kwargs['physics_enabled'] = physics_enabled
 
     # if node hovering color not set, set default to black
     if 'node_color_hover_background' not in kwargs.keys():
@@ -172,9 +172,9 @@ def draw_graph_overlap(G1, G2,
 
     # export the network to JSON for Cytoscape
     if export_network:
-        node_colors = map_node_to_color(G_overlap,'node_overlap')
+        node_colors = map_node_to_color(G_overlap,'node_overlap',False)
         nx.set_node_attributes(G_overlap,'nodeColor',node_colors)
-        edge_colors = map_edge_to_color(G_overlap,'edge_weight')
+        edge_colors = map_edge_to_color(G_overlap,'edge_weight',False)
         nx.set_edge_attributes(G_overlap,'edgeColor',edge_colors)
         export_to_cytoscape(G_overlap,export_file)
 
@@ -260,7 +260,7 @@ def draw_heat_prop(G, seed_nodes,
                    node_cmap=mpl.cm.autumn_r,
                    node_size=10,
                    num_nodes=None,
-                   physics_enabled=None,
+                   physics_enabled=False,
                    Wprime=None,
                    **kwargs):
     '''
@@ -280,7 +280,7 @@ def draw_heat_prop(G, seed_nodes,
         - node_cmap: matplotlib colormap for nodes, default: matplotlib.cm.autumn_r
         - node_size: size of nodes, default: 10
         - num_nodes: the number of the hottest nodes to graph, default: None (all nodes will be graphed)
-        - physics_enabled: enable physics simulation, default: True for graphs of less than 100 nodes
+        - physics_enabled: enable physics simulation, default: False
         - Wprime: normalized adjacency matrix (from function normalized_adj_matrix())
 
     Returns:
@@ -423,7 +423,7 @@ def draw_heat_prop(G, seed_nodes,
         else:
             kwargs['node_size_multiplier'] = 7
 
-    kwargs['physics_enabled'] = set_physics_enabled(physics_enabled,len(nodes))
+    kwargs['physics_enabled'] = physics_enabled
 
     # if node hovering color not set, set default to black
     if 'node_color_hover_background' not in kwargs.keys():
@@ -439,9 +439,9 @@ def draw_heat_prop(G, seed_nodes,
 
     # export the network to JSON for Cytoscape
     if export_network:
-        node_colors = map_node_to_color(G,'node_heat')
+        node_colors = map_node_to_color(G,'node_heat',True)
         nx.set_node_attributes(G,'nodeColor',node_colors)
-        edge_colors = map_edge_to_color(G,'edge_weight')
+        edge_colors = map_edge_to_color(G,'edge_weight',True)
         nx.set_edge_attributes(G,'edgeColor',edge_colors)
         export_to_cytoscape(G,export_file)
 
@@ -458,7 +458,7 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
                         node_cmap=mpl.cm.autumn_r,
                         node_size=10,
                         num_nodes=None,
-                        physics_enabled=None,
+                        physics_enabled=False,
                         Wprime=None,
                         **kwargs):
     '''
@@ -479,7 +479,7 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
         - node_cmap: matplotlib colormap for nodes, optional, default: matplotlib.cm.autumn_r
         - node_size: size of nodes, default: 10
         - num_nodes: the number of the hottest nodes to graph, default: None (all nodes will be graphed)
-        - physics_enabled: enable physics simulation, default: True for graphs of less than 100 nodes
+        - physics_enabled: enable physics simulation, default: False
         - Wprime:  Normalized adjacency matrix (from normalized_adj_matrix)
 
     Returns:
@@ -627,7 +627,7 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
         else:
             kwargs['node_size_multiplier'] = 5
 
-    kwargs['physics_enabled'] = set_physics_enabled(physics_enabled,len(nodes))
+    kwargs['physics_enabled'] = physics_enabled
 
     # if node hovering color not set, set default to black
     if 'node_color_hover_background' not in kwargs.keys():
@@ -643,9 +643,9 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
 
     # export the network to JSON for Cytoscape
     if export_network:
-        node_colors = map_node_to_color(G,'node_heat')
+        node_colors = map_node_to_color(G,'node_heat',True)
         nx.set_node_attributes(G,'nodeColor',node_colors)
-        edge_colors = map_edge_to_color(G,'edge_weight')
+        edge_colors = map_edge_to_color(G,'edge_weight',True)
         nx.set_edge_attributes(G,'edgeColor',edge_colors)
         export_to_cytoscape(G,export_file)
 
@@ -737,27 +737,6 @@ def network_propagation(G,Wprime,seed_nodes,alpha=.5, num_its=20):
     return Fnew
 
 
-def set_physics_enabled(physics_enabled, num_nodes):
-    '''
-    Sets whether the graph should be physics-enabled or not. Physics simulation
-    is turned on by default for graphs of fewer than 100 nodes.
-
-    Inputs:
-        - physics-enabled: boolean value user passed in for physics-enabled
-        - num_nodes: integer value for number of nodes in the graph
-
-    Returns:
-        - True if graph has fewer than 100 nodes, False otherwise.
-    '''
-
-    if physics_enabled is None:
-        if num_nodes < 100:
-            return True
-        else:
-            return False
-    return physics_enabled
-
-
 def set_num_nodes(G, num_nodes):
     '''
     Sets whether the graph should be physics-enabled or not. It is set for
@@ -796,37 +775,50 @@ def export_to_cytoscape(G, export_file):
     '''
 
     G_json = util.from_networkx(G)
+    if 'partition' in G_json['data'].keys():
+        del G_json['data']['partition']
     with open(export_file,'w') as outfile:
         json.dump(G_json,outfile)
 
 
-def map_node_to_color(G,field_to_map):
+def map_node_to_color(G,field_to_map,color_vals_transform):
     '''
     Maps node to color value between 0 and 1 based on the given field.
 
     Inputs:
         - G: networkX graph
         - field_to_map: node attribute to map color to
+        - color_vals_transform: to calculate color vals with log (boolean)
 
     Returns:
         - Dictionary that maps node to color value.
     '''
 
-    node_to_field = dict([(n[0], n[1][field_to_map])
-                          for n in G.nodes(data=True)])
-    min_val = np.min(list(node_to_field.values()))
-    max_val = np.max(list(node_to_field.values())) - min_val
-    color_list = [float(node_to_field[n]-min_val)/max_val for n in G.nodes()]
+    node_to_field = [(n[0], max(n[1][field_to_map], 10**-18))
+                        for n in G.nodes(data=True)]
+    nodes,data = zip(*node_to_field)
+    if color_vals_transform:
+        nonzero_list = [d for d in data if d>(10**-18)]
+        if not nonzero_list:
+            data = [1 for d in data]
+        else:
+            min_val = min(nonzero_list)
+            data = [np.log(max(d,min_val)) for d in data] #set 0 vals to min val
+            data = [(d-np.min(data)) for d in data] #shift so we don't have neg vals
+    min_val = np.min(data)
+    max_val = np.max(data) - min_val
+    color_list = [float(d-min_val)/max_val for d in data]
     return dict(zip(G.nodes(),color_list))
 
 
-def map_edge_to_color(G,field_to_map):
+def map_edge_to_color(G,field_to_map,color_vals_transform):
     '''
     Maps edge to color value between 0 and 1 based on the given field.
 
     Inputs:
         - G: networkX graph
         - field_to_map: edge attribute to map color to
+        - color_vals_transform: to calculate color vals with log (boolean)
 
     Returns:
         - Dictionary that maps edge to color value.
@@ -835,6 +827,14 @@ def map_edge_to_color(G,field_to_map):
     edges_data = [(e[0],e[1],e[2][field_to_map])
                   for e in G.edges(data=True)]
     edges1,edges2,data = zip(*edges_data)
+    if color_vals_transform:
+        nonzero_list = [d for d in data if d>(10**-18)]
+        if not nonzero_list:
+            data = [1 for d in data]
+        else:
+            min_dn0 = min([d for d in data if d>(10**-18)])
+            data = [np.log(max(d,min_dn0)) for d in data]  #set 0 vals to min val
+            data = [(d-np.min(data)) for d in data] #shift so we don't have neg vals
     edges_data = zip(zip(edges1,edges2),data)
     edge_to_field = dict(edges_data)
     min_val = np.min(list(edge_to_field.values()))

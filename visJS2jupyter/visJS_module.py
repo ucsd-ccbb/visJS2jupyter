@@ -12,11 +12,12 @@ Authors:
 # import some packages
 from __future__ import print_function
 from IPython.display import HTML, Javascript
+import json
 from json import dumps
-import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
-import math
+from py2cytoscape import util
+import networkx as nx
 
 Javascript("https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.js")
 
@@ -142,7 +143,7 @@ def visjs_network(nodes_dict, edges_dict,
 
 						   # other stuff
 						   border_color='white',
-                           physics_enabled=True,
+                           physics_enabled=False,
                            min_velocity=2,
                            max_velocity=8,
                            draw_threshold=None,
@@ -154,7 +155,11 @@ def visjs_network(nodes_dict, edges_dict,
                            graph_height = 800,
                            scaling_factor = 1,
 						   time_stamp = 0,   # deprecated: use graph_id
-                           graph_id = 0):    # To draw multiple graphs in the same notebook, give each a different id
+                           graph_id = 0,     # To draw multiple graphs in the same notebook, give each a different id
+                           export_network = False,
+                           export_file = 'network.json',
+                           export_node_attribute = None,
+                           export_edge_attribute = None):
 
     '''
     This function creates an iframe for the input graph
@@ -168,6 +173,43 @@ def visjs_network(nodes_dict, edges_dict,
         - VisJS html network plot (iframe)
 
     '''
+
+    # error checking for nodes_dict and edges_dict
+    if not nodes_dict:
+        print ("Error: nodes_dict is empty")
+        return
+
+    if type(nodes_dict[0]) is not dict:
+        print ("Error: nodes_dict does not contain dictionary")
+        return
+
+    if 'id' not in nodes_dict[0].keys():
+        print ("Error: 'id' must be in nodes_dict")
+        return
+
+    if 'x' not in nodes_dict[0].keys():
+        print ("Error: 'x' must be in nodes_dict")
+        return
+
+    if 'y' not in nodes_dict[0].keys():
+        print ("Error: 'y' must be in nodes_dict")
+        return
+
+    if not edges_dict:
+        print ("Error: edges_dict is empty")
+        return
+
+    if type(edges_dict[0]) is not dict:
+        print ("Error: edges_dict does not contain dictionary")
+        return
+
+    if 'source' not in edges_dict[0].keys():
+        print ("Error: 'source' must be in edges_dict")
+        return
+
+    if 'target' not in edges_dict[0].keys():
+        print ("Error: 'target' must be in edges_dict")
+        return
 
     # turn off physics simulation if scaling graph
     if scaling_factor > 1:
@@ -198,6 +240,13 @@ def visjs_network(nodes_dict, edges_dict,
 
     # check nodes_dict and edges_dict and fill in default values
     nodes_dict = check_nodes_dict(nodes_dict)
+
+    if export_network:
+        export_to_cytoscape(nodes_dict,
+                            edges_dict,
+                            export_file,
+                            export_node_attribute,
+                            export_edge_attribute)
 
     create_graph_style_file(filename = fname_temp,
 
@@ -333,23 +382,6 @@ def visjs_network(nodes_dict, edges_dict,
                            scaling_factor = scaling_factor
 						   )
 
-
-    # for n in nodes_dict:
-    #     #print(n)
-    #     print(type(n['node_label']))
-    #     print(type(n['border_width']))
-    #     print(type(n['x']))
-    #     print(type(n['id']))
-    #     print(type(n['color']))
-    #     print(type(n['degree']))
-    #     print(type(n['node_shape']))
-    #     print(type(n['node_size']))
-    #     print(type(n['title']))
-    #     print(type(n['y']))
-        # print(type(np.int64(n['node_label']).item()))
-        # print(type(n['border_width']))
-        # print(type(np.float64(n['x']).item()))
-
     dumps(nodes_dict)
 
     html_return = HTML(
@@ -371,11 +403,64 @@ def visjs_network(nodes_dict, edges_dict,
    + '</html>'
    )
 
-    #os.remove(fname_temp)
-
     return html_return
 
 
+def export_to_cytoscape(nodes_dict,
+                        edges_dict,
+                        export_file,
+                        export_node_attribute,
+                        export_edge_attribute):
+    '''
+    Exports graph to JSON file in a Cytoscape compatible format.
+
+    Inputs:
+        - nodes_dict: dictionary of nodes and attributes
+        - edges_dict: dictionary of edges and attributes
+        - export_file: JSON file name to export graph to
+
+    Returns:
+        - None
+
+    Side Effect:
+        - Creates a JSON file of the name export_file.
+    '''
+
+    nodes = [node['id'] for node in nodes_dict]
+    edges = [(edge['source'],edge['target']) for edge in edges_dict]
+    G = nx.Graph()
+    G.add_nodes_from(nodes)
+    G.add_edges_from(edges)
+    node_to_shape = {node['id']:node['node_shape'] for node in nodes_dict}
+    nx.set_node_attributes(G,'nodeShape',node_to_shape)
+
+    if export_node_attribute is None or export_node_attribute not in nodes_dict[0].keys():
+        export_node_attribute = 'id'    #PLACEHOLDER
+
+    node_to_color = {node['id']:node[export_node_attribute] for node in nodes_dict}
+    nx.set_node_attributes(G,'nodeColor',node_to_color)
+
+    if export_edge_attribute is None or export_edge_attribute not in edges_dict[0].keys():
+        export_edge_attribute = 'source'    #PLACEHOLDER
+
+    edges_data = [(edge['source'],edge['target'],edge[export_edge_attribute])
+                  for edge in edges_dict]
+    edges1,edges2,data = zip(*edges_data)
+    edge_to_color = dict(zip(zip(edges1,edges2),data))
+    nx.set_edge_attributes(G,'edgeColor',edge_to_color)
+
+    xpos = {node['id']:node['x'] for node in nodes_dict}
+    nx.set_node_attributes(G,'xpos',xpos)
+    ypos = {node['id']:node['y'] for node in nodes_dict}
+    nx.set_node_attributes(G,'ypos',ypos)
+    border_width = {node['id']:node['border_width'] for node in nodes_dict}
+    nx.set_node_attributes(G,'nodeOutline',border_width)
+    node_titles = {node['id']:node['title'] for node in nodes_dict}
+    nx.set_node_attributes(G,'nodeTitle',node_titles)
+
+    G_json = util.from_networkx(G)
+    with open(export_file,'w') as outfile:
+        json.dump(G_json,outfile)
 
 
 def return_node_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0,color_vals_transform = None,ceil_val=10,
@@ -396,9 +481,9 @@ def return_node_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0,col
         nonzero_list = [d for d in data if d>(10**-18)]
         if not nonzero_list:
             data = [1 for d in data]
-            print ("Warning: All nodes have data value of 0")
+            print ('Warning: All nodes have data value of 0')
         else:
-            min_dn0 = min([d for d in data if d>(10**-18)])
+            min_dn0 = min(nonzero_list)
             data = [np.log(max(d,min_dn0)) for d in data]  # set the zero d values to minimum non0 value
             data = [(d-np.min(data)) for d in data] # shift so we don't have any negative values
         nodes_with_data = zip(nodes,data)
@@ -419,11 +504,9 @@ def return_node_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0,col
     color_to_add = 256*color_min_frac
 
     color_list = [np.multiply(cmap(int(float(node_to_mapField[d])/np.max(list(node_to_mapField.values()))*color_to_mult+color_to_add)),256) for d in G.nodes()]
-
     color_list = [(int(c[0]),int(c[1]),int(c[2]),alpha) for c in color_list]
 
     node_to_color = dict(zip(G.nodes(),['rgba'+str(c) for c in color_list]))
-
     return node_to_color
 
 
@@ -463,14 +546,10 @@ def return_edge_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0,col
         edges_with_data = zip(zip(edges1,edges2),data)
 
     edge_to_mapField = dict(edges_with_data)
-
-    # color_list = [np.multiply(cmap(int(float(edge_to_mapField[d])/np.max(edge_to_mapField.values())*256)),256) for d in G.edges()]
     color_list = [np.multiply(cmap(int(float(edge_to_mapField[d])/np.max(list(edge_to_mapField.values()))*256)),256) for d in G.edges()]
-
     color_list = [(int(c[0]),int(c[1]),int(c[2]),alpha) for c in color_list]
 
     edge_to_color = dict(zip(G.edges(),['rgba'+str(c) for c in color_list]))
-
     return edge_to_color
 
 
