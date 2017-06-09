@@ -129,6 +129,8 @@ In order to save high resolution images, we include the ‘scaling_factor’ arg
 
 To export to a cytoscape compatible format, set the ‘export_network’ argument to True in the visualization functions.  The network, with attributes, will be saved in a Cytoscape compatible JSON format.  To change the default file name, set the ‘export_file’ argument to the desired name.  Once the network has been saved, open Cytoscape and load the file.  To reproduce the network as it looked in the Jupyter cell, load the corresponding Cytoscape style file (provided where in the GitHub repository https://github.com/ucsd-ccbb/visJS2jupyter/tree/master/cytoscape_styles), and apply it to the network.
 
+Note that physics simulations will interfere with the initial placement of nodes and edges in the network. Thus, to reproduce the network exactly, we recommend keeping the physics simulation turned off. 
+
   
 [Table of contents](#toc)
 <a id='visualizations'></a>
