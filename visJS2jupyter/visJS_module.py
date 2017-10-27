@@ -4,6 +4,7 @@
 Authors:
     - Brin Rosenthal (sbrosenthal@ucsd.edu)
     - Aaron Gary (agary@ucsd.edu)
+	- Mikayla Webster (m1webste@ucsd.edu)
 
 --------------------------------------------------------
 '''
@@ -15,6 +16,7 @@ from IPython.display import HTML, Javascript
 import json
 from json import dumps
 import matplotlib as mpl
+import matplotlib.pyplot as plt
 import numpy as np
 from py2cytoscape import util
 import networkx as nx
@@ -432,13 +434,13 @@ def export_to_cytoscape(nodes_dict,
     G.add_nodes_from(nodes)
     G.add_edges_from(edges)
     node_to_shape = {node['id']:node['node_shape'] for node in nodes_dict}
-    nx.set_node_attributes(G,'nodeShape',node_to_shape)
+    nx.set_node_attributes(G, name = 'nodeShape', values = node_to_shape)
 
     if export_node_attribute is None or export_node_attribute not in nodes_dict[0].keys():
         export_node_attribute = 'id'    #PLACEHOLDER
 
     node_to_color = {node['id']:node[export_node_attribute] for node in nodes_dict}
-    nx.set_node_attributes(G,'nodeColor',node_to_color)
+    nx.set_node_attributes(G, name = 'nodeColor', values = node_to_color)
 
     if export_edge_attribute is None or export_edge_attribute not in edges_dict[0].keys():
         export_edge_attribute = 'source'    #PLACEHOLDER
@@ -447,23 +449,23 @@ def export_to_cytoscape(nodes_dict,
                   for edge in edges_dict]
     edges1,edges2,data = zip(*edges_data)
     edge_to_color = dict(zip(zip(edges1,edges2),data))
-    nx.set_edge_attributes(G,'edgeColor',edge_to_color)
+    nx.set_edge_attributes(G, name = 'edgeColor', values = edge_to_color)
 
     xpos = {node['id']:node['x'] for node in nodes_dict}
-    nx.set_node_attributes(G,'xpos',xpos)
+    nx.set_node_attributes(G, name = 'xpos', values = xpos)
     ypos = {node['id']:node['y'] for node in nodes_dict}
-    nx.set_node_attributes(G,'ypos',ypos)
+    nx.set_node_attributes(G, name = 'ypos', values = ypos)
     border_width = {node['id']:node['border_width'] for node in nodes_dict}
-    nx.set_node_attributes(G,'nodeOutline',border_width)
+    nx.set_node_attributes(G, name = 'nodeOutline', values = border_width)
     node_titles = {node['id']:node['title'] for node in nodes_dict}
-    nx.set_node_attributes(G,'nodeTitle',node_titles)
+    nx.set_node_attributes(G, name = 'nodeTitle', values = node_titles)
 
     G_json = util.from_networkx(G)
     with open(export_file,'w') as outfile:
         json.dump(G_json,outfile)
 
 
-def return_node_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0,color_vals_transform = None,ceil_val=10,
+def return_node_to_color(G,field_to_map='degree',cmap=plt.cm.jet,alpha = 1.0,color_vals_transform = None,ceil_val=10,
                          color_max_frac = 1.0,color_min_frac = 0.0):
 
     '''
@@ -506,11 +508,11 @@ def return_node_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0,col
     color_list = [np.multiply(cmap(int(float(node_to_mapField[d])/np.max(list(node_to_mapField.values()))*color_to_mult+color_to_add)),256) for d in G.nodes()]
     color_list = [(int(c[0]),int(c[1]),int(c[2]),alpha) for c in color_list]
 
-    node_to_color = dict(zip(G.nodes(),['rgba'+str(c) for c in color_list]))
+    node_to_color = dict(zip(list(G.nodes()),['rgba'+str(c) for c in color_list]))
     return node_to_color
 
 
-def return_edge_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0,color_vals_transform = None,ceil_val=10):
+def return_edge_to_color(G,field_to_map='degree',cmap=plt.cm.jet,alpha = 1.0,color_vals_transform = None,ceil_val=10):
 
     '''
     Function to return a dictionary mapping edges (keys) to colors (values), based on the selected field_to_map.
@@ -549,7 +551,7 @@ def return_edge_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0,col
     color_list = [np.multiply(cmap(int(float(edge_to_mapField[d])/np.max(list(edge_to_mapField.values()))*256)),256) for d in G.edges()]
     color_list = [(int(c[0]),int(c[1]),int(c[2]),alpha) for c in color_list]
 
-    edge_to_color = dict(zip(G.edges(),['rgba'+str(c) for c in color_list]))
+    edge_to_color = dict(zip(list(G.edges()),['rgba'+str(c) for c in color_list]))
     return edge_to_color
 
 

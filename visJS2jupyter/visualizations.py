@@ -12,6 +12,7 @@ from __future__ import print_function
 import json
 import math
 import matplotlib as mpl
+import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import pandas as pd
@@ -19,12 +20,12 @@ from py2cytoscape import util
 import visJS2jupyter.visJS_module as visJS_module
 
 def draw_graph_overlap(G1, G2,
-                       edge_cmap=mpl.cm.coolwarm,
+                       edge_cmap=plt.cm.coolwarm,
                        export_file='graph_overlap.json',
                        export_network=False,
                        highlight_nodes=None,
                        k=None,
-                       node_cmap=mpl.cm.autumn,
+                       node_cmap=plt.cm.autumn,
                        node_name_1='graph 1',
                        node_name_2='graph 2',
                        node_size=10,
@@ -55,8 +56,8 @@ def draw_graph_overlap(G1, G2,
     G_overlap = create_graph_overlap(G1, G2, node_name_1, node_name_2)
 
     # create nodes dict and edges dict for input to visjs
-    nodes = G_overlap.nodes()
-    edges = G_overlap.edges()
+    nodes = list(G_overlap.nodes())
+    edges = list(G_overlap.edges())
 
     # set the position of each node
     if k is None:
@@ -65,8 +66,8 @@ def draw_graph_overlap(G1, G2,
         pos = nx.spring_layout(G_overlap,k=k)
 
     xpos,ypos=zip(*pos.values())
-    nx.set_node_attributes(G_overlap,'xpos',dict(zip(pos.keys(),[x*1000 for x in xpos])))
-    nx.set_node_attributes(G_overlap,'ypos',dict(zip(pos.keys(),[y*1000 for y in ypos])))
+    nx.set_node_attributes(G_overlap, name = 'xpos', values = dict(zip(pos.keys(),[x*1000 for x in xpos])))
+    nx.set_node_attributes(G_overlap, name = 'ypos', values = dict(zip(pos.keys(),[y*1000 for y in ypos])))
 
     # set the border width of nodes
     if 'node_border_width' not in kwargs.keys():
@@ -79,7 +80,7 @@ def draw_graph_overlap(G1, G2,
         else:
             border_width[n] = 0
 
-    nx.set_node_attributes(G_overlap,'nodeOutline',border_width)
+    nx.set_node_attributes(G_overlap, name = 'nodeOutline', values = border_width)
 
     # set the shape of each node
     nodes_shape=[]
@@ -91,7 +92,7 @@ def draw_graph_overlap(G1, G2,
         elif node[1]['node_overlap']==1:
             nodes_shape.append('triangle')
     node_to_shape=dict(zip(G_overlap.nodes(),nodes_shape))
-    nx.set_node_attributes(G_overlap,'nodeShape',node_to_shape)
+    nx.set_node_attributes(G_overlap, name = 'nodeShape', values = node_to_shape)
 
     # set the node label of each node
     if highlight_nodes:
@@ -104,13 +105,13 @@ def draw_graph_overlap(G1, G2,
     else:
         node_labels = {n:str(n) for n in nodes}
 
-    nx.set_node_attributes(G_overlap,'nodeLabel',node_labels)
+    nx.set_node_attributes(G_overlap, name = 'nodeLabel', values = node_labels)
 
     # set the node title of each node
     node_titles = [ node[1]['node_name_membership'] + '<br/>' + str(node[0])
                     for node in G_overlap.nodes(data=True) ]
     node_titles = dict(zip(G_overlap.nodes(),node_titles))
-    nx.set_node_attributes(G_overlap,'nodeTitle',node_titles)
+    nx.set_node_attributes(G_overlap, name = 'nodeTitle', values = node_titles)
 
     # set color of each node
     node_to_color = visJS_module.return_node_to_color(G_overlap,
@@ -173,9 +174,9 @@ def draw_graph_overlap(G1, G2,
     # export the network to JSON for Cytoscape
     if export_network:
         node_colors = map_node_to_color(G_overlap,'node_overlap',False)
-        nx.set_node_attributes(G_overlap,'nodeColor',node_colors)
+        nx.set_node_attributes(G_overlap, name = 'nodeColor', values = node_colors)
         edge_colors = map_edge_to_color(G_overlap,'edge_weight',False)
-        nx.set_edge_attributes(G_overlap,'edgeColor',edge_colors)
+        nx.set_edge_attributes(G_overlap, name = 'edgeColor', values = edge_colors)
         export_to_cytoscape(G_overlap,export_file)
 
     return visJS_module.visjs_network(nodes_dict,edges_dict,**kwargs)
@@ -196,13 +197,13 @@ def create_graph_overlap(G1,G2,node_name_1,node_name_2):
     '''
 
     overlap_graph = nx.Graph()
-    node_union = list(np.union1d(G1.nodes(),G2.nodes()))
-    node_intersect = list(np.intersect1d(G1.nodes(),G2.nodes()))
-    nodes_1only = np.setdiff1d(G1.nodes(),node_intersect)
-    nodes_2only = np.setdiff1d(G2.nodes(),node_intersect)
+    node_union = list(np.union1d(list(G1.nodes()),list(G2.nodes())))
+    node_intersect = list(np.intersect1d(list(G1.nodes()),list(G2.nodes())))
+    nodes_1only = np.setdiff1d(list(G1.nodes()),node_intersect)
+    nodes_2only = np.setdiff1d(list(G2.nodes()),node_intersect)
 
-    edges_total = G1.edges()
-    edges_total.extend(G2.edges())
+    edges_total = list(G1.edges())
+    edges_total.extend(list(G2.edges()))
 
     overlap_graph.add_nodes_from(node_union)
 
@@ -221,13 +222,13 @@ def create_graph_overlap(G1,G2,node_name_1,node_name_2):
             node_name_membership.append(node_name_1+' + '+node_name_2)
 
     nx.set_node_attributes(overlap_graph,
-                           'node_overlap',
-                           dict(zip(node_union,node_overlap)))
+                           name = 'node_overlap',
+                           values = dict(zip(node_union,node_overlap)))
     nx.set_node_attributes(overlap_graph,
-                           'node_name_membership',
-                           dict(zip(node_union,node_name_membership)))
+                           name = 'node_name_membership',
+                           values = dict(zip(node_union,node_name_membership)))
 
-    nodes_total = overlap_graph.nodes()
+    nodes_total = list(overlap_graph.nodes())
     intersecting_edge_val = int(math.floor(math.log10(len(nodes_total)))) * 10
 
     # set the edge weights
@@ -246,18 +247,18 @@ def create_graph_overlap(G1,G2,node_name_1,node_name_2):
     edges = zip(v1,v2,weights)
 
     overlap_graph.add_weighted_edges_from(edges)
-    nx.set_edge_attributes(overlap_graph,'edge_weight',edge_weights)
+    nx.set_edge_attributes(overlap_graph, name = 'edge_weight', values = edge_weights)
     return overlap_graph
 
 
 def draw_heat_prop(G, seed_nodes,
-                   edge_cmap=mpl.cm.autumn_r,
+                   edge_cmap=plt.cm.autumn_r,
                    export_file='heat_prop.json',
                    export_network=False,
                    highlight_nodes=None,
                    k=None,
                    largest_connected_component=False,
-                   node_cmap=mpl.cm.autumn_r,
+                   node_cmap=plt.cm.autumn_r,
                    node_size=10,
                    num_nodes=None,
                    physics_enabled=False,
@@ -298,14 +299,14 @@ def draw_heat_prop(G, seed_nodes,
     if Wprime is None:
         Wprime = normalized_adj_matrix(G)
     prop_graph = network_propagation(G, Wprime, seed_nodes).to_dict()
-    nx.set_node_attributes(G,'node_heat',prop_graph)
+    nx.set_node_attributes(G, name = 'node_heat', values = prop_graph)
 
     # find top num_nodes hottest nodes and connected component if requested
     G = set_num_nodes(G,num_nodes)
     if largest_connected_component:
         G = max(nx.connected_component_subgraphs(G), key=len)
-    nodes = G.nodes()
-    edges = G.edges()
+    nodes = list(G.nodes())
+    edges = list(G.edges())
 
     # check for empty nodes and edges after getting subgraph of G
     if not nodes:
@@ -322,8 +323,8 @@ def draw_heat_prop(G, seed_nodes,
         pos = nx.spring_layout(G,k=k)
 
     xpos,ypos=zip(*pos.values())
-    nx.set_node_attributes(G,'xpos',dict(zip(pos.keys(),[x*1000 for x in xpos])))
-    nx.set_node_attributes(G,'ypos',dict(zip(pos.keys(),[y*1000 for y in ypos])))
+    nx.set_node_attributes(G, name = 'xpos', values = dict(zip(pos.keys(),[x*1000 for x in xpos])))
+    nx.set_node_attributes(G, name = 'ypos', values = dict(zip(pos.keys(),[y*1000 for y in ypos])))
 
     # set the border width of nodes
     if 'node_border_width' not in kwargs.keys():
@@ -338,7 +339,7 @@ def draw_heat_prop(G, seed_nodes,
         else:
             border_width[n] = 0
 
-    nx.set_node_attributes(G,'nodeOutline',border_width)
+    nx.set_node_attributes(G, name = 'nodeOutline', values = border_width)
 
     # set the shape of each node
     nodes_shape=[]
@@ -348,7 +349,7 @@ def draw_heat_prop(G, seed_nodes,
         else:
             nodes_shape.append('dot')
     node_to_shape=dict(zip(G.nodes(),nodes_shape))
-    nx.set_node_attributes(G,'nodeShape',node_to_shape)
+    nx.set_node_attributes(G, name = 'nodeShape', values = node_to_shape)
 
     # add a field for node labels
     if highlight_nodes:
@@ -363,13 +364,13 @@ def draw_heat_prop(G, seed_nodes,
     else:
         node_labels = {n:str(n) for n in nodes}
 
-    nx.set_node_attributes(G,'nodeLabel',node_labels)
+    nx.set_node_attributes(G, name = 'nodeLabel', values = node_labels)
 
     # set title for each node
     node_titles = [str(node[0]) + '<br/>heat = ' + str(round(node[1]['node_heat'],5))
                    for node in G.nodes(data=True)]
     node_titles = dict(zip(G.nodes(),node_titles))
-    nx.set_node_attributes(G,'nodeTitle',node_titles)
+    nx.set_node_attributes(G, name = 'nodeTitle', values = node_titles)
 
     # set color of each node
     node_to_color = visJS_module.return_node_to_color(G,
@@ -386,7 +387,7 @@ def draw_heat_prop(G, seed_nodes,
         else:
             edge_weights[e] = node_attr[e[1]]
 
-    nx.set_edge_attributes(G,'edge_weight',edge_weights)
+    nx.set_edge_attributes(G, name = 'edge_weight', values = edge_weights)
 
     # set color of each edge
     edge_to_color = visJS_module.return_edge_to_color(G,
@@ -440,22 +441,22 @@ def draw_heat_prop(G, seed_nodes,
     # export the network to JSON for Cytoscape
     if export_network:
         node_colors = map_node_to_color(G,'node_heat',True)
-        nx.set_node_attributes(G,'nodeColor',node_colors)
+        nx.set_node_attributes(G, name = 'nodeColor', values = node_colors)
         edge_colors = map_edge_to_color(G,'edge_weight',True)
-        nx.set_edge_attributes(G,'edgeColor',edge_colors)
+        nx.set_edge_attributes(G, name = 'edgeColor', values = edge_colors)
         export_to_cytoscape(G,export_file)
 
     return visJS_module.visjs_network(nodes_dict,edges_dict,**kwargs)
 
 
 def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
-                        edge_cmap=mpl.cm.autumn_r,
+                        edge_cmap=plt.cm.autumn_r,
                         export_file='colocalization.json',
                         export_network=False,
                         highlight_nodes=None,
                         k=None,
                         largest_connected_component=False,
-                        node_cmap=mpl.cm.autumn_r,
+                        node_cmap=plt.cm.autumn_r,
                         node_size=10,
                         num_nodes=None,
                         physics_enabled=False,
@@ -500,14 +501,14 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
     prop_graph_1 = network_propagation(G, Wprime, seed_nodes_1).to_dict()
     prop_graph_2 = network_propagation(G, Wprime, seed_nodes_2).to_dict()
     prop_graph = {node:(prop_graph_1[node]*prop_graph_2[node]) for node in prop_graph_1}
-    nx.set_node_attributes(G,'node_heat',prop_graph)
+    nx.set_node_attributes(G, name = 'node_heat', values = prop_graph)
 
     # find top num_nodes hottest nodes and connected component if requested
     G = set_num_nodes(G,num_nodes)
     if largest_connected_component:
         G = max(nx.connected_component_subgraphs(G), key=len)
-    nodes = G.nodes()
-    edges = G.edges()
+    nodes = list(G.nodes())
+    edges = list(G.edges())
 
     # check for empty nodes and edges after getting subgraph of G
     if not nodes:
@@ -524,8 +525,8 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
         pos = nx.spring_layout(G,k=k)
 
     xpos,ypos=zip(*pos.values())
-    nx.set_node_attributes(G,'xpos',dict(zip(pos.keys(),[x*1000 for x in xpos])))
-    nx.set_node_attributes(G,'ypos',dict(zip(pos.keys(),[y*1000 for y in ypos])))
+    nx.set_node_attributes(G, name = 'xpos', values = dict(zip(pos.keys(),[x*1000 for x in xpos])))
+    nx.set_node_attributes(G, name = 'ypos', values = dict(zip(pos.keys(),[y*1000 for y in ypos])))
 
     # set the border width of nodes
     if 'node_border_width' not in kwargs.keys():
@@ -540,7 +541,7 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
         else:
             border_width[n] = 0
 
-    nx.set_node_attributes(G,'nodeOutline',border_width)
+    nx.set_node_attributes(G, name = 'nodeOutline', values = border_width)
 
     # set the shape of each node
     nodes_shape=[]
@@ -552,7 +553,7 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
         else:
             nodes_shape.append('dot')
     node_to_shape=dict(zip(G.nodes(),nodes_shape))
-    nx.set_node_attributes(G,'nodeShape',node_to_shape)
+    nx.set_node_attributes(G, name = 'nodeShape', values = node_to_shape)
 
     # add a field for node labels
     if highlight_nodes:
@@ -567,13 +568,13 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
     else:
         node_labels = {n:str(n) for n in nodes}
 
-    nx.set_node_attributes(G,'nodeLabel',node_labels)
+    nx.set_node_attributes(G, name = 'nodeLabel', values = node_labels)
 
     # set the title of each node
     node_titles = [str(node[0]) + '<br/>heat = ' + str(round(node[1]['node_heat'],10))
                    for node in G.nodes(data=True)]
     node_titles = dict(zip(nodes,node_titles))
-    nx.set_node_attributes(G,'nodeTitle',node_titles)
+    nx.set_node_attributes(G, name = 'nodeTitle', values = node_titles)
 
     # set the color of each node
     node_to_color = visJS_module.return_node_to_color(G,
@@ -590,7 +591,7 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
         else:
             edge_weights[e] = node_attr[e[1]]
 
-    nx.set_edge_attributes(G, 'edge_weight', edge_weights)
+    nx.set_edge_attributes(G, name = 'edge_weight', values = edge_weights)
 
     # set the color of each edge
     edge_to_color = visJS_module.return_edge_to_color(G,
@@ -644,9 +645,9 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
     # export the network to JSON for Cytoscape
     if export_network:
         node_colors = map_node_to_color(G,'node_heat',True)
-        nx.set_node_attributes(G,'nodeColor',node_colors)
+        nx.set_node_attributes(G, name = 'nodeColor', values = node_colors)
         edge_colors = map_edge_to_color(G,'edge_weight',True)
-        nx.set_edge_attributes(G,'edgeColor',edge_colors)
+        nx.set_edge_attributes(G, name = 'edgeColor', values = edge_colors)
         export_to_cytoscape(G,export_file)
 
     return visJS_module.visjs_network(nodes_dict,edges_dict,**kwargs)
@@ -693,7 +694,7 @@ def normalized_adj_matrix(G,conserve_heat=True,weighted=False):
 
     G_weighted.add_weighted_edges_from(wvec)
 
-    Wprime = nx.to_numpy_matrix(G_weighted,nodelist=G.nodes())
+    Wprime = nx.to_numpy_matrix(G_weighted,nodelist=list(G.nodes()))
     Wprime = np.array(Wprime)
 
     return Wprime
@@ -716,15 +717,15 @@ def network_propagation(G,Wprime,seed_nodes,alpha=.5, num_its=20):
         - Fnew: heat vector after propagation
     '''
 
-    nodes = G.nodes()
+    nodes = list(G.nodes())
     numnodes = len(nodes)
-    edges=G.edges()
+    edges= list(G.edges())
     numedges = len(edges)
 
     Fold = np.zeros(numnodes)
-    Fold = pd.Series(Fold,index=G.nodes())
+    Fold = pd.Series(Fold,index=list(G.nodes()))
     Y = np.zeros(numnodes)
-    Y = pd.Series(Y,index=G.nodes())
+    Y = pd.Series(Y,index=list(G.nodes()))
     for g in seed_nodes:
         # normalize total amount of heat added, allow for replacement
         Y[g] = Y[g]+1/float(len(seed_nodes))
