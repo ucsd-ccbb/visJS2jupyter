@@ -16,7 +16,6 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import pandas as pd
-from py2cytoscape import util
 import visJS2jupyter.visJS_module as visJS_module
 
 def draw_graph_overlap(G1, G2,
@@ -177,7 +176,7 @@ def draw_graph_overlap(G1, G2,
         nx.set_node_attributes(G_overlap, name = 'nodeColor', values = node_colors)
         edge_colors = map_edge_to_color(G_overlap,'edge_weight',False)
         nx.set_edge_attributes(G_overlap, name = 'edgeColor', values = edge_colors)
-        export_to_cytoscape(G_overlap,export_file)
+        visJS_module.export_to_cytoscape(G = G_overlap, export_file = export_file)
 
     return visJS_module.visjs_network(nodes_dict,edges_dict,**kwargs)
 
@@ -444,7 +443,7 @@ def draw_heat_prop(G, seed_nodes,
         nx.set_node_attributes(G, name = 'nodeColor', values = node_colors)
         edge_colors = map_edge_to_color(G,'edge_weight',True)
         nx.set_edge_attributes(G, name = 'edgeColor', values = edge_colors)
-        export_to_cytoscape(G,export_file)
+        visJS_module.export_to_cytoscape(G = G,export_file = export_file)
 
     return visJS_module.visjs_network(nodes_dict,edges_dict,**kwargs)
 
@@ -648,7 +647,7 @@ def draw_colocalization(G, seed_nodes_1, seed_nodes_2,
         nx.set_node_attributes(G, name = 'nodeColor', values = node_colors)
         edge_colors = map_edge_to_color(G,'edge_weight',True)
         nx.set_edge_attributes(G, name = 'edgeColor', values = edge_colors)
-        export_to_cytoscape(G,export_file)
+        visJS_module.export_to_cytoscape(G = G,export_file = export_file)
 
     return visJS_module.visjs_network(nodes_dict,edges_dict,**kwargs)
 
@@ -758,28 +757,6 @@ def set_num_nodes(G, num_nodes):
         top_hottest_nodes = [nodes_sorted[i][0] for i in range(num_nodes)]
         return G.subgraph(top_hottest_nodes)
     return G
-
-
-def export_to_cytoscape(G, export_file):
-    '''
-    Exports networkX graph to JSON file in a Cytoscape compatible format.
-
-    Inputs:
-        - G: networkX graph
-        - export_file: JSON file name to export graph to
-
-    Returns:
-        - None
-
-    Side Effect:
-        - Creates a JSON file of the name export_file.
-    '''
-
-    G_json = util.from_networkx(G)
-    if 'partition' in G_json['data'].keys():
-        del G_json['data']['partition']
-    with open(export_file,'w') as outfile:
-        json.dump(G_json,outfile)
 
 
 def map_node_to_color(G,field_to_map,color_vals_transform):

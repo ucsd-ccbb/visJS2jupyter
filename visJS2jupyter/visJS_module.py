@@ -4,7 +4,7 @@
 Authors:
     - Brin Rosenthal (sbrosenthal@ucsd.edu)
     - Aaron Gary (agary@ucsd.edu)
-	- Mikayla Webster (m1webste@ucsd.edu)
+    - Mikayla Webster (m1webste@ucsd.edu)
 
 --------------------------------------------------------
 '''
@@ -18,7 +18,6 @@ from json import dumps
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
-from py2cytoscape import util
 import networkx as nx
 
 Javascript("https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.js")
@@ -26,52 +25,52 @@ Javascript("https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.js")
 def visjs_network(nodes_dict, edges_dict,
 
                            # by node
-					       node_border_width = 2, # node border width when not hover or selected
-						   node_border_width_selected = 2, # node border width once clicked
-						   node_broken_image = 'undefined', # back-up image in case a node image doesn't successfully load
-						   node_color_border = 'black', # creates border around node shape
-						   node_color_highlight_border = '#2B7CE9', # node border color when selected
-						   node_color_highlight_background = 'orange', # border color when selected
-						   node_color_hover_border = '#2B7CE9', # color of node border when mouse hovers but does not click
-						   node_color_hover_background = 'orange', # color of node when mouse hovers but does not click
-						   node_fixed_x = False, # node does not move in x direction but is still calculated into physics
-						   node_fixed_y = False, # node does not move in y direction but is still calculated into physics
-						   node_font_color = '#343434', # color of label text
-						   node_font_size = 14, # size of label text
-						   node_font_face = 'arial', # font face of label text
-						   node_font_background = "rgba(0,0,0,0)", # when defined with color string, a background rectangle will be drawn around text
-						   node_font_stroke_width = 0, # width of stroke, if zero not drawn
-						   node_font_stroke_color = '#ffffff', # color of stroke
-						   node_font_align = 'center', # other option is 'left'
-						   node_icon_face = 'FontAwesome', # only used when shape is set to icon. Options are 'FontAwesome' and 'Ionicons'
-						   node_icon_code = 'undefined', # code used to define which icon to use
-						   node_icon_size = 50, # size of icon
-						   node_icon_color = '#2B7CE9', # color of icon
-						   node_image = 'undefined', # when shape set to 'image' or 'circularImage', then the URL image designated here will be used
-						   node_label_highlight_bold = True, # determines if label boldens when node is selected
-						   node_scaling_min = 10, # min size node can become when it scales down
-						   node_scaling_max = 30, # max size node can become when it scales up
-						   node_scaling_label_enabled = False, # toggle scaling of label on or off
-						   node_scaling_label_min = 14, # min font size the label can become when it scales down
-						   node_scaling_label_max = 30, # max font size the label can become when it scales up
-						   node_scaling_label_max_visible = 30, # font will never be larger than this number at 100% zoom
-						   node_scaling_label_draw_threshold = 5, # lower limit font is drawn as, use this and max visible to control which labels remain visible during zoom out
-						   node_shadow_enabled = True, # whether there is a shadow cast by the nodes
-						   node_shadow_color ='rgba(0,0,0,0.5)', # shadow color
-						   node_shadow_size = 10, # shadow blur size
-						   node_shadow_x = 5, # shadow x offset from node
-						   node_shadow_y = 5, # shadow y offet from node
-						   node_shape_border_dashes = False, # makes dashed border around node
-						   node_shape_border_radius = 6, # determines roundness of node shape (only for "box" shape)
-						   node_shape_interpolation = True, # only for image and circular image: image resamples when scaling down
-						   node_shape_use_image_size = False, # only for image and circular image: true means use image size, false use our defined node size
-						   node_shape_use_border_with_image = False, # only for image: draws border around image icon
-						   node_label_field = 'id', # field that nodes will be labeled with
-						   node_size_field = 'degree', # field that determines which nodes are more important thus should be scaled bigger
-						   node_size_transform = 'Math.sqrt', # function by which higher value (not node_value) nodes are scaled larger to show importance
-						   node_size_multiplier = 3, # increment by which higher value (not node_value) nodes are scaled larger to show importance
+                           node_border_width = 2, # node border width when not hover or selected
+                           node_border_width_selected = 2, # node border width once clicked
+                           node_broken_image = 'undefined', # back-up image in case a node image doesn't successfully load
+                           node_color_border = 'black', # creates border around node shape
+                           node_color_highlight_border = '#2B7CE9', # node border color when selected
+                           node_color_highlight_background = 'orange', # border color when selected
+                           node_color_hover_border = '#2B7CE9', # color of node border when mouse hovers but does not click
+                           node_color_hover_background = 'orange', # color of node when mouse hovers but does not click
+                           node_fixed_x = False, # node does not move in x direction but is still calculated into physics
+                           node_fixed_y = False, # node does not move in y direction but is still calculated into physics
+                           node_font_color = '#343434', # color of label text
+                           node_font_size = 14, # size of label text
+                           node_font_face = 'arial', # font face of label text
+                           node_font_background = "rgba(0,0,0,0)", # when defined with color string, a background rectangle will be drawn around text
+                           node_font_stroke_width = 0, # width of stroke, if zero not drawn
+                           node_font_stroke_color = '#ffffff', # color of stroke
+                           node_font_align = 'center', # other option is 'left'
+                           node_icon_face = 'FontAwesome', # only used when shape is set to icon. Options are 'FontAwesome' and 'Ionicons'
+                           node_icon_code = 'undefined', # code used to define which icon to use
+                           node_icon_size = 50, # size of icon
+                           node_icon_color = '#2B7CE9', # color of icon
+                           node_image = 'undefined', # when shape set to 'image' or 'circularImage', then the URL image designated here will be used
+                           node_label_highlight_bold = True, # determines if label boldens when node is selected
+                           node_scaling_min = 10, # min size node can become when it scales down
+                           node_scaling_max = 30, # max size node can become when it scales up
+                           node_scaling_label_enabled = False, # toggle scaling of label on or off
+                           node_scaling_label_min = 14, # min font size the label can become when it scales down
+                           node_scaling_label_max = 30, # max font size the label can become when it scales up
+                           node_scaling_label_max_visible = 30, # font will never be larger than this number at 100% zoom
+                           node_scaling_label_draw_threshold = 5, # lower limit font is drawn as, use this and max visible to control which labels remain visible during zoom out
+                           node_shadow_enabled = True, # whether there is a shadow cast by the nodes
+                           node_shadow_color ='rgba(0,0,0,0.5)', # shadow color
+                           node_shadow_size = 10, # shadow blur size
+                           node_shadow_x = 5, # shadow x offset from node
+                           node_shadow_y = 5, # shadow y offet from node
+                           node_shape_border_dashes = False, # makes dashed border around node
+                           node_shape_border_radius = 6, # determines roundness of node shape (only for "box" shape)
+                           node_shape_interpolation = True, # only for image and circular image: image resamples when scaling down
+                           node_shape_use_image_size = False, # only for image and circular image: true means use image size, false use our defined node size
+                           node_shape_use_border_with_image = False, # only for image: draws border around image icon
+                           node_label_field = 'id', # field that nodes will be labeled with
+                           node_size_field = 'degree', # field that determines which nodes are more important thus should be scaled bigger
+                           node_size_transform = 'Math.sqrt', # function by which higher value (not node_value) nodes are scaled larger to show importance
+                           node_size_multiplier = 3, # increment by which higher value (not node_value) nodes are scaled larger to show importance
 
-						   # by edge
+                           # by edge
                            edge_title_field = 'id', # which attribute name to show on edge hover
                            edge_arrow_to = False, # creates a directed edge with arrow head on receiving node
                            edge_arrow_from = False, # creates a directed edge with arrow head coming from delivering node
@@ -91,7 +90,7 @@ def visjs_network(nodes_dict, edges_dict,
                            edge_font_face = 'ariel', # font of label text
                            edge_font_background = 'rgba(0,0,0,0)', # when given a color string, a background rectangle of that color will be drawn behind the label
                            edge_font_strokeWidth = 0, # stroke drawn around text
-						   edge_font_stroke_color = '#343434', # color of stroke
+                           edge_font_stroke_color = '#343434', # color of stroke
                            edge_font_align = 'horizontal', # 'horizontal', 'middle', 'top', or 'bottom'
                            edge_hoverWidth = 0.5, # number to be added to width of edge to determine hovering
                            edge_label_highlight_bold = True, # determines whether label becomes bold when edge is selected
@@ -116,35 +115,35 @@ def visjs_network(nodes_dict, edges_dict,
                            edge_smooth_force_direction = 'none', # 'horizontal', 'vertical', and 'none'. Only for cubicBezier curves
                            edge_smooth_roundness = 0.5, # number between 0 and 1 that changes roundness of curve except with dynamic curves
                            edge_width = 1, # width of all edges
-						   edge_label_field = "id",
+                           edge_label_field = "id",
 
-						   #interaction
-						   drag_nodes = True, # When true, the nodes that are not fixed can be dragged by the user.
-						   drag_view = True, # When true, the view can be dragged around by the user.
-						   hide_edges_on_drag = False, # When true, the edges are not drawn when dragging the view. This can greatly speed up responsiveness on dragging, improving user experience.
-						   hide_nodes_on_drag = False, # When true, the nodes are not drawn when dragging the view. This can greatly speed up responsiveness on dragging, improving user experience.
-						   hover = True, # When true, the nodes use their hover colors when the mouse moves over them.
-						   hover_connected_edges = True, # When true, on hovering over a node, it's connecting edges are highlighted.
-						   keyboard_enabled = False, # Toggle the usage of the keyboard shortcuts. If this option is not defined, it is set to true if any of the properties in this object are defined.
-						   keyboard_speed_x = 10, # The speed at which the view moves in the x direction on pressing a key or pressing a navigation button.
-						   keyboard_speed_y = 10, # The speed at which the view moves in the y direction on pressing a key or pressing a navigation button.
-						   keyboard_speed_zoom = 0.02, # The speed at which the view zooms in or out pressing a key or pressing a navigation button.
-						   keyboard_bind_to_window = True, # When binding the keyboard shortcuts to the window, they will work regardless of which DOM object has the focus. If you have multiple networks on your page, you could set this to false, making sure the keyboard shortcuts only work on the network that has the focus.
-						   multiselect = False, # When true, a longheld click (or touch) as well as a control-click will add to the selection.
-						   navigation_buttons = False, # When true, navigation buttons are drawn on the network canvas. These are HTML buttons and can be completely customized using CSS.
-						   selectable = True, # When true, the nodes and edges can be selected by the user.
-						   select_connected_edges = True, # When true, on selecting a node, its connecting edges are highlighted.
-						   tooltip_delay = 300, # When nodes or edges have a defined 'title' field, this can be shown as a pop-up tooltip. The tooltip itself is an HTML element that can be fully styled using CSS. The delay is the amount of time in milliseconds it takes before the tooltip is shown.
-						   zoom_view = True, # When true, the user can zoom in.
+                           #interaction
+                           drag_nodes = True, # When true, the nodes that are not fixed can be dragged by the user.
+                           drag_view = True, # When true, the view can be dragged around by the user.
+                           hide_edges_on_drag = False, # When true, the edges are not drawn when dragging the view. This can greatly speed up responsiveness on dragging, improving user experience.
+                           hide_nodes_on_drag = False, # When true, the nodes are not drawn when dragging the view. This can greatly speed up responsiveness on dragging, improving user experience.
+                           hover = True, # When true, the nodes use their hover colors when the mouse moves over them.
+                           hover_connected_edges = True, # When true, on hovering over a node, it's connecting edges are highlighted.
+                           keyboard_enabled = False, # Toggle the usage of the keyboard shortcuts. If this option is not defined, it is set to true if any of the properties in this object are defined.
+                           keyboard_speed_x = 10, # The speed at which the view moves in the x direction on pressing a key or pressing a navigation button.
+                           keyboard_speed_y = 10, # The speed at which the view moves in the y direction on pressing a key or pressing a navigation button.
+                           keyboard_speed_zoom = 0.02, # The speed at which the view zooms in or out pressing a key or pressing a navigation button.
+                           keyboard_bind_to_window = True, # When binding the keyboard shortcuts to the window, they will work regardless of which DOM object has the focus. If you have multiple networks on your page, you could set this to false, making sure the keyboard shortcuts only work on the network that has the focus.
+                           multiselect = False, # When true, a longheld click (or touch) as well as a control-click will add to the selection.
+                           navigation_buttons = False, # When true, navigation buttons are drawn on the network canvas. These are HTML buttons and can be completely customized using CSS.
+                           selectable = True, # When true, the nodes and edges can be selected by the user.
+                           select_connected_edges = True, # When true, on selecting a node, its connecting edges are highlighted.
+                           tooltip_delay = 300, # When nodes or edges have a defined 'title' field, this can be shown as a pop-up tooltip. The tooltip itself is an HTML element that can be fully styled using CSS. The delay is the amount of time in milliseconds it takes before the tooltip is shown.
+                           zoom_view = True, # When true, the user can zoom in.
 
-						   # configuration
-						   config_enabled = False, # Toggle the configuration interface on or off. This is an optional parameter. If left undefined and any of the other properties of this object are defined, this will be set to true.
+                           # configuration
+                           config_enabled = False, # Toggle the configuration interface on or off. This is an optional parameter. If left undefined and any of the other properties of this object are defined, this will be set to true.
                            config_filter = "nodes,edges", # When a string is supplied, any combination of the following is allowed: nodes, edges, layout, interaction, manipulation, physics, selection, renderer. Feel free to come up with a fun seperating character. Finally, when supplied an array of strings, any of the previously mentioned fields are accepted.
                            container = "undefined", # This allows you to put the configure list in another HTML container than below the network.
                            showButton = False, # Show the generate options button at the bottom of the configurator.
 
-						   # other stuff
-						   border_color='white',
+                           # other stuff
+                           border_color='white',
                            physics_enabled=False,
                            min_velocity=2,
                            max_velocity=8,
@@ -156,7 +155,7 @@ def visjs_network(nodes_dict, edges_dict,
                            graph_width = 900,
                            graph_height = 800,
                            scaling_factor = 1,
-						   time_stamp = 0,   # deprecated: use graph_id
+                           time_stamp = 0,   # deprecated: use graph_id
                            graph_id = 0,     # To draw multiple graphs in the same notebook, give each a different id
                            export_network = False,
                            export_file = 'network.json',
@@ -244,11 +243,11 @@ def visjs_network(nodes_dict, edges_dict,
     nodes_dict = check_nodes_dict(nodes_dict)
 
     if export_network:
-        export_to_cytoscape(nodes_dict,
-                            edges_dict,
-                            export_file,
-                            export_node_attribute,
-                            export_edge_attribute)
+        export_to_cytoscape(nodes_dict = nodes_dict,
+                            edges_dict = edges_dict,
+                            export_file = export_file,
+                            export_node_attribute = export_node_attribute,
+                            export_edge_attribute = export_edge_attribute)
 
     create_graph_style_file(filename = fname_temp,
 
@@ -298,7 +297,7 @@ def visjs_network(nodes_dict, edges_dict,
                            node_size_transform = node_size_transform,
                            node_size_multiplier = node_size_multiplier,
 
-						   # by edge
+                           # by edge
                            edge_title_field = edge_title_field,
                            edge_arrow_to = edge_arrow_to,
                            edge_arrow_from = edge_arrow_from,
@@ -318,7 +317,7 @@ def visjs_network(nodes_dict, edges_dict,
                            edge_font_face = edge_font_face,
                            edge_font_background = edge_font_background,
                            edge_font_strokeWidth = edge_font_strokeWidth,
-						   edge_font_stroke_color = edge_font_stroke_color,
+                           edge_font_stroke_color = edge_font_stroke_color,
                            edge_font_align = edge_font_align,
                            edge_hoverWidth = edge_hoverWidth,
                            edge_label_highlight_bold = edge_label_highlight_bold,
@@ -342,35 +341,35 @@ def visjs_network(nodes_dict, edges_dict,
                            edge_smooth_force_direction = edge_smooth_force_direction,
                            edge_smooth_roundness = edge_smooth_roundness,
                            edge_width = edge_width,
-						   edge_label_field = edge_label_field,
+                           edge_label_field = edge_label_field,
 
-						   #interaction
-						   drag_nodes = drag_nodes,
-						   drag_view = drag_view,
-						   hide_edges_on_drag = hide_edges_on_drag,
-						   hide_nodes_on_drag = hide_nodes_on_drag,
-						   hover = hover,
-						   hover_connected_edges = hover_connected_edges,
-						   keyboard_enabled = keyboard_enabled,
-						   keyboard_speed_x = keyboard_speed_x,
-						   keyboard_speed_y = keyboard_speed_y,
-						   keyboard_speed_zoom = keyboard_speed_zoom,
-						   keyboard_bind_to_window = keyboard_bind_to_window,
-						   multiselect = multiselect,
-						   navigation_buttons = navigation_buttons,
-						   selectable = selectable,
-						   select_connected_edges = select_connected_edges,
-						   tooltip_delay = tooltip_delay,
-						   zoom_view = zoom_view,
+                           #interaction
+                           drag_nodes = drag_nodes,
+                           drag_view = drag_view,
+                           hide_edges_on_drag = hide_edges_on_drag,
+                           hide_nodes_on_drag = hide_nodes_on_drag,
+                           hover = hover,
+                           hover_connected_edges = hover_connected_edges,
+                           keyboard_enabled = keyboard_enabled,
+                           keyboard_speed_x = keyboard_speed_x,
+                           keyboard_speed_y = keyboard_speed_y,
+                           keyboard_speed_zoom = keyboard_speed_zoom,
+                           keyboard_bind_to_window = keyboard_bind_to_window,
+                           multiselect = multiselect,
+                           navigation_buttons = navigation_buttons,
+                           selectable = selectable,
+                           select_connected_edges = select_connected_edges,
+                           tooltip_delay = tooltip_delay,
+                           zoom_view = zoom_view,
 
-						   #configuration
-						   config_enabled = config_enabled,
+                           #configuration
+                           config_enabled = config_enabled,
                            config_filter = config_filter,
                            container = container,
                            showButton = showButton,
 
                            # other stuff
-						   border_color = border_color,
+                           border_color = border_color,
                            physics_enabled = physics_enabled,
                            min_velocity = min_velocity,
                            max_velocity = max_velocity,
@@ -382,7 +381,7 @@ def visjs_network(nodes_dict, edges_dict,
                            graph_width = graph_width,
                            graph_height = graph_height,
                            scaling_factor = scaling_factor
-						   )
+                           )
 
     dumps(nodes_dict)
 
@@ -408,61 +407,136 @@ def visjs_network(nodes_dict, edges_dict,
     return html_return
 
 
-def export_to_cytoscape(nodes_dict,
-                        edges_dict,
-                        export_file,
-                        export_node_attribute,
-                        export_edge_attribute):
+def export_to_cytoscape(nodes_dict = 0,
+                        edges_dict = 0,
+                        G = 0,
+                        export_file = 'network.json',
+                        export_node_attribute = 0,
+                        export_edge_attribute = 0):
     '''
     Exports graph to JSON file in a Cytoscape compatible format.
 
     Inputs:
         - nodes_dict: dictionary of nodes and attributes
         - edges_dict: dictionary of edges and attributes
+        - G: a networkX graph to use in place of nodes and edges dicts
         - export_file: JSON file name to export graph to
-
-    Returns:
-        - None
-
-    Side Effect:
-        - Creates a JSON file of the name export_file.
+        - export_node_attribute: currently unsupported
+        - export_edge_attribute: currently unsupported
     '''
+    
+    
+    if((nodes_dict == 0) & (edges_dict == 0) & (G == 0)):
+        print('Please specify either a networkX graph (G) or a nodes_dict and edges_dict when calling visJS_module.export_to_cytoscape')
+        return -1
+        
+    if( ((nodes_dict == 0) & (edges_dict != 0)) | ((nodes_dict == 0) & (edges_dict != 0)) ):
+        print('Please specify both a nodes_dict and edges_dict when calling visJS_module.export_to_cytoscape')
+        return -1
+    
+    # if the user did not specify a graph
+    if (G == 0):
+        # making the basic graph from only node id
+        nodes = [node['id'] for node in nodes_dict] # nodes_dict must contain id
+        edges = [(edge['source'],edge['target']) for edge in edges_dict] # edges_dict must contain source and target
+        G = nx.Graph()
+        G.add_nodes_from(nodes)
+        G.add_edges_from(edges)
+    else:
+        # create nodes_dict from graph
+        nodes_dict = []
+        for node in list(G.nodes(data=True)):
+            if 'id' not in node[1]: # ensure id is in node dict
+                node[1]['id'] = node[0]
+            nodes_dict.append(node[1])
+    
+        # create edges_dict from graph
+        edges_dict = []
+        for edge in list(G.edges(data=True)):
+            if 'source' not in edge[2]: # ensure source is in edge dict
+                edge[2]['source'] = edge[0]
+            if 'target' not in edge[2]: # ensure target is in edge dict
+                edge[2]['target'] = edge[1]
+            edges_dict.append(edge[2])   
 
-    nodes = [node['id'] for node in nodes_dict]
-    edges = [(edge['source'],edge['target']) for edge in edges_dict]
-    G = nx.Graph()
-    G.add_nodes_from(nodes)
-    G.add_edges_from(edges)
-    node_to_shape = {node['id']:node['node_shape'] for node in nodes_dict}
-    nx.set_node_attributes(G, name = 'nodeShape', values = node_to_shape)
+        nodes = [node['id'] for node in nodes_dict] # nodes_dict must contain id
+        edges = [(edge['source'],edge['target']) for edge in edges_dict] # edges_dict must contain source and target
+    
+    print(list(G.nodes(data = True)))
+    print(list(G.edges(data = True)))
+    
+    # iterate over nodes dict and add attributes to graph
+    for attribute in nodes_dict[0].keys(): # under the assumption that all nodes have the same attributes!!!!
+    
+        if attribute == 'x':
+            xpos = {node['id']:node['x'] for node in nodes_dict}
+            nx.set_node_attributes(G, name = 'xpos', values = xpos)
+        elif attribute == 'y':
+            ypos = {node['id']:node['y'] for node in nodes_dict}
+            nx.set_node_attributes(G, name = 'ypos', values = ypos)
+        elif attribute == 'border_width':
+            border_width = {node['id']:node['border_width'] for node in nodes_dict}
+            nx.set_node_attributes(G, name = 'nodeOutline', values = border_width)
+        elif attribute == 'title':
+            node_titles = {node['id']:node['title'] for node in nodes_dict}
+            nx.set_node_attributes(G, name = 'nodeTitle', values = node_titles)
+        elif attribute == 'id':
+            node_id = {node['id']:str(node['id']) for node in nodes_dict}
+            nx.set_node_attributes(G, name = 'id', values = node_id)
+        else:
+            node_att = {node['id']:node[attribute] for node in nodes_dict}
+            nx.set_node_attributes(G, name = attribute, values = node_att)
+            
+    if 'name' not in nodes_dict[0].keys():
+        node_name = {node['id']:str(node['id']) for node in nodes_dict}
+        nx.set_node_attributes(G, name = 'name', values = node_name)
 
-    if export_node_attribute is None or export_node_attribute not in nodes_dict[0].keys():
-        export_node_attribute = 'id'    #PLACEHOLDER
-
-    node_to_color = {node['id']:node[export_node_attribute] for node in nodes_dict}
-    nx.set_node_attributes(G, name = 'nodeColor', values = node_to_color)
-
-    if export_edge_attribute is None or export_edge_attribute not in edges_dict[0].keys():
-        export_edge_attribute = 'source'    #PLACEHOLDER
-
-    edges_data = [(edge['source'],edge['target'],edge[export_edge_attribute])
-                  for edge in edges_dict]
-    edges1,edges2,data = zip(*edges_data)
-    edge_to_color = dict(zip(zip(edges1,edges2),data))
-    nx.set_edge_attributes(G, name = 'edgeColor', values = edge_to_color)
-
-    xpos = {node['id']:node['x'] for node in nodes_dict}
-    nx.set_node_attributes(G, name = 'xpos', values = xpos)
-    ypos = {node['id']:node['y'] for node in nodes_dict}
-    nx.set_node_attributes(G, name = 'ypos', values = ypos)
-    border_width = {node['id']:node['border_width'] for node in nodes_dict}
-    nx.set_node_attributes(G, name = 'nodeOutline', values = border_width)
-    node_titles = {node['id']:node['title'] for node in nodes_dict}
-    nx.set_node_attributes(G, name = 'nodeTitle', values = node_titles)
-
-    G_json = util.from_networkx(G)
-    with open(export_file,'w') as outfile:
-        json.dump(G_json,outfile)
+    # set source and target attributes based on node id's
+    sources = [str(edge['source']) for edge in edges_dict] # assuming edges_dict has a source attribute
+    targets = [str(edge['target']) for edge in edges_dict] # assuming edges_dict has a target attribute
+    edge_to_source = dict(zip(edges, sources))
+    edge_to_target = dict(zip(edges, targets))
+    nx.set_edge_attributes(G, name = 'source', values = edge_to_source)
+    nx.set_edge_attributes(G, name = 'target', values = edge_to_target) 
+    
+    for attribute in edges_dict[0].keys(): 
+        if attribute == 'source':
+            l = 0 # do nothing
+        elif attribute == 'target':
+            k = 0 # do nothing
+        else:
+            edge_att = {(edge['source'],edge['target']):edge[attribute] for edge in edges_dict}
+            nx.set_edge_attributes(G, name = attribute, values = edge_att) 
+    
+    # begin writing the json-style file        
+    to_string = '{\"elements\":{\"nodes\":['
+    
+    # write node data
+    for i in range(len(G.nodes())):
+        to_string += str('{\"data\":')
+        to_string += str(dict(G.nodes(data=True)).values()[i])
+        if (i == len(G.nodes()) - 1):
+            to_string += str('}],\"edges\":[')
+        else:
+            to_string += str('},')
+        
+    # write edges data
+    for j in range(len(G.edges())):
+        to_string += str('{\"data\":')
+        to_string += str( list(G.edges(data = True))[j][2] ) # 2 correspondes to the edge attributes
+        if (j == len(G.edges()) - 1):
+            to_string += str('}]},\"data\": {}}')
+        else:
+            to_string += str('},')
+            
+    to_string = to_string.replace('\'', '\"')            
+            
+    file_str = export_file.split(".")
+    f = open((file_str[0] + '.json'), 'w') # ensure has json ending
+    f.write(to_string)
+    f.close()
+    
+    return to_string
 
 
 def return_node_to_color(G,field_to_map='degree',cmap=plt.cm.jet,alpha = 1.0,color_vals_transform = None,ceil_val=10,
@@ -587,52 +661,52 @@ def check_nodes_dict(nodes_dict):
 def create_graph_style_file(filename = 'visJS_html_file_temp',
 
                             # by node
-					       node_border_width = 0, # node border width when not hover or selected
-						   node_border_width_selected = 2, # node border width once clicked
-						   node_broken_image = 'undefined', # back-up image in case a node image doesn't successfully load
-						   node_color_border = '#2B7CE9', # creates border around node shape
-						   node_color_highlight_border = '#2B7CE9', # node border color when selected
-						   node_color_highlight_background = '#D2E5FF', # border color when selected
-						   node_color_hover_border = '#2B7CE9', # color of node border when mouse hovers but does not click
-						   node_color_hover_background = '#D2E5FF', # color of node when mouse hovers but does not click
-						   node_fixed_x = False, # node does not move in x direction but is still calculated into physics
-						   node_fixed_y = False, # node does not move in y direction but is still calculated into physics
-						   node_font_color = '#343434', # color of label text
-						   node_font_size = 14, # size of label text
-						   node_font_face = 'arial', # font face of label text
-						   node_font_background = 'rgba(0,0,0,0)', # when defined with color string, a background rectangle will be drawn around text
-						   node_font_stroke_width = 0, # width of stroke, if zero not drawn
-						   node_font_stroke_color = '#ffffff', # color of stroke
-						   node_font_align = 'center', # other option is 'left'
-						   node_icon_face = 'FontAwesome', # only used when shape is set to icon. Options are 'FontAwesome' and 'Ionicons'
-						   node_icon_code = 'undefined', # code used to define which icon to use
-						   node_icon_size = 50, # size of icon
-						   node_icon_color = '#2B7CE9', # color of icon
-						   node_image = 'undefined', # when shape set to 'image' or 'circularImage', then the URL image designated here will be used
-						   node_label_highlight_bold = True, # determines if label boldens when node is selected
-						   node_scaling_min = 10, # min size node can become when it scales down
-						   node_scaling_max = 30, # max size node can become when it scales up
-						   node_scaling_label_enabled = False, # toggle scaling of label on or off
-						   node_scaling_label_min = 14, # min font size the label can become when it scales down
-						   node_scaling_label_max = 30, # max font size the label can becomme when it scales up
-						   node_scaling_label_max_visible = 30, # font will never be larger than this number at 100% zoom
-						   node_scaling_label_draw_threshold = 5, # lower limit font is drawn as, use this and max visible to control which labels remain visible during zoom out
-						   node_shadow_enabled = True, # whether there is a shadow cast by the nodes
-						   node_shadow_color ='rgba(0,0,0,0.5)', # shadow color
-						   node_shadow_size = 10, # shadow blur size
-						   node_shadow_x = 5, # shadow x offset from node
-						   node_shadow_y = 5, # shadow y offet from node
-						   node_shape_border_dashes = False, # makes dashed border around node
-						   node_shape_border_radius = 6, # determines roundness of node shape (only for "box" shape)
-						   node_shape_interpolation = True, # only for image and circular image: image resamples when scaling down
-						   node_shape_use_image_size = False, # only for image and circular image: true means use image size, false use our defined node size
-						   node_shape_use_border_with_image = False, # only for image: draws border around image icon
-						   node_label_field = 'id', # field that nodes will be labeled with
-						   node_size_field = 'degree', # field that determines which nodes are more important thus should be scaled bigger
-						   node_size_transform = 'Math.sqrt', # function by which higher value (not node_value) nodes are scaled larger to show importance
-						   node_size_multiplier = 3, # increment by which higher value (not node_value) nodes are scaled larger to show importance
+                           node_border_width = 0, # node border width when not hover or selected
+                           node_border_width_selected = 2, # node border width once clicked
+                           node_broken_image = 'undefined', # back-up image in case a node image doesn't successfully load
+                           node_color_border = '#2B7CE9', # creates border around node shape
+                           node_color_highlight_border = '#2B7CE9', # node border color when selected
+                           node_color_highlight_background = '#D2E5FF', # border color when selected
+                           node_color_hover_border = '#2B7CE9', # color of node border when mouse hovers but does not click
+                           node_color_hover_background = '#D2E5FF', # color of node when mouse hovers but does not click
+                           node_fixed_x = False, # node does not move in x direction but is still calculated into physics
+                           node_fixed_y = False, # node does not move in y direction but is still calculated into physics
+                           node_font_color = '#343434', # color of label text
+                           node_font_size = 14, # size of label text
+                           node_font_face = 'arial', # font face of label text
+                           node_font_background = 'rgba(0,0,0,0)', # when defined with color string, a background rectangle will be drawn around text
+                           node_font_stroke_width = 0, # width of stroke, if zero not drawn
+                           node_font_stroke_color = '#ffffff', # color of stroke
+                           node_font_align = 'center', # other option is 'left'
+                           node_icon_face = 'FontAwesome', # only used when shape is set to icon. Options are 'FontAwesome' and 'Ionicons'
+                           node_icon_code = 'undefined', # code used to define which icon to use
+                           node_icon_size = 50, # size of icon
+                           node_icon_color = '#2B7CE9', # color of icon
+                           node_image = 'undefined', # when shape set to 'image' or 'circularImage', then the URL image designated here will be used
+                           node_label_highlight_bold = True, # determines if label boldens when node is selected
+                           node_scaling_min = 10, # min size node can become when it scales down
+                           node_scaling_max = 30, # max size node can become when it scales up
+                           node_scaling_label_enabled = False, # toggle scaling of label on or off
+                           node_scaling_label_min = 14, # min font size the label can become when it scales down
+                           node_scaling_label_max = 30, # max font size the label can becomme when it scales up
+                           node_scaling_label_max_visible = 30, # font will never be larger than this number at 100% zoom
+                           node_scaling_label_draw_threshold = 5, # lower limit font is drawn as, use this and max visible to control which labels remain visible during zoom out
+                           node_shadow_enabled = True, # whether there is a shadow cast by the nodes
+                           node_shadow_color ='rgba(0,0,0,0.5)', # shadow color
+                           node_shadow_size = 10, # shadow blur size
+                           node_shadow_x = 5, # shadow x offset from node
+                           node_shadow_y = 5, # shadow y offet from node
+                           node_shape_border_dashes = False, # makes dashed border around node
+                           node_shape_border_radius = 6, # determines roundness of node shape (only for "box" shape)
+                           node_shape_interpolation = True, # only for image and circular image: image resamples when scaling down
+                           node_shape_use_image_size = False, # only for image and circular image: true means use image size, false use our defined node size
+                           node_shape_use_border_with_image = False, # only for image: draws border around image icon
+                           node_label_field = 'id', # field that nodes will be labeled with
+                           node_size_field = 'degree', # field that determines which nodes are more important thus should be scaled bigger
+                           node_size_transform = 'Math.sqrt', # function by which higher value (not node_value) nodes are scaled larger to show importance
+                           node_size_multiplier = 3, # increment by which higher value (not node_value) nodes are scaled larger to show importance
 
-						   # by edge
+                           # by edge
                            edge_title_field = 'id', # which attribute to use as label on edge hover
                            edge_arrow_to = False, # creates a directed edge with arrow head on receiving node
                            edge_arrow_from = False, # creates a directed edge with arrow head coming from delivering node
@@ -646,13 +720,13 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                            edge_color_hover = '#848484', # same but for hover color
                            edge_color_inherit = 'from', # if edge color is set, must be false. Else inherits color from "to", "from", or "both" connected nodes
                            edge_color_opacity = 1.0, # number from 0 - 1 that sets opacity of all edge colors
-						   edge_dashes = False, # if true, edges will be drawn with a dashed line
+                           edge_dashes = False, # if true, edges will be drawn with a dashed line
                            edge_font_color = '#343434', # color of label text
                            edge_font_size = 20, # size of label text
                            edge_font_face = 'ariel', # font of label text
                            edge_font_background = 'undefined', # when givn a color string, a background rectangle of that color will be drawn behind the label
                            edge_font_strokeWidth = 0, # stroke drawn around text
-						   edge_font_stroke_color = '#343434',
+                           edge_font_stroke_color = '#343434',
                            edge_font_align = 'horizontal', # 'horizontal', 'middle', 'top', or 'bottom'
                            edge_hoverWidth = 0.5, # number to be added to width of edge to determine hovering
                            edge_label_highlight_bold = True, # determines whether label becomes bold when edge is selected
@@ -676,35 +750,35 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                            edge_smooth_force_direction = 'none', # 'horizontal', 'vertical', and 'none'. Only for cubicBezier curves
                            edge_smooth_roundness = 0.5, # number between 0 and 1 that changes roundness of curve except with dynamic curves
                            edge_width = 2, # width of all edges
-						   edge_label_field = "id",
+                           edge_label_field = "id",
 
-						   #interaction
-						   drag_nodes = True, # When true, the nodes that are not fixed can be dragged by the user.
-						   drag_view = True, # When true, the view can be dragged around by the user.
-						   hide_edges_on_drag = False, # When true, the edges are not drawn when dragging the view. This can greatly speed up responsiveness on dragging, improving user experience.
-						   hide_nodes_on_drag = False, # When true, the nodes are not drawn when dragging the view. This can greatly speed up responsiveness on dragging, improving user experience.
-						   hover = True, # When true, the nodes use their hover colors when the mouse moves over them.
-						   hover_connected_edges = True, # When true, on hovering over a node, it's connecting edges are highlighted.
-						   keyboard_enabled = False, # Toggle the usage of the keyboard shortcuts. If this option is not defined, it is set to true if any of the properties in this object are defined.
-						   keyboard_speed_x = 10, # The speed at which the view moves in the x direction on pressing a key or pressing a navigation button.
-						   keyboard_speed_y = 10, # The speed at which the view moves in the y direction on pressing a key or pressing a navigation button.
-						   keyboard_speed_zoom = 0.02, # The speed at which the view zooms in or out pressing a key or pressing a navigation button.
-						   keyboard_bind_to_window = True, # When binding the keyboard shortcuts to the window, they will work regardless of which DOM object has the focus. If you have multiple networks on your page, you could set this to false, making sure the keyboard shortcuts only work on the network that has the focus.
-						   multiselect = False, # When true, a longheld click (or touch) as well as a control-click will add to the selection.
-						   navigation_buttons = False, # When true, navigation buttons are drawn on the network canvas. These are HTML buttons and can be completely customized using CSS.
-						   selectable = True, # When true, the nodes and edges can be selected by the user.
-						   select_connected_edges = True, # When true, on selecting a node, its connecting edges are highlighted.
-						   tooltip_delay = 300, # When nodes or edges have a defined 'title' field, this can be shown as a pop-up tooltip. The tooltip itself is an HTML element that can be fully styled using CSS. The delay is the amount of time in milliseconds it takes before the tooltip is shown.
-						   zoom_view = True, # When true, the user can zoom in.
+                           #interaction
+                           drag_nodes = True, # When true, the nodes that are not fixed can be dragged by the user.
+                           drag_view = True, # When true, the view can be dragged around by the user.
+                           hide_edges_on_drag = False, # When true, the edges are not drawn when dragging the view. This can greatly speed up responsiveness on dragging, improving user experience.
+                           hide_nodes_on_drag = False, # When true, the nodes are not drawn when dragging the view. This can greatly speed up responsiveness on dragging, improving user experience.
+                           hover = True, # When true, the nodes use their hover colors when the mouse moves over them.
+                           hover_connected_edges = True, # When true, on hovering over a node, it's connecting edges are highlighted.
+                           keyboard_enabled = False, # Toggle the usage of the keyboard shortcuts. If this option is not defined, it is set to true if any of the properties in this object are defined.
+                           keyboard_speed_x = 10, # The speed at which the view moves in the x direction on pressing a key or pressing a navigation button.
+                           keyboard_speed_y = 10, # The speed at which the view moves in the y direction on pressing a key or pressing a navigation button.
+                           keyboard_speed_zoom = 0.02, # The speed at which the view zooms in or out pressing a key or pressing a navigation button.
+                           keyboard_bind_to_window = True, # When binding the keyboard shortcuts to the window, they will work regardless of which DOM object has the focus. If you have multiple networks on your page, you could set this to false, making sure the keyboard shortcuts only work on the network that has the focus.
+                           multiselect = False, # When true, a longheld click (or touch) as well as a control-click will add to the selection.
+                           navigation_buttons = False, # When true, navigation buttons are drawn on the network canvas. These are HTML buttons and can be completely customized using CSS.
+                           selectable = True, # When true, the nodes and edges can be selected by the user.
+                           select_connected_edges = True, # When true, on selecting a node, its connecting edges are highlighted.
+                           tooltip_delay = 300, # When nodes or edges have a defined 'title' field, this can be shown as a pop-up tooltip. The tooltip itself is an HTML element that can be fully styled using CSS. The delay is the amount of time in milliseconds it takes before the tooltip is shown.
+                           zoom_view = True, # When true, the user can zoom in.
 
-						   # configuration
-						   config_enabled = False, # Toggle the configuration interface on or off. This is an optional parameter. If left undefined and any of the other properties of this object are defined, this will be set to true.
+                           # configuration
+                           config_enabled = False, # Toggle the configuration interface on or off. This is an optional parameter. If left undefined and any of the other properties of this object are defined, this will be set to true.
                            config_filter = "nodes,edges", # When a string is supplied, any combination of the following is allowed: nodes, edges, layout, interaction, manipulation, physics, selection, renderer. Feel free to come up with a fun seperating character. Finally, when supplied an array of strings, any of the previously mentioned fields are accepted.
                            container = "undefined", # This allows you to put the configure list in another HTML container than below the network.
                            showButton = True, # Show the generate options button at the bottom of the configurator.
 
-						   # other stuff
-						   border_color='white',
+                           # other stuff
+                           border_color='white',
                            physics_enabled=True,
                            min_velocity=2,
                            max_velocity=8,
@@ -716,7 +790,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                            graph_width = 900,
                            graph_height = 800,
                            scaling_factor = 1
-						   ):
+                           ):
 
 
 
@@ -735,199 +809,199 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
     else:
         physics_enabled='false'
 
-	# switch edge_arrow_to bool from python to JS
+    # switch edge_arrow_to bool from python to JS
     if edge_arrow_to:
         edge_arrow_to = 'true'
     else:
         edge_arrow_to = 'false'
 
-	# switch edge_arrow_from bool from python to JS
+    # switch edge_arrow_from bool from python to JS
     if edge_arrow_from:
         edge_arrow_from = 'true'
     else:
         edge_arrow_from = 'false'
 
-	# switch edge_arrow_middle bool from python to JS
+    # switch edge_arrow_middle bool from python to JS
     if edge_arrow_middle:
         edge_arrow_middle = 'true'
     else:
         edge_arrow_middle = 'false'
 
-	# switch edge_arrow_strikethrough bool from python to JS
+    # switch edge_arrow_strikethrough bool from python to JS
     if edge_arrow_strikethrough:
         edge_arrow_strikethrough = 'true'
     else:
         edge_arrow_strikethrough = 'false'
 
-	# switch edge_dashes bool from python to JS
+    # switch edge_dashes bool from python to JS
     if edge_dashes:
         edge_dashes = 'true'
     else:
         edge_dashes = 'false'
 
-	# switch edge_label_highlight_bold bool from python to JS
+    # switch edge_label_highlight_bold bool from python to JS
     if edge_label_highlight_bold:
         edge_label_highlight_bold = 'true'
     else:
         edge_label_highlight_bold = 'false'
 
-	# switch edge_scaling_label_enabled bool from python to JS
+    # switch edge_scaling_label_enabled bool from python to JS
     if edge_scaling_label_enabled:
         edge_scaling_label_enabled = 'true'
     else:
         edge_scaling_label_enabled = 'false'
 
-	# switch edge_shadow_enabled bool from python to JS
+    # switch edge_shadow_enabled bool from python to JS
     if edge_shadow_enabled:
         edge_shadow_enabled = 'true'
     else:
         edge_shadow_enabled = 'false'
 
-	# switch edge_smooth_enabled bool from python to JS
+    # switch edge_smooth_enabled bool from python to JS
     if edge_smooth_enabled:
         edge_smooth_enabled = 'true'
     else:
         edge_smooth_enabled = 'false'
 
-	# switch node_fixed_x bool from python to JS
+    # switch node_fixed_x bool from python to JS
     if node_fixed_x:
         node_fixed_x = 'true'
     else:
         node_fixed_x = 'false'
 
-	# switch node_fixed_y bool from python to JS
+    # switch node_fixed_y bool from python to JS
     if node_fixed_y:
         node_fixed_y = 'true'
     else:
         node_fixed_y = 'false'
 
-	# switch node_label_highlight_bold bool from python to JS
+    # switch node_label_highlight_bold bool from python to JS
     if node_label_highlight_bold:
         node_label_highlight_bold = 'true'
     else:
         node_label_highlight_bold = 'false'
 
-	# switch node_scaling_label_enabled bool from python to JS
+    # switch node_scaling_label_enabled bool from python to JS
     if node_scaling_label_enabled:
         node_scaling_label_enabled = 'true'
     else:
         node_scaling_label_enabled = 'false'
 
-	# switch node_shadow_enabled bool from python to JS
+    # switch node_shadow_enabled bool from python to JS
     if node_shadow_enabled:
         node_shadow_enabled = 'true'
     else:
         node_shadow_enabled = 'false'
 
-	# switch node_shape_border_dashes bool from python to JS
+    # switch node_shape_border_dashes bool from python to JS
     if node_shape_border_dashes:
         node_shape_border_dashes = 'true'
     else:
         node_shape_border_dashes = 'false'
 
-	# switch node_shape_interpolation bool from python to JS
+    # switch node_shape_interpolation bool from python to JS
     if node_shape_interpolation:
         node_shape_interpolation = 'true'
     else:
         node_shape_interpolation = 'false'
 
-	# switch node_shape_use_image_size bool from python to JS
+    # switch node_shape_use_image_size bool from python to JS
     if node_shape_use_image_size:
         node_shape_use_image_size = 'true'
     else:
         node_shape_use_image_size = 'false'
 
-	# switch node_shape_use_border_with_image bool from python to JS
+    # switch node_shape_use_border_with_image bool from python to JS
     if node_shape_use_border_with_image:
         node_shape_use_border_with_image = 'true'
     else:
         node_shape_use_border_with_image = 'false'
 
-	# switch drag_nodes bool from python to JS
+    # switch drag_nodes bool from python to JS
     if drag_nodes:
         drag_nodes = 'true'
     else:
         drag_nodes = 'false'
 
-	# switch drag_view bool from python to JS
+    # switch drag_view bool from python to JS
     if drag_view:
         drag_view = 'true'
     else:
         drag_view = 'false'
 
-	# switch hide_edges_on_drag from python to JS
+    # switch hide_edges_on_drag from python to JS
     if hide_edges_on_drag:
         hide_edges_on_drag = 'true'
     else:
         hide_edges_on_drag = 'false'
 
-	# switch hide_nodes_on_drag  from python to JS
+    # switch hide_nodes_on_drag  from python to JS
     if hide_nodes_on_drag:
         hide_nodes_on_drag  = 'true'
     else:
         hide_nodes_on_drag  = 'false'
 
-	# switch hover from python to JS
+    # switch hover from python to JS
     if hover:
         hover  = 'true'
     else:
         hover  = 'false'
 
-	# switch hover_connected_edges from python to JS
+    # switch hover_connected_edges from python to JS
     if hover_connected_edges:
         hover_connected_edges  = 'true'
     else:
         hover_connected_edges  = 'false'
 
-	# switch keyboard_enabled from python to JS
+    # switch keyboard_enabled from python to JS
     if keyboard_enabled:
         keyboard_enabled  = 'true'
     else:
         keyboard_enabled  = 'false'
 
-	# switch keyboard_bind_to_window from python to JS
+    # switch keyboard_bind_to_window from python to JS
     if keyboard_bind_to_window:
         keyboard_bind_to_window  = 'true'
     else:
         keyboard_bind_to_window  = 'false'
 
-	# switch multiselect from python to JS
+    # switch multiselect from python to JS
     if multiselect:
         multiselect  = 'true'
     else:
         multiselect  = 'false'
 
-	# switch navigation_buttons from python to JS
+    # switch navigation_buttons from python to JS
     if navigation_buttons:
         navigation_buttons  = 'true'
     else:
         navigation_buttons  = 'false'
 
-	# switch selectable from python to JS
+    # switch selectable from python to JS
     if selectable:
         selectable  = 'true'
     else:
         selectable  = 'false'
 
-	# switch select_connected_edges from python to JS
+    # switch select_connected_edges from python to JS
     if select_connected_edges:
         select_connected_edges  = 'true'
     else:
         select_connected_edges  = 'false'
 
-	# switch zoom_view from python to JS
+    # switch zoom_view from python to JS
     if zoom_view:
         zoom_view  = 'true'
     else:
         zoom_view  = 'false'
 
-	# switch config_enabled from python to JS
+    # switch config_enabled from python to JS
     if config_enabled:
         config_enabled  = 'true'
     else:
         config_enabled  = 'false'
 
-	# switch showButton from python to JS
+    # switch showButton from python to JS
     if showButton:
         showButton  = 'true'
     else:
@@ -967,19 +1041,19 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
     function init() { window.parent.setUpFrame(); return true; }
     function runVis(visNodes, visEdges) {
        var vizOptions = {
-	      configure: {
-			enabled: """ + config_enabled + """,
-			filter: '""" + config_filter + """',
-			container: """ + container + """,
-			showButton: """ + showButton + """
-		  },
-		  edges:{
-		    arrows: {
+          configure: {
+            enabled: """ + config_enabled + """,
+            filter: '""" + config_filter + """',
+            container: """ + container + """,
+            showButton: """ + showButton + """
+          },
+          edges:{
+            arrows: {
                to:     {enabled: """ + edge_arrow_to + """, scaleFactor:""" + str(edge_arrow_to_scale_factor) + """},
-			   middle:   {enabled: """ + edge_arrow_middle + """, scaleFactor:""" + str(edge_arrow_middle_scale_factor) + """},
+               middle:   {enabled: """ + edge_arrow_middle + """, scaleFactor:""" + str(edge_arrow_middle_scale_factor) + """},
                from: {enabled: """ + edge_arrow_from + """, scaleFactor:""" + str(edge_arrow_from_scale_factor) + """}
             },
-			arrowStrikethrough: """ + edge_arrow_strikethrough + """,
+            arrowStrikethrough: """ + edge_arrow_strikethrough + """,
             color: {
                color: '""" + edge_color + """',
                highlight: '""" + edge_color_highlight + """',
@@ -987,7 +1061,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                inherit: '""" + edge_color_inherit + """',
                opacity: """ + str(edge_color_opacity) + """
             },
-			dashes: """ + edge_dashes + """,
+            dashes: """ + edge_dashes + """,
             font: {
                 color: '""" + edge_font_color + """',
                 size: """ + str(edge_font_size) + """*""" + str(scaling_factor) + """,
@@ -1011,7 +1085,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                   drawThreshold: """ + str(edge_scaling_label_draw_threshold) + """,
                }
             },
-			selectionWidth: """ + str(edge_selection_width) + """,
+            selectionWidth: """ + str(edge_selection_width) + """,
             selfReferenceSize: """ + str(edge_selfReferenceSize) + """,
             shadow:{
                enabled: """ + edge_shadow_enabled + """,
@@ -1020,58 +1094,58 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                x: """ + str(edge_shadow_x) + """,
                y: """ + str(edge_shadow_y) + """
             },
-			smooth: {
+            smooth: {
                enabled: """ + edge_smooth_enabled + """,
                type: '""" + edge_smooth_type + """',
                forceDirection: '""" + edge_smooth_force_direction + """',
                roundness: """ + str(edge_smooth_roundness) + """
             },
             width: """+str(edge_width)+"""*"""+str(scaling_factor)+""",
-		  },
-		  interaction:{
-			dragNodes: """ + drag_nodes + """,
-			dragView: """ + drag_view + """,
-			hideEdgesOnDrag: """ + hide_edges_on_drag + """,
-			hideNodesOnDrag: """ + hide_nodes_on_drag + """,
-			hover: """ + hover + """,
-			hoverConnectedEdges: """ + hover_connected_edges + """,
-			keyboard: {
-				enabled: """ + keyboard_enabled + """,
-				speed: {x: """ + str(keyboard_speed_x) + """, y: """ + str(keyboard_speed_y) + """, zoom: """ + str(keyboard_speed_zoom) + """},
-				bindToWindow: """ + keyboard_bind_to_window + """
-			},
-			multiselect: """ + multiselect + """,
-			navigationButtons: """ + navigation_buttons + """,
-			selectable: """ + selectable + """,
-			selectConnectedEdges: """ + select_connected_edges + """,
-			tooltipDelay: """ + str(tooltip_delay) + """,
-			zoomView: """ + zoom_view + """
-		  },
-		  layout: {
-			improvedLayout:true,
-			hierarchical: {
-				enabled:false,
-				levelSeparation: 150,
-				direction: 'UD',
-				sortMethod: 'hubsize'
-			},
+          },
+          interaction:{
+            dragNodes: """ + drag_nodes + """,
+            dragView: """ + drag_view + """,
+            hideEdgesOnDrag: """ + hide_edges_on_drag + """,
+            hideNodesOnDrag: """ + hide_nodes_on_drag + """,
+            hover: """ + hover + """,
+            hoverConnectedEdges: """ + hover_connected_edges + """,
+            keyboard: {
+                enabled: """ + keyboard_enabled + """,
+                speed: {x: """ + str(keyboard_speed_x) + """, y: """ + str(keyboard_speed_y) + """, zoom: """ + str(keyboard_speed_zoom) + """},
+                bindToWindow: """ + keyboard_bind_to_window + """
+            },
+            multiselect: """ + multiselect + """,
+            navigationButtons: """ + navigation_buttons + """,
+            selectable: """ + selectable + """,
+            selectConnectedEdges: """ + select_connected_edges + """,
+            tooltipDelay: """ + str(tooltip_delay) + """,
+            zoomView: """ + zoom_view + """
+          },
+          layout: {
+            improvedLayout:true,
+            hierarchical: {
+                enabled:false,
+                levelSeparation: 150,
+                direction: 'UD',
+                sortMethod: 'hubsize'
+            },
             randomSeed: 780555
-		  },
+          },
           nodes: {
-			  borderWidth: """ + str(node_border_width) + """,
-			  borderWidthSelected: """ + str(node_border_width_selected) + """,
-			  brokenImage: """ + node_broken_image + """,
-			  color: {
-			     border: '""" + node_color_border + """',
+              borderWidth: """ + str(node_border_width) + """,
+              borderWidthSelected: """ + str(node_border_width_selected) + """,
+              brokenImage: """ + node_broken_image + """,
+              color: {
+                 border: '""" + node_color_border + """',
                  highlight: {
-					background: '""" + node_color_highlight_background + """',
+                    background: '""" + node_color_highlight_background + """',
                     border: '""" + node_color_highlight_border + """'
                  },
                  hover: {
                     background: '""" + node_color_hover_background + """',
                     border: '""" + node_color_hover_border +"""'
                  }
-			  },
+              },
               font: {
                  color: '""" + node_font_color + """',
                  size: """ + str(node_font_size) + """*""" + str(scaling_factor) + """,
@@ -1081,18 +1155,18 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                  strokeColor: '""" + node_font_stroke_color + """',
                  align: '""" + node_font_align + """'
               },
-			  icon: {
-				 face: '""" + node_icon_face + """',
-				 code: """ + node_icon_code + """,
-				 size: """ + str(node_icon_size) + """,
-				 color:'""" + node_icon_color + """'
-			  },
-			  image: """ + node_image + """,
-			  labelHighlightBold: """ + node_label_highlight_bold + """,
+              icon: {
+                 face: '""" + node_icon_face + """',
+                 code: """ + node_icon_code + """,
+                 size: """ + str(node_icon_size) + """,
+                 color:'""" + node_icon_color + """'
+              },
+              image: """ + node_image + """,
+              labelHighlightBold: """ + node_label_highlight_bold + """,
               scaling: {
-				 min: """ + str(node_scaling_min) + """,
-				 max: """ + str(node_scaling_max) + """,
-				 label: {
+                 min: """ + str(node_scaling_min) + """,
+                 max: """ + str(node_scaling_max) + """,
+                 label: {
                      enabled: """ + node_scaling_label_enabled + """,
                      min: """ + str(node_scaling_label_min) + """,
                      max: """ + str(node_scaling_label_max) + """*"""+str(scaling_factor)+""",
@@ -1101,21 +1175,21 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                  }
               },
               shadow:{
-				 enabled: """ + node_shadow_enabled + """,
-				 color: '""" + node_shadow_color + """',
-				 size:""" + str(node_shadow_size) + """,
-				 x: """ + str(node_shadow_x) + """,
-				 y: """ + str(node_shadow_y) + """
-			  },
-			  shapeProperties: {
-				 borderDashes: """ + node_shape_border_dashes + """, // only for borders
-				 borderRadius: """ + str(node_shape_border_radius) + """,     // only for box shape
-				 interpolation: """ + node_shape_interpolation + """,  // only for image and circularImage shapes
-				 useImageSize: """ + node_shape_use_image_size + """,  // only for image and circularImage shapes
-				 useBorderWithImage: """ + node_shape_use_border_with_image + """  // only for image shape
-			  }
+                 enabled: """ + node_shadow_enabled + """,
+                 color: '""" + node_shadow_color + """',
+                 size:""" + str(node_shadow_size) + """,
+                 x: """ + str(node_shadow_x) + """,
+                 y: """ + str(node_shadow_y) + """
+              },
+              shapeProperties: {
+                 borderDashes: """ + node_shape_border_dashes + """, // only for borders
+                 borderRadius: """ + str(node_shape_border_radius) + """,     // only for box shape
+                 interpolation: """ + node_shape_interpolation + """,  // only for image and circularImage shapes
+                 useImageSize: """ + node_shape_use_image_size + """,  // only for image and circularImage shapes
+                 useBorderWithImage: """ + node_shape_use_border_with_image + """  // only for image shape
+              }
           },
-		 physics: {
+         physics: {
             enabled: """+physics_enabled +""",
             stabilization: false,
             barnesHut: {gravitationalConstant: -8000, springConstant: 0.012, springLength: 100},
@@ -1161,12 +1235,12 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
        for(var i=0; i<python_edges.length; i++){
          edgeArray.push({from: python_edges[i].source,
                          to: python_edges[i].target,
-						 label: python_edges[i].""" + edge_label_field + """,
+                         label: python_edges[i].""" + edge_label_field + """,
                          title: python_edges[i].""" + edge_title_field + """,
                          color: {
                             color: python_edges[i].color,
                             opacity: """ + str(edge_color_opacity) + """
-						}
+                        }
             });
        }
        //console.log(nodeArray);
