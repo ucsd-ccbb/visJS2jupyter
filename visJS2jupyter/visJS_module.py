@@ -462,9 +462,6 @@ def export_to_cytoscape(nodes_dict = 0,
         nodes = [node['id'] for node in nodes_dict] # nodes_dict must contain id
         edges = [(edge['source'],edge['target']) for edge in edges_dict] # edges_dict must contain source and target
     
-    print(list(G.nodes(data = True)))
-    print(list(G.edges(data = True)))
-    
     # iterate over nodes dict and add attributes to graph
     for attribute in nodes_dict[0].keys(): # under the assumption that all nodes have the same attributes!!!!
     
@@ -535,8 +532,6 @@ def export_to_cytoscape(nodes_dict = 0,
     f = open((file_str[0] + '.json'), 'w') # ensure has json ending
     f.write(to_string)
     f.close()
-    
-    return to_string
 
 
 def return_node_to_color(G,field_to_map='degree',cmap=plt.cm.jet,alpha = 1.0,color_vals_transform = None,ceil_val=10,
