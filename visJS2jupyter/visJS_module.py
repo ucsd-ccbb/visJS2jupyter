@@ -590,10 +590,18 @@ def return_edge_to_color(G,field_to_map='degree',cmap=plt.cm.jet,alpha = 1.0,col
 
     '''
 
-    edges_with_data = [(e[0],e[1],e[2][field_to_map]) for e in G.edges(data=True)]
-
-    if color_vals_transform == 'log':
+    # check whether it is a multigraph or not
+    if (str(type(G)) == '<class \'networkx.classes.multigraph.MultiGraph\'>'):
+        G_edges = G.edges(keys = True, data=True)
+        edges_with_data = [(e[0],e[1],e[2],e[3][field_to_map]) for e in G_edges]
+        edges1,edges2,edges3, data = zip(*edges_with_data)
+    else:
+        G_edges = G.edges(data=True)
+        edges_with_data = [(e[0],e[1],e[2][field_to_map]) for e in G_edges]
         edges1,edges2,data = zip(*edges_with_data)
+
+    # perform data transformations if necessaary
+    if color_vals_transform == 'log':
         nonzero_list = [d for d in data if d>(10**-18)]
         if not nonzero_list:
             data = [1 for d in data]
@@ -601,26 +609,26 @@ def return_edge_to_color(G,field_to_map='degree',cmap=plt.cm.jet,alpha = 1.0,col
             min_dn0 = min([d for d in data if d>(10**-18)])
             data = [np.log(max(d,min_dn0)) for d in data]  # set the zero d values to minimum non0 value
             data = [(d-np.min(data)) for d in data] # shift so we don't have any negative values
-        edges_with_data = zip(zip(edges1,edges2),data)
 
     elif color_vals_transform == 'sqrt':
-        edges1,edges2,data = zip(*edges_with_data)
         data = [np.sqrt(d) for d in data]
-        edges_with_data = zip(zip(edges1,edges2),data)
 
     elif color_vals_transform == 'ceil':
-        edges1,edges2,data = zip(*edges_with_data)
         data = [max(d,ceil_val) for d in data]
-        edges_with_data = zip(zip(edges1,edges2),data)
+        
+    # check whether it is a multigraph or not
+    if (str(type(G)) == '<class \'networkx.classes.multigraph.MultiGraph\'>'):
+        edges_with_data = zip(zip(edges1,edges2,edges3),data)
+        G_edges = G.edges(keys = True)
     else:
-        edges1,edges2,data = zip(*edges_with_data)
+        G_edges = G.edges()
         edges_with_data = zip(zip(edges1,edges2),data)
 
     edge_to_mapField = dict(edges_with_data)
-    color_list = [np.multiply(cmap(int(float(edge_to_mapField[d])/np.max(list(edge_to_mapField.values()))*256)),256) for d in G.edges()]
+    color_list = [np.multiply(cmap(int(float(edge_to_mapField[d])/np.max(list(edge_to_mapField.values()))*256)),256) for d in G_edges]
     color_list = [(int(c[0]),int(c[1]),int(c[2]),alpha) for c in color_list]
 
-    edge_to_color = dict(zip(list(G.edges()),['rgba'+str(c) for c in color_list]))
+    edge_to_color = dict(zip(list(G_edges),['rgba'+str(c) for c in color_list]))
     return edge_to_color
 
 

@@ -1,0 +1,255 @@
+<!doctype html>
+<html>
+<head>
+  <title>Network | Basic usage</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.1.0/d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.js"></script>
+  <style type="text/css">
+    #mynetwork {
+      width: 600px;
+      height: 400px;
+      border: 5px solid white;
+    }
+  </style>
+</head>
+<body onload="init();">
+
+<p>
+  
+</p>
+
+<div id="mynetwork" style="height: 800px; width: 900px;"></div>
+
+
+<script>
+    function init() { window.parent.setUpFrame(); return true; }
+    function runVis(visNodes, visEdges) {
+       var vizOptions = {
+          configure: {
+            enabled: false,
+            filter: 'nodes,edges',
+            container: undefined,
+            showButton: false
+          },
+          edges:{
+            arrows: {
+               to:     {enabled: true, scaleFactor:1},
+               middle:   {enabled: false, scaleFactor:1},
+               from: {enabled: false, scaleFactor:1}
+            },
+            arrowStrikethrough: true,
+            color: {
+               color: '#848484',
+               highlight: '#8A324E',
+               hover: '#8BADD3',
+               inherit: 'from',
+               opacity: 1.0
+            },
+            dashes: false,
+            font: {
+                color: '#343434',
+                size: 20*1,
+                face: 'ariel',
+                background: 'rgba(0,0,0,0)',
+                strokeWidth: 0,
+                strokeColor: '#343434',
+                align:'horizontal'
+            },
+            hoverWidth: 0.5,
+            labelHighlightBold: true,
+            length: undefined,
+            scaling:{
+               min: 1,
+               max: 15,
+               label: {
+                  enabled: false,
+                  min: 14,
+                  max: 30*1,
+                  maxVisible: 30*1,
+                  drawThreshold: 5,
+               }
+            },
+            selectionWidth: 1,
+            selfReferenceSize: 10,
+            shadow:{
+               enabled: false,
+               color: 'rgba(0,0,0,0.5)',
+               size: 10,
+               x: 5,
+               y: 5
+            },
+            smooth: {
+               enabled: true,
+               type: 'dynamic',
+               forceDirection: 'none',
+               roundness: 0.5
+            },
+            width: 3*1,
+          },
+          interaction:{
+            dragNodes: true,
+            dragView: true,
+            hideEdgesOnDrag: false,
+            hideNodesOnDrag: false,
+            hover: true,
+            hoverConnectedEdges: true,
+            keyboard: {
+                enabled: false,
+                speed: {x: 10, y: 10, zoom: 0.02},
+                bindToWindow: true
+            },
+            multiselect: false,
+            navigationButtons: false,
+            selectable: true,
+            selectConnectedEdges: true,
+            tooltipDelay: 300,
+            zoomView: true
+          },
+          layout: {
+            improvedLayout:true,
+            hierarchical: {
+                enabled:false,
+                levelSeparation: 150,
+                direction: 'UD',
+                sortMethod: 'hubsize'
+            },
+            randomSeed: 780555
+          },
+          nodes: {
+              borderWidth: 2,
+              borderWidthSelected: 2,
+              brokenImage: undefined,
+              color: {
+                 border: 'black',
+                 highlight: {
+                    background: '#D3918B',
+                    border: 'red'
+                 },
+                 hover: {
+                    background: '#8BADD3',
+                    border: 'blue'
+                 }
+              },
+              font: {
+                 color: '#343434',
+                 size: 25*1,
+                 face: 'arial',
+                 background: 'rgba(0,0,0,0)',
+                 strokeWidth: 0,
+                 strokeColor: '#ffffff',
+                 align: 'center'
+              },
+              icon: {
+                 face: 'FontAwesome',
+                 code: undefined,
+                 size: 50,
+                 color:'#2B7CE9'
+              },
+              image: undefined,
+              labelHighlightBold: true,
+              scaling: {
+                 min: 10,
+                 max: 30,
+                 label: {
+                     enabled: false,
+                     min: 14,
+                     max: 30*1,
+                     maxVisible: 30*1,
+                     drawThreshold: 5
+                 }
+              },
+              shadow:{
+                 enabled: true,
+                 color: 'rgba(0,0,0,0.5)',
+                 size:10,
+                 x: 5,
+                 y: 5
+              },
+              shapeProperties: {
+                 borderDashes: false, // only for borders
+                 borderRadius: 6,     // only for box shape
+                 interpolation: true,  // only for image and circularImage shapes
+                 useImageSize: false,  // only for image and circularImage shapes
+                 useBorderWithImage: false  // only for image shape
+              }
+          },
+         physics: {
+            enabled: true,
+            stabilization: false,
+            barnesHut: {gravitationalConstant: -8000, springConstant: 0.012, springLength: 100},
+            maxVelocity: 15,
+            minVelocity: 1,
+            solver: 'barnesHut',
+            adaptiveTimestep: true,
+            stabilization: {
+              enabled: true,
+              iterations: 1000,
+              updateInterval: 100,
+              onlyDynamicEdges: false,
+              fit: true
+            }
+          }
+       };
+       var python_nodes = visNodes;
+       var nodeArray = [];
+       for(var i=0; i<python_nodes.length; i++){
+         var node_degree = python_nodes[i].degree > 30 ? 30 + ((python_nodes[i].degree - 30)/6) : python_nodes[i].degree;
+         node_degree = node_degree < 10 ? 10 : node_degree;
+         var font_size = python_nodes[i].degree * 2;
+         font_size = font_size < 10 ? 10 : font_size;
+         nodeArray.push({id: i,
+                         label: python_nodes[i].id,
+                         borderWidth: python_nodes[i].border_width * 1,
+                         borderWidthSelected: 2,
+                         color: {
+                             background: python_nodes[i].color,
+                             border: python_nodes[i].border_color,
+                             hover: {
+                                border: python_nodes[i].border_color_hover,
+                             },
+                         },
+                         title: python_nodes[i].title,
+                         shape: python_nodes[i].node_shape,
+                         size: (python_nodes[i].degree)*3*1,
+                         x: python_nodes[i].x * 1,
+                         y: python_nodes[i].y * 1});
+         }
+       var python_edges = visEdges;
+       var edgeArray = [];
+       for(var i=0; i<python_edges.length; i++){
+         edgeArray.push({from: python_edges[i].source,
+                         to: python_edges[i].target,
+                         label: python_edges[i].id,
+                         title: python_edges[i].id,
+                         color: {
+                            color: python_edges[i].color,
+                            opacity: 1.0
+                        }
+            });
+       }
+       //console.log(nodeArray);
+       //console.log(edgeArray);
+       var vis_nodes = new vis.DataSet(nodeArray);
+       var vis_edges = new vis.DataSet(edgeArray);
+
+        var container = document.getElementById('mynetwork');
+        var data = {
+            edges: vis_edges,
+            nodes: vis_nodes
+        };
+        var options = {};
+        var myNetwork = new vis.Network(container, data, vizOptions);
+
+        myNetwork.fit();
+
+
+       console.log( "ready!" );
+    }
+</script>
+
+
+    </body>
+</html>
+    
