@@ -56,6 +56,8 @@ For an example of how more complex styles may be added to a network, see http://
 
 An interactive use example of visJS2jupyter may be found [here](http://bl.ocks.org/brinrosenthal/raw/89ef33bebbf2d360099029666b1e8bea/) (scroll to the bottom to see the network).  In this example, we display the bipartite network composed of diseases in [The Cancer Genome Atlas](http://cancergenome.nih.gov/) and the top 25 most common mutations in each disease.  We also overlay information about drugs which target those mutations.  Genes which have a drug targeting them are displayed with a bold black outline.  The user may hover over each gene to get a list of associated drugs.
 
+For an example of how to style a multigraph using visJS2jupyter, see https://bl.ocks.org/m1webste/raw/db4aeda3f3e4a8840f08182f2e5d4608/ This notebook demonstrates how to use visJS2jupyter to visualize a NetworkX multigraph inside a jupyter notebook cell. visJS2jupyter can be used to manipulate numerous graph styling parameters (edge width, node color, node spacing, etc.). In this notebook, we exemplify manipulating a small subset of these features. Notibly, we demonstrate how to manipulate node and edge colors for a multigraph based off of node and edge attributes.
+
 #### Visualizations
 Supplementary module, containing frequently used network visualizations
 
