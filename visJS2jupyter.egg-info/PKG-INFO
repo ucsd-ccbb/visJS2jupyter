@@ -1,0 +1,13 @@
+Metadata-Version: 1.1
+Name: visJS2jupyter
+Version: 0.1.8
+Summary: visJS2jupyter is a tool to bring the interactivity of networks created with vis.js into Jupyter notebook cells
+Home-page: https://github.com/ucsd-ccbb/visJS2jupyter
+Author: Brin Rosenthal (sbrosenthal@ucsd.edu), Mikayla Webster (m1webste@ucsd.edu), Aaron Gary (agary@ucsd.edu), Julia Len (jlen@ucsd.edu)
+Author-email: sbrosenthal@ucsd.edu
+License: MIT
+Description: 0.1.8 update: visJS2jupyter is now compatible with both networkx 1.11 and 2.0. Additionally, igraph is no longer needed to install visJS2jupyter.
+Keywords: Jupyter notebook,interactive,network
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 2
