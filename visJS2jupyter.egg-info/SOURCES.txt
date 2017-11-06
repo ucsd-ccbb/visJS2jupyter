@@ -1,0 +1,9 @@
+setup.cfg
+setup.py
+visJS2jupyter/__init__.py
+visJS2jupyter/visJS_module.py
+visJS2jupyter/visualizations.py
+visJS2jupyter.egg-info/PKG-INFO
+visJS2jupyter.egg-info/SOURCES.txt
+visJS2jupyter.egg-info/dependency_links.txt
+visJS2jupyter.egg-info/top_level.txt
