@@ -63,7 +63,7 @@ import visJS2jupyter.visualizations
 #### Python Script Usage
 You could save the output HTML to a file if used "save_to_html" procedure. Please check the examples folders.
 
-## Features and Examples
+### Features and Examples
 A simple use example with default parameters may be found here http://bl.ocks.org/brinrosenthal/raw/cfb0e12f113d55551a45d530527baedf/.  In the example provided, we show how to display a graph created with NetworkX using visJS2jupyter.  The networks displayed within Jupyter notebook cells may be dragged, clicked, and hovered on, and zooming is enabled within the window.  
 
 For an example of how more complex styles may be added to a network, see http://bl.ocks.org/brinrosenthal/raw/658325f6e0db7419625a31c883313e9b/. Nodes and edges may be styled with properties available from vis.js networks (see http://visjs.org/docs/network/ for a list and description of properties).  The main function is 'visjs_network', which requires two inputs which describe the nodes and edges in the network- 'nodes_dict', and edges_dict'.  The other arguments are optional, and apply general styles to the graph, such as sizes, highlight colors, and physics properties of the graph.
@@ -72,7 +72,7 @@ An interactive use example of visJS2jupyter may be found [here](http://bl.ocks.o
 
 For an example of how to style a multigraph using visJS2jupyter, see https://bl.ocks.org/m1webste/raw/db4aeda3f3e4a8840f08182f2e5d4608/ This notebook demonstrates how to use visJS2jupyter to visualize a NetworkX multigraph inside a jupyter notebook cell. visJS2jupyter can be used to manipulate numerous graph styling parameters (edge width, node color, node spacing, etc.). In this notebook, we exemplify manipulating a small subset of these features. Notibly, we demonstrate how to manipulate node and edge colors for a multigraph based off of node and edge attributes.
 
-## Visualizations
+### Visualizations
 Supplementary module, containing frequently used network visualizations
 
 1) **draw_graph_overlap** takes in two graphs and displays their overlap. Intersecting nodes are triangles and non-intersecting nodes are either circles or squares, depending on which graph they belong to. An interactive example may be found [here](https://bl.ocks.org/julialen/raw/d21c9d378cb09b5a7181497101996727/). In this example, we graph the union of two networks of 10 nodes each. The user can hover over each node to see the graph it belongs to and the node name. 
