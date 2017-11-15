@@ -37,7 +37,7 @@ def save_to_html(graph_html_object,outputpath,graph_id=0):
     with open(outputpath, 'w') as f:
         f.write(html)
     fname_temp = 'style_file' + str(graph_id) + '.html'
-    copyfile(fname_temp,os.path.dirname(outputpath) + "/" + fname_temp)
+    copyfile(fname_temp,os.path.join(os.path.dirname(os.path.abspath(outputpath)),fname_temp))
 
 def visjs_network(nodes_dict, edges_dict,
 
