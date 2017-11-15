@@ -277,7 +277,7 @@ def visjs_network(nodes_dict, edges_dict,
                             export_edge_attribute = export_edge_attribute)
 
     if os.path.isfile(fname_temp):
-        print("Temporary style is already at: {} and will be used as is.".format(style_file))
+        print("Temporary style is already at: {} and will be used as is.".format(fname_temp))
     else:
         create_graph_style_file(filename = fname_temp,
 
