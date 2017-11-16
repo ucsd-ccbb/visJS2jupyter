@@ -4,8 +4,7 @@ visJS2jupyter is a tool to bring the interactivity of networks created with vis.
 
 For full documentation of the tool, see https://ucsd-ccbb.github.io/visJS2jupyter/
 
-Please cite our accompanying paper:  
-
+### Please cite our accompanying paper:  
 Rosenthal, S. B., Len, J., Webster, M., Gary, A., Birmingham, A., & Fisch, K. M. (2017). Interactive network visualization in Jupyter notebooks: visJS2jupyter. Bioinformatics.
 
 ## Getting Started
