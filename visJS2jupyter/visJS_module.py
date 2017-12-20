@@ -414,6 +414,8 @@ def export_to_cytoscape(nodes_dict = 0,
                         export_node_attribute = 0,
                         export_edge_attribute = 0):
     '''
+    SBR updated 12/19/17 to rectify error in handling of the 'id' field
+    
     Exports graph to JSON file in a Cytoscape compatible format.
 
     Inputs:
@@ -430,7 +432,7 @@ def export_to_cytoscape(nodes_dict = 0,
         print('Please specify either a networkX graph (G) or a nodes_dict and edges_dict when calling visJS_module.export_to_cytoscape')
         return -1
         
-    if( ((nodes_dict == 0) & (edges_dict != 0)) | ((nodes_dict == 0) & (edges_dict != 0)) ):
+    if( ((nodes_dict == 0) & (edges_dict != 0)) | ((nodes_dict != 0) & (edges_dict == 0)) ):
         print('Please specify both a nodes_dict and edges_dict when calling visJS_module.export_to_cytoscape')
         return -1
     
@@ -438,16 +440,26 @@ def export_to_cytoscape(nodes_dict = 0,
     if (G == 0):
         # making the basic graph from only node id
         nodes = [node['id'] for node in nodes_dict] # nodes_dict must contain id
+        node_map = dict(zip(nodes,range(len(nodes)))) # relabel ids so they match the edges
         edges = [(edge['source'],edge['target']) for edge in edges_dict] # edges_dict must contain source and target
         G = nx.Graph()
         G.add_nodes_from(nodes)
+        G=nx.relabel_nodes(G,node_map) # relabel nodes so edges match up
         G.add_edges_from(edges)
+        
+        # SBR 12/19/17: reset node['id']
+        for i in range(len(nodes_dict)):
+            nodes_dict[i]['id']=node_map[nodes_dict[i]['id']]
     else:
+        # SBR 12/19/17: id needs to be an int which matches source and target from edges
+        #node_map = dict(zip(nodes,range(len(nodes))))  # map to indices for source/target in edges
         # create nodes_dict from graph
         nodes_dict = []
+        node_counter=-1
         for node in list(G.nodes(data=True)):
-            if 'id' not in node[1]: # ensure id is in node dict
-                node[1]['id'] = node[0]
+            node_counter+=1
+            #if 'id' not in node[1]: # ensure id is in node dict
+            node[1]['id'] = node_counter 
             nodes_dict.append(node[1])
     
         # create edges_dict from graph
@@ -462,7 +474,11 @@ def export_to_cytoscape(nodes_dict = 0,
         nodes = [node['id'] for node in nodes_dict] # nodes_dict must contain id
         edges = [(edge['source'],edge['target']) for edge in edges_dict] # edges_dict must contain source and target
     
+    
     # iterate over nodes dict and add attributes to graph
+    print(len(nodes_dict))
+    print(len(G.nodes()))
+    
     for attribute in nodes_dict[0].keys(): # under the assumption that all nodes have the same attributes!!!!
     
         if attribute == 'x':
@@ -487,6 +503,8 @@ def export_to_cytoscape(nodes_dict = 0,
     if 'name' not in nodes_dict[0].keys():
         node_name = {node['id']:str(node['id']) for node in nodes_dict}
         nx.set_node_attributes(G, name = 'name', values = node_name)
+        
+    
 
     # set source and target attributes based on node id's
     sources = [str(edge['source']) for edge in edges_dict] # assuming edges_dict has a source attribute
@@ -504,6 +522,9 @@ def export_to_cytoscape(nodes_dict = 0,
         else:
             edge_att = {(edge['source'],edge['target']):edge[attribute] for edge in edges_dict}
             nx.set_edge_attributes(G, name = attribute, values = edge_att) 
+    
+    
+    
     
     # begin writing the json-style file        
     to_string = '{\"elements\":{\"nodes\":['
