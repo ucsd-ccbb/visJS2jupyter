@@ -94,6 +94,9 @@ import visJS2jupyter.visualizations
 
 **Prioritize autism risk genes**:An example of how to use the network propagation functionality of our tool to prioritize genes related to autism is located [here](http://bl.ocks.org/brinrosenthal/raw/c9b1644357124d02b42997548165badd/)
 
+**Multigraph example**:For an example of how to style a multigraph using visJS2jupyter, see https://bl.ocks.org/m1webste/raw/db4aeda3f3e4a8840f08182f2e5d4608/ This notebook demonstrates how to use visJS2jupyter to visualize a NetworkX multigraph inside a jupyter notebook cell. visJS2jupyter can be used to manipulate numerous graph styling parameters (edge width, node color, node spacing, etc.). In this notebook, we exemplify manipulating a small subset of these features. Notibly, we demonstrate how to manipulate node and edge colors for a multigraph based off of node and edge attributes.
+
+
 #### Visualizations
 Supplementary module, containing frequently used network visualizations
 
