@@ -622,4 +622,10 @@ time_stamp: integer (default = 0)
 graph_id: integer (default = 0)      
 &nbsp;&nbsp;&nbsp;&nbsp;To draw multiple graphs in the same notebook, you must use this argument to give each graph a different id.
 
+override_graph_size_to_max: boolean (default = False)
+&nbsp;&nbsp;&nbsp;&nbsp;If set to true, overrides the graph_width and graph_height pixel values to use 100% of available space. Useful for html and jupyter output, but not recommended for zeppelin.
+
+output: string (default = ‘jupyter’)
+&nbsp;&nbsp;&nbsp;&nbsp;When not set, produces output for jupyter to be used as usual. When set to "zeppelin", you may simply print the returned value in the zeppelin notebook. When set to "html", it will return the raw html code which you may save to a file.
+
 [Table of contents](#toc)
