@@ -384,6 +384,7 @@ def visjs_network(nodes_dict, edges_dict,
                            graph_width = graph_width,
                            graph_height = graph_height,
                            scaling_factor = scaling_factor,
+                           graph_id = graph_id,
                            override_graph_size_to_max = override_graph_size_to_max,
                            is_standalone = output not in ["jupyter"],
                            )
@@ -853,6 +854,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                            graph_width = 900,
                            graph_height = 800,
                            scaling_factor = 1,
+                           graph_id = 0,
                            override_graph_size_to_max = False,
                            is_standalone = False,
                            ):
@@ -930,7 +932,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.1.0/d3.min.js" type="text/javascript"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.js"></script>
   <style type="text/css">""" + frame_max + """
-    #mynetwork {
+    #mynetwork""" + str(graph_id) + """ {
       width: """ + graph_width + """;
       height: """ + graph_height + """;
       border: 5px solid """ + border_color + """;
@@ -940,7 +942,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
     """
 
     network_div = """
-  <div id="mynetwork"></div>"""
+  <div id="mynetwork{}"></div>""".format(graph_id)
 
     run_vis = """
     function runVis(visNodes, visEdges) {
@@ -1152,7 +1154,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
        var vis_nodes = new vis.DataSet(nodeArray);
        var vis_edges = new vis.DataSet(edgeArray);
 
-        var container = document.getElementById('mynetwork');
+        var container = document.getElementById('mynetwork""" + str(graph_id) + """');
         var data = {
             edges: vis_edges,
             nodes: vis_nodes
