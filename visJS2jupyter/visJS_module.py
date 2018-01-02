@@ -116,6 +116,7 @@ def visjs_network(nodes_dict, edges_dict,
                            edge_smooth_roundness = 0.5, # number between 0 and 1 that changes roundness of curve except with dynamic curves
                            edge_width = 1, # width of all edges
                            edge_label_field = "id",
+                           edge_width_field = "", # empty string will use global value for all edge widths
 
                            #interaction
                            drag_nodes = True, # When true, the nodes that are not fixed can be dragged by the user.
@@ -345,6 +346,7 @@ def visjs_network(nodes_dict, edges_dict,
                            edge_smooth_roundness = edge_smooth_roundness,
                            edge_width = edge_width,
                            edge_label_field = edge_label_field,
+                           edge_width_field = edge_width_field,
 
                            #interaction
                            drag_nodes = drag_nodes,
@@ -815,6 +817,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                            edge_smooth_roundness = 0.5, # number between 0 and 1 that changes roundness of curve except with dynamic curves
                            edge_width = 2, # width of all edges
                            edge_label_field = "id",
+                           edge_width_field = "",
 
                            #interaction
                            drag_nodes = True, # When true, the nodes that are not fixed can be dragged by the user.
@@ -1146,7 +1149,8 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                          color: {
                             color: python_edges[i].color,
                             opacity: """ + str(edge_color_opacity) + """
-                        }
+                        },
+                         width: """ + ("python_edges[i].{} * {}".format(edge_width_field, scaling_factor) if edge_width_field else "null") + """
             });
        }
        //console.log(nodeArray);

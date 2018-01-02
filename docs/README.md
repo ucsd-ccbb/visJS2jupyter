@@ -499,6 +499,9 @@ edge_width: integer (default = 1)
 						   
 edge_label_field: string (default = ‘id’)  
 &nbsp;&nbsp;&nbsp;&nbsp;Field that edges will be labeled with.
+               
+edge_width_field: string (default = ‘’)  
+&nbsp;&nbsp;&nbsp;&nbsp;Field specifying edge width. If blank, defaults to global edge_width value for all edges. Otherwise, overrides the global value with the numeric value from that field.
 
 
 [Table of contents](#toc)
