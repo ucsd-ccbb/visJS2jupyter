@@ -116,6 +116,7 @@ def visjs_network(nodes_dict, edges_dict,
                            edge_smooth_roundness = 0.5, # number between 0 and 1 that changes roundness of curve except with dynamic curves
                            edge_width = 1, # width of all edges
                            edge_label_field = "id",
+                           edge_width_field = "", # empty string will use global value for all edge widths
 
                            #interaction
                            drag_nodes = True, # When true, the nodes that are not fixed can be dragged by the user.
@@ -160,7 +161,10 @@ def visjs_network(nodes_dict, edges_dict,
                            export_network = False,
                            export_file = 'network.json',
                            export_node_attribute = None,
-                           export_edge_attribute = None):
+                           export_edge_attribute = None,
+                           override_graph_size_to_max = False,
+                           output = "jupyter",
+                           ):
 
     '''
     This function creates an iframe for the input graph
@@ -249,7 +253,7 @@ def visjs_network(nodes_dict, edges_dict,
                             export_node_attribute = export_node_attribute,
                             export_edge_attribute = export_edge_attribute)
 
-    create_graph_style_file(filename = fname_temp,
+    network_div, graph_style_file = create_graph_style_file(filename = fname_temp,
 
                            # by node
                            node_border_width = node_border_width,
@@ -342,6 +346,7 @@ def visjs_network(nodes_dict, edges_dict,
                            edge_smooth_roundness = edge_smooth_roundness,
                            edge_width = edge_width,
                            edge_label_field = edge_label_field,
+                           edge_width_field = edge_width_field,
 
                            #interaction
                            drag_nodes = drag_nodes,
@@ -380,12 +385,14 @@ def visjs_network(nodes_dict, edges_dict,
                            graph_title = graph_title,
                            graph_width = graph_width,
                            graph_height = graph_height,
-                           scaling_factor = scaling_factor
+                           scaling_factor = scaling_factor,
+                           graph_id = graph_id,
+                           override_graph_size_to_max = override_graph_size_to_max,
+                           is_standalone = output not in ["jupyter"],
                            )
 
-    dumps(nodes_dict)
-
-    html_return = HTML(
+    if output == "jupyter":
+      html_return = HTML(
     '<!doctype html>'
    + '<html>'
    + '<head>'
@@ -399,12 +406,47 @@ def visjs_network(nodes_dict, edges_dict,
    + '}'
    + '</script>'
    + '<iframe name="' + fname_temp.replace('.html','').replace('html/', '')
-   + '" src="' + fname_temp + '" height="1200px" width="100%;"></iframe>'
+   + '" src="' + fname_temp + '" width="100%;" height="' + str(graph_height + 5) + 'px"></iframe>'
    + '</body>'
    + '</html>'
    )
-
-    return html_return
+      return html_return
+    elif output == "zeppelin":
+      zeppelin_output = """%html
+        {}
+        {}
+        <script type="text/javascript">
+        function setUpFrame() {{
+          window.runVis({}, {});
+        }}
+        setUpFrame();
+        </script>
+      """.format(network_div, graph_style_file, dumps(nodes_dict), dumps(edges_dict))
+      return zeppelin_output
+    elif output == "html":
+      html_output = """
+        <!doctype html>
+        <html>
+        <head>
+          <title>Network | Basic usage</title>
+          {}
+          <script type="text/javascript">
+          function setUpFrame() {{
+            window.runVis({}, {});
+          }}
+          </script>
+        </head>
+        <body onload="setUpFrame();">
+          {}
+        </body>
+        </html>
+      """.format(graph_style_file, dumps(nodes_dict), dumps(edges_dict), network_div)
+      return html_output
+      # standalone_filename = "vis_js_output.html"
+      # f = open(standalone_filename, 'w')
+      # f.write(html_output)
+      # f.close()
+      # print("Saved to {}!".format(standalone_filename))
 
 
 def export_to_cytoscape(nodes_dict = 0,
@@ -775,6 +817,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                            edge_smooth_roundness = 0.5, # number between 0 and 1 that changes roundness of curve except with dynamic curves
                            edge_width = 2, # width of all edges
                            edge_label_field = "id",
+                           edge_width_field = "",
 
                            #interaction
                            drag_nodes = True, # When true, the nodes that are not fixed can be dragged by the user.
@@ -813,7 +856,10 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                            graph_title='',
                            graph_width = 900,
                            graph_height = 800,
-                           scaling_factor = 1
+                           scaling_factor = 1,
+                           graph_id = 0,
+                           override_graph_size_to_max = False,
+                           is_standalone = False,
                            ):
 
 
@@ -827,242 +873,81 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
 
     '''
 
-    # switch physics_enabled bool from python to JS
-    if physics_enabled:
-        physics_enabled='true'
-    else:
-        physics_enabled='false'
+    # switch bool from python to JS
+    def stringify_bool(var):
+      return 'true' if var else 'false'
 
-    # switch edge_arrow_to bool from python to JS
-    if edge_arrow_to:
-        edge_arrow_to = 'true'
-    else:
-        edge_arrow_to = 'false'
-
-    # switch edge_arrow_from bool from python to JS
-    if edge_arrow_from:
-        edge_arrow_from = 'true'
-    else:
-        edge_arrow_from = 'false'
-
-    # switch edge_arrow_middle bool from python to JS
-    if edge_arrow_middle:
-        edge_arrow_middle = 'true'
-    else:
-        edge_arrow_middle = 'false'
-
-    # switch edge_arrow_strikethrough bool from python to JS
-    if edge_arrow_strikethrough:
-        edge_arrow_strikethrough = 'true'
-    else:
-        edge_arrow_strikethrough = 'false'
-
-    # switch edge_dashes bool from python to JS
-    if edge_dashes:
-        edge_dashes = 'true'
-    else:
-        edge_dashes = 'false'
-
-    # switch edge_label_highlight_bold bool from python to JS
-    if edge_label_highlight_bold:
-        edge_label_highlight_bold = 'true'
-    else:
-        edge_label_highlight_bold = 'false'
-
-    # switch edge_scaling_label_enabled bool from python to JS
-    if edge_scaling_label_enabled:
-        edge_scaling_label_enabled = 'true'
-    else:
-        edge_scaling_label_enabled = 'false'
-
-    # switch edge_shadow_enabled bool from python to JS
-    if edge_shadow_enabled:
-        edge_shadow_enabled = 'true'
-    else:
-        edge_shadow_enabled = 'false'
-
-    # switch edge_smooth_enabled bool from python to JS
-    if edge_smooth_enabled:
-        edge_smooth_enabled = 'true'
-    else:
-        edge_smooth_enabled = 'false'
-
-    # switch node_fixed_x bool from python to JS
-    if node_fixed_x:
-        node_fixed_x = 'true'
-    else:
-        node_fixed_x = 'false'
-
-    # switch node_fixed_y bool from python to JS
-    if node_fixed_y:
-        node_fixed_y = 'true'
-    else:
-        node_fixed_y = 'false'
-
-    # switch node_label_highlight_bold bool from python to JS
-    if node_label_highlight_bold:
-        node_label_highlight_bold = 'true'
-    else:
-        node_label_highlight_bold = 'false'
-
-    # switch node_scaling_label_enabled bool from python to JS
-    if node_scaling_label_enabled:
-        node_scaling_label_enabled = 'true'
-    else:
-        node_scaling_label_enabled = 'false'
-
-    # switch node_shadow_enabled bool from python to JS
-    if node_shadow_enabled:
-        node_shadow_enabled = 'true'
-    else:
-        node_shadow_enabled = 'false'
-
-    # switch node_shape_border_dashes bool from python to JS
-    if node_shape_border_dashes:
-        node_shape_border_dashes = 'true'
-    else:
-        node_shape_border_dashes = 'false'
-
-    # switch node_shape_interpolation bool from python to JS
-    if node_shape_interpolation:
-        node_shape_interpolation = 'true'
-    else:
-        node_shape_interpolation = 'false'
-
-    # switch node_shape_use_image_size bool from python to JS
-    if node_shape_use_image_size:
-        node_shape_use_image_size = 'true'
-    else:
-        node_shape_use_image_size = 'false'
-
-    # switch node_shape_use_border_with_image bool from python to JS
-    if node_shape_use_border_with_image:
-        node_shape_use_border_with_image = 'true'
-    else:
-        node_shape_use_border_with_image = 'false'
-
-    # switch drag_nodes bool from python to JS
-    if drag_nodes:
-        drag_nodes = 'true'
-    else:
-        drag_nodes = 'false'
-
-    # switch drag_view bool from python to JS
-    if drag_view:
-        drag_view = 'true'
-    else:
-        drag_view = 'false'
-
-    # switch hide_edges_on_drag from python to JS
-    if hide_edges_on_drag:
-        hide_edges_on_drag = 'true'
-    else:
-        hide_edges_on_drag = 'false'
-
-    # switch hide_nodes_on_drag  from python to JS
-    if hide_nodes_on_drag:
-        hide_nodes_on_drag  = 'true'
-    else:
-        hide_nodes_on_drag  = 'false'
-
-    # switch hover from python to JS
-    if hover:
-        hover  = 'true'
-    else:
-        hover  = 'false'
-
-    # switch hover_connected_edges from python to JS
-    if hover_connected_edges:
-        hover_connected_edges  = 'true'
-    else:
-        hover_connected_edges  = 'false'
-
-    # switch keyboard_enabled from python to JS
-    if keyboard_enabled:
-        keyboard_enabled  = 'true'
-    else:
-        keyboard_enabled  = 'false'
-
-    # switch keyboard_bind_to_window from python to JS
-    if keyboard_bind_to_window:
-        keyboard_bind_to_window  = 'true'
-    else:
-        keyboard_bind_to_window  = 'false'
-
-    # switch multiselect from python to JS
-    if multiselect:
-        multiselect  = 'true'
-    else:
-        multiselect  = 'false'
-
-    # switch navigation_buttons from python to JS
-    if navigation_buttons:
-        navigation_buttons  = 'true'
-    else:
-        navigation_buttons  = 'false'
-
-    # switch selectable from python to JS
-    if selectable:
-        selectable  = 'true'
-    else:
-        selectable  = 'false'
-
-    # switch select_connected_edges from python to JS
-    if select_connected_edges:
-        select_connected_edges  = 'true'
-    else:
-        select_connected_edges  = 'false'
-
-    # switch zoom_view from python to JS
-    if zoom_view:
-        zoom_view  = 'true'
-    else:
-        zoom_view  = 'false'
-
-    # switch config_enabled from python to JS
-    if config_enabled:
-        config_enabled  = 'true'
-    else:
-        config_enabled  = 'false'
-
-    # switch showButton from python to JS
-    if showButton:
-        showButton  = 'true'
-    else:
-        showButton  = 'false'
+    physics_enabled = stringify_bool(physics_enabled)
+    edge_arrow_to = stringify_bool(edge_arrow_to)
+    edge_arrow_from = stringify_bool(edge_arrow_from)
+    edge_arrow_middle = stringify_bool(edge_arrow_middle)
+    edge_arrow_strikethrough = stringify_bool(edge_arrow_strikethrough)
+    edge_dashes = stringify_bool(edge_dashes)
+    edge_label_highlight_bold = stringify_bool(edge_label_highlight_bold)
+    edge_scaling_label_enabled = stringify_bool(edge_scaling_label_enabled)
+    edge_shadow_enabled = stringify_bool(edge_shadow_enabled)
+    edge_smooth_enabled = stringify_bool(edge_smooth_enabled)
+    node_fixed_x = stringify_bool(node_fixed_x)
+    node_fixed_y = stringify_bool(node_fixed_y)
+    node_label_highlight_bold = stringify_bool(node_label_highlight_bold)
+    node_scaling_label_enabled = stringify_bool(node_scaling_label_enabled)
+    node_shadow_enabled = stringify_bool(node_shadow_enabled)
+    node_shape_border_dashes = stringify_bool(node_shape_border_dashes)
+    node_shape_interpolation = stringify_bool(node_shape_interpolation)
+    node_shape_use_image_size = stringify_bool(node_shape_use_image_size)
+    node_shape_use_border_with_image = stringify_bool(node_shape_use_border_with_image)
+    drag_nodes = stringify_bool(drag_nodes)
+    drag_view = stringify_bool(drag_view)
+    hide_edges_on_drag = stringify_bool(hide_edges_on_drag)
+    hide_nodes_on_drag = stringify_bool(hide_nodes_on_drag)
+    hover = stringify_bool(hover)
+    hover_connected_edges = stringify_bool(hover_connected_edges)
+    keyboard_enabled = stringify_bool(keyboard_enabled)
+    keyboard_bind_to_window = stringify_bool(keyboard_bind_to_window)
+    multiselect = stringify_bool(multiselect)
+    navigation_buttons = stringify_bool(navigation_buttons)
+    selectable = stringify_bool(selectable)
+    select_connected_edges = stringify_bool(select_connected_edges)
+    zoom_view = stringify_bool(zoom_view)
+    config_enabled = stringify_bool(config_enabled)
+    showButton = stringify_bool(showButton)
 
     graph_width = scaling_factor * graph_width
     graph_height = scaling_factor * graph_height
     if edge_length != 'undefined':
         edge_length *= scaling_factor
+    if override_graph_size_to_max:
+      graph_width = "100%"
+      graph_height = "100%"
+      frame_max = """
+    html, body {
+      width: 100%;
+      height: 100%;
+    }"""
+    else:
+      graph_width = "{}px".format(graph_width)
+      graph_height = "{}px".format(graph_height)
+      frame_max = ""
 
-    visJS_to_write = """<!doctype html>
-<html>
-<head>
-  <title>Network | Basic usage</title>
-
+    header = """
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.css"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.1.0/d3.min.js" type="text/javascript"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.js"></script>
-  <style type="text/css">
-    #mynetwork {
-      width: 600px;
-      height: 400px;
+  <style type="text/css">""" + frame_max + """
+    #mynetwork""" + str(graph_id) + """ {
+      width: """ + graph_width + """;
+      height: """ + graph_height + """;
       border: 5px solid """ + border_color + """;
+      box-sizing: border-box;
     }
   </style>
-</head>
-<body onload="init();">
+    """
 
-<p>
-  """ + graph_title + """
-</p>
+    network_div = """
+  <div id="mynetwork{}"></div>""".format(graph_id)
 
-<div id="mynetwork" style="height: """ + str(graph_height) + """px; width: """ + str(graph_width) + """px;"></div>
-
-
-<script>
-    function init() { window.parent.setUpFrame(); return true; }
+    run_vis = """
     function runVis(visNodes, visEdges) {
        var vizOptions = {
           configure: {
@@ -1264,7 +1149,8 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                          color: {
                             color: python_edges[i].color,
                             opacity: """ + str(edge_color_opacity) + """
-                        }
+                        },
+                         width: """ + ("python_edges[i].{} * {}".format(edge_width_field, scaling_factor) if edge_width_field else "null") + """
             });
        }
        //console.log(nodeArray);
@@ -1272,7 +1158,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
        var vis_nodes = new vis.DataSet(nodeArray);
        var vis_edges = new vis.DataSet(edgeArray);
 
-        var container = document.getElementById('mynetwork');
+        var container = document.getElementById('mynetwork""" + str(graph_id) + """');
         var data = {
             edges: vis_edges,
             nodes: vis_nodes
@@ -1285,13 +1171,36 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
 
        console.log( "ready!" );
     }
+    """
+
+    visJS_to_write = """<!doctype html>
+<html>
+<head>
+  <title>Network | Basic usage</title>
+    """ + header + """
+</head>
+<body onload="init();">
+
+<p>
+  """ + graph_title + """
+</p>
+
+  """ + network_div + """
+
+<script type="text/javascript">
+    function init() { window.parent.setUpFrame(); return true; }
+  """ + run_vis + """
 </script>
 
 
     </body>
 </html>
     """
-    # write the huge string to a file
-    f = open(filename, 'w')
-    f.write(visJS_to_write)
-    f.close()
+    if not is_standalone:
+      # write the huge string to a file
+      f = open(filename, 'w')
+      f.write(visJS_to_write)
+      f.close()
+      return None, None
+    else:
+      return network_div, header + """<script type="text/javascript">\n""" + run_vis + "\n</script>"
