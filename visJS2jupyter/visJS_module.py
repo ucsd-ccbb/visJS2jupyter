@@ -253,7 +253,7 @@ def visjs_network(nodes_dict, edges_dict,
                             export_node_attribute = export_node_attribute,
                             export_edge_attribute = export_edge_attribute)
 
-    network_div, graph_style_file = create_graph_style_file(filename = fname_temp,
+    result = create_graph_style_file(filename = fname_temp,
 
                            # by node
                            node_border_width = node_border_width,
@@ -388,7 +388,7 @@ def visjs_network(nodes_dict, edges_dict,
                            scaling_factor = scaling_factor,
                            graph_id = graph_id,
                            override_graph_size_to_max = override_graph_size_to_max,
-                           is_standalone = output not in ["jupyter"],
+                           output = output,
                            )
 
     if output == "jupyter":
@@ -411,42 +411,53 @@ def visjs_network(nodes_dict, edges_dict,
    + '</html>'
    )
       return html_return
-    elif output == "zeppelin":
-      zeppelin_output = """%html
+    elif output in ["zeppelin", "html", "div"]:
+      script = """
         {}
-        {}
-        <script type="text/javascript">
         function setUpFrame() {{
           window.runVis({}, {});
-        }}
-        setUpFrame();
+        }}{}
+      """.format(result["script"], dumps(nodes_dict), dumps(edges_dict), (("\n" + result["run"]) if output == "zeppelin" else ""))
+      head = """
+        {}
+        <style type="text/css">
+        {}
+        </style>
+        <script type="text/javascript">
+        {}
         </script>
-      """.format(network_div, graph_style_file, dumps(nodes_dict), dumps(edges_dict))
-      return zeppelin_output
-    elif output == "html":
-      html_output = """
-        <!doctype html>
-        <html>
-        <head>
-          <title>Network | Basic usage</title>
+      """.format(result["external"], result["style"], script)
+      if output == "zeppelin":
+        return """%html
           {}
-          <script type="text/javascript">
-          function setUpFrame() {{
-            window.runVis({}, {});
-          }}
-          </script>
-        </head>
-        <body onload="setUpFrame();">
           {}
-        </body>
-        </html>
-      """.format(graph_style_file, dumps(nodes_dict), dumps(edges_dict), network_div)
-      return html_output
-      # standalone_filename = "vis_js_output.html"
-      # f = open(standalone_filename, 'w')
-      # f.write(html_output)
-      # f.close()
-      # print("Saved to {}!".format(standalone_filename))
+        """.format(result["body"], head)
+      elif output == "html":
+        return """
+          <!doctype html>
+          <html>
+          <head>
+            <title>{}</title>
+            {}
+          </head>
+          <body onload="{}">
+            {}
+          </body>
+          </html>
+        """.format(graph_title, head, result["run"], result["body"])
+        # standalone_filename = "vis_js_output.html"
+        # f = open(standalone_filename, 'w')
+        # f.write(html_output)
+        # f.close()
+        # print("Saved to {}!".format(standalone_filename))
+      elif output == "div":
+        return {
+          "external": result["external"],
+          "style": result["style"],
+          "script": script,
+          "run": result["run"],
+          "body": result["body"],
+        }
 
 
 def export_to_cytoscape(nodes_dict = 0,
@@ -859,7 +870,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                            scaling_factor = 1,
                            graph_id = 0,
                            override_graph_size_to_max = False,
-                           is_standalone = False,
+                           output = "jupyter",
                            ):
 
 
@@ -929,19 +940,19 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
       graph_height = "{}px".format(graph_height)
       frame_max = ""
 
-    header = """
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.css"/>
+    external = """
+  {}<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.css"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.1.0/d3.min.js" type="text/javascript"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.js"></script>
-  <style type="text/css">""" + frame_max + """
+    """.format("""<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"/>\n""" if output in ["jupyter", "html"] else "")
+
+    style = frame_max + """
     #mynetwork""" + str(graph_id) + """ {
       width: """ + graph_width + """;
       height: """ + graph_height + """;
       border: 5px solid """ + border_color + """;
       box-sizing: border-box;
     }
-  </style>
     """
 
     network_div = """
@@ -1177,7 +1188,10 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
 <html>
 <head>
   <title>Network | Basic usage</title>
-    """ + header + """
+    """ + external + """
+  <style type="text/css">
+    """ + style + """
+  </style>
 </head>
 <body onload="init();">
 
@@ -1192,15 +1206,20 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
   """ + run_vis + """
 </script>
 
-
     </body>
 </html>
     """
-    if not is_standalone:
+    if output == "jupyter":
       # write the huge string to a file
       f = open(filename, 'w')
       f.write(visJS_to_write)
       f.close()
-      return None, None
+      return None
     else:
-      return network_div, header + """<script type="text/javascript">\n""" + run_vis + "\n</script>"
+      return {
+        "external": external,
+        "style": style,
+        "script": run_vis,
+        "run": "setUpFrame();",
+        "body": network_div,
+      }
