@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import networkx as nx
 
-Javascript("https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.js")
+Javascript("https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.js")
 
 def visjs_network(nodes_dict, edges_dict,
 
@@ -941,9 +941,9 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
       frame_max = ""
 
     external = """
-  {}<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.css"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.1.0/d3.min.js" type="text/javascript"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.js"></script>
+  {}<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.12.2/d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.js"></script>
     """.format("""<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"/>\n""" if output in ["jupyter", "html"] else "")
 
     style = frame_max + """
