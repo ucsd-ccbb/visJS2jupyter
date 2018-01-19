@@ -629,6 +629,6 @@ override_graph_size_to_max: boolean (default = False)
 &nbsp;&nbsp;&nbsp;&nbsp;If set to true, overrides the graph_width and graph_height pixel values to use 100% of available space. Useful for html and jupyter output, but not recommended for zeppelin. Do not use this with scaling_factor other than 1.
 
 output: string (default = ‘jupyter’)
-&nbsp;&nbsp;&nbsp;&nbsp;When not set, produces output for jupyter to be used as usual. When set to "zeppelin", you may simply print the returned value in the zeppelin notebook. When set to "html", it will return the raw html code which you may save to a file.
+&nbsp;&nbsp;&nbsp;&nbsp;When not set, produces output for jupyter to be used as usual. When set to "zeppelin", you can simply print the returned value in the zeppelin notebook. When set to "html", it will return the raw full HTML code which you can save to a file. When set to "div", it will return a Python dictionary with separate code snippets you can embed into different sections of your custom HTML file.
 
 [Table of contents](#toc)

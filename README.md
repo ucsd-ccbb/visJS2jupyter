@@ -2,7 +2,7 @@
 
 visJS2jupyter is a tool to bring the interactivity of networks created with vis.js into jupyter notebook cells, authored by members of the [UCSD Center for Computational Biology & Bioinformatics](http://compbio.ucsd.edu)
 
-There's also an option to get the output in a format compatible with Zeppelin notebook or ready to save as a standalone HTML file.
+There's also an option to get the output in a format compatible with Zeppelin notebook, ready to save as a standalone HTML file, or code to embed in your own HTML.
 
 For full documentation of the tool, see https://ucsd-ccbb.github.io/visJS2jupyter/
 
