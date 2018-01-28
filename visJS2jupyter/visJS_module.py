@@ -415,7 +415,7 @@ def visjs_network(nodes_dict, edges_dict,
       script = """
         {}
         function setUpFrame() {{
-          window.runVis({}, {});
+          return window.runVis({}, {});
         }}{}
       """.format(result["script"], dumps(nodes_dict), dumps(edges_dict), (("\n" + result["run"]) if output == "zeppelin" else ""))
       head = """
@@ -1203,6 +1203,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
 
 
        console.log( "ready!" );
+       return myNetwork;
     }
     """
 
