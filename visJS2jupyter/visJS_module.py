@@ -494,6 +494,7 @@ def export_to_cytoscape(nodes_dict = 0,
         # making the basic graph from only node id
         nodes = [node['id'] for node in nodes_dict] # nodes_dict must contain id
         node_map = dict(zip(nodes,range(len(nodes)))) # relabel ids so they match the edges
+        node_map_r = dict(zip(range(len(nodes)),nodes))
         edges = [(edge['source'],edge['target']) for edge in edges_dict] # edges_dict must contain source and target
         G = nx.Graph()
         G.add_nodes_from(nodes)
@@ -516,13 +517,28 @@ def export_to_cytoscape(nodes_dict = 0,
             nodes_dict.append(node[1])
     
         # create edges_dict from graph
+        nodes = G.nodes()
+        node_map = dict(zip(nodes,range(len(nodes)))) # relabel ids so they match the edges
+        node_map_r = dict(zip(range(len(nodes)),nodes))
+        
+        # relabel nodes in G
+        G = nx.relabel_nodes(G,node_map)
+        
+        # add node name as node attribute
+        nx.set_node_attributes(G,'node_name',dict(zip(range(len(nodes)),[str(n) for n in nodes]))) # make sure node names are strings
+        
+        edges_no_data = G.edges()
         edges_dict = []
-        for edge in list(G.edges(data=True)):
-            if 'source' not in edge[2]: # ensure source is in edge dict
-                edge[2]['source'] = edge[0]
-            if 'target' not in edge[2]: # ensure target is in edge dict
-                edge[2]['target'] = edge[1]
-            edges_dict.append(edge[2])   
+        
+        # SBR 01/22/18: update this for consistency with node id naming convention
+        for i in range(len(edges_no_data)):
+            edges_dict.append({"source":edges_no_data[i][0],"target":edges_no_data[i][1]})   
+#        for edge in list(G.edges(data=True)):
+#            if 'source' not in edge[2]: # ensure source is in edge dict
+#                edge[2]['source'] = edge[0]
+#            if 'target' not in edge[2]: # ensure target is in edge dict
+#                edge[2]['target'] = edge[1]
+#            edges_dict.append(edge[2])   
 
         nodes = [node['id'] for node in nodes_dict] # nodes_dict must contain id
         edges = [(edge['source'],edge['target']) for edge in edges_dict] # edges_dict must contain source and target
@@ -553,9 +569,15 @@ def export_to_cytoscape(nodes_dict = 0,
             node_att = {node['id']:node[attribute] for node in nodes_dict}
             nx.set_node_attributes(G, name = attribute, values = node_att)
             
-    if 'name' not in nodes_dict[0].keys():
-        node_name = {node['id']:str(node['id']) for node in nodes_dict}
-        nx.set_node_attributes(G, name = 'name', values = node_name)
+# SBR 1/22/18: this part doesn't seem to be needed..?
+#    if 'name' not in nodes_dict[0].keys():
+#        print(node_map_r)
+#        print(type(node_map_r[0]))
+#        print(nodes_dict[0]['id'])
+#
+#        node_name = {node_map[node['id']]:str(node_map[node['id']]) for node in nodes_dict}
+#        print(node_name)
+#        nx.set_node_attributes(G, name = 'name', values = node_name)
         
     
 
