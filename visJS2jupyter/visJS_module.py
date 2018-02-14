@@ -1076,7 +1076,7 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
           nodes: {
               borderWidth: """ + str(node_border_width) + """,
               borderWidthSelected: """ + str(node_border_width_selected) + """,
-              brokenImage: """ + node_broken_image + """,
+              brokenImage: '""" + node_broken_image + """',
               color: {
                  border: '""" + node_color_border + """',
                  highlight: {
