@@ -1103,7 +1103,10 @@ def create_graph_style_file(filename = 'visJS_html_file_temp',
                  size: """ + str(node_icon_size) + """,
                  color:'""" + node_icon_color + """'
               },
-              image: """ + node_image + """,
+              image: {
+                 unselected: '""" + node_image + """',
+                 selected: '""" + node_image + """'
+              },
               labelHighlightBold: """ + node_label_highlight_bold + """,
               scaling: {
                  min: """ + str(node_scaling_min) + """,
