@@ -630,101 +630,120 @@ def export_to_cytoscape(nodes_dict = 0,
     f.close()
 
 
-def return_node_to_color(G,field_to_map='degree',cmap=plt.cm.jet,alpha = 1.0,color_vals_transform = None,ceil_val=10,
-                         color_max_frac = 1.0,color_min_frac = 0.0):
+# development versions of return_node_to_color and return_edge_to_color
+
+def return_node_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0, color_vals_transform = None,ceil_val=10,
+                        color_max_frac = 1.0,color_min_frac = 0.0,vmin=None,vmax=None):
+    
 
     '''
     Function to return a dictionary mapping nodes (keys) to colors (values), based on the selected field_to_map.
-    - field_to_map must be a node attribute
-    - cmap must be a valid matplotlib colormap
-    - color_max_frac and color_min_frac allow user to set lower and upper ranges for colormap
+        - field_to_map must be a node attribute
+        - cmap must be a valid matplotlib colormap
+        - color_max_frac and color_min_frac allow user to set lower and upper ranges for colormap
+    
     '''
-
-    #fixes a divide by zero error when |E|/v gets too high
-    nodes_with_data = [(n[0], max(n[1][field_to_map], 0.0000000000000000001)) for n in G.nodes(data=True)]
-
+    
+    
+    
+    nodes_with_data = [(n[0],n[1][field_to_map]) for n in G.nodes(data=True)]
+    
+    
     if color_vals_transform == 'log':
         nodes,data = zip(*nodes_with_data)
-        nonzero_list = [d for d in data if d>(10**-18)]
-        if not nonzero_list:
-            data = [1 for d in data]
-            print ('Warning: All nodes have data value of 0')
-        else:
-            min_dn0 = min(nonzero_list)
-            data = [np.log(max(d,min_dn0)) for d in data]  # set the zero d values to minimum non0 value
-            data = [(d-np.min(data)) for d in data] # shift so we don't have any negative values
+        min_dn0 = np.nanmin([d for d in data if d>0])
+        data = [np.log(np.max([d,min_dn0])) for d in data]  # set the zero d values to minimum non0 value
+        data = [(d-np.nanmin(data)) for d in data] # shift so we don't have any negative values
         nodes_with_data = zip(nodes,data)
-
+        
     elif color_vals_transform == 'sqrt':
         nodes,data = zip(*nodes_with_data)
         data = [np.sqrt(d) for d in data]
         nodes_with_data = zip(nodes,data)
-
+        
     elif color_vals_transform == 'ceil':
         nodes,data = zip(*nodes_with_data)
-        data = [max(d,ceil_val) for d in data]
+        data = [min(d,ceil_val) for d in data]
         nodes_with_data = zip(nodes,data)
-
+    else:
+        nodes,data = zip(*nodes_with_data)
+        
+    # if vmin and vmax aren't set, set them to min and max of the data
+    if vmin == None:
+        vmin = np.nanmin(data)
+    if vmax == None:
+        vmax = np.nanmax(data)
+        
     node_to_mapField = dict(nodes_with_data)
-
+    
     color_to_mult = 256*(color_max_frac-color_min_frac)
     color_to_add = 256*color_min_frac
+    print(color_to_mult)
+    print(color_to_add)
+    print(np.nanmax(list(node_to_mapField.values())))
+    
+    color_list = [np.multiply(cmap(int(float(node_to_mapField[d]-vmin)/(vmax-vmin)*color_to_mult+color_to_add)),256) 
+                  if ~np.isnan(node_to_mapField[d])
+                  else [np.nan]
+                  for d in G.nodes()]
+    
+    color_list = [(int(c[0]),int(c[1]),int(c[2]),alpha) 
+                  if ~np.isnan(c[0])
+                  else (200,200,200,alpha)
+                  for c in color_list]
 
-    color_list = [np.multiply(cmap(int(float(node_to_mapField[d])/np.max(list(node_to_mapField.values()))*color_to_mult+color_to_add)),256) for d in G.nodes()]
-    color_list = [(int(c[0]),int(c[1]),int(c[2]),alpha) for c in color_list]
-
-    node_to_color = dict(zip(list(G.nodes()),['rgba'+str(c) for c in color_list]))
+    node_to_color = dict(zip(G.nodes(),['rgba'+str(c) for c in color_list]))
+    
     return node_to_color
 
-
-def return_edge_to_color(G,field_to_map='degree',cmap=plt.cm.jet,alpha = 1.0,color_vals_transform = None,ceil_val=10):
-
+def return_edge_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0, color_vals_transform = None,ceil_val=10,
+                        vmin=None,vmax=None):
+    
+    
     '''
     Function to return a dictionary mapping edges (keys) to colors (values), based on the selected field_to_map.
         - field_to_map must be an edge attribute
         - cmap must be a valid matplotlib colormap
-
+    
     '''
-
-    # check whether it is a multigraph or not
-    if (str(type(G)) == '<class \'networkx.classes.multigraph.MultiGraph\'>'):
-        G_edges = G.edges(keys = True, data=True)
-        edges_with_data = [(e[0],e[1],e[2],e[3][field_to_map]) for e in G_edges]
-        edges1,edges2,edges3, data = zip(*edges_with_data)
-    else:
-        G_edges = G.edges(data=True)
-        edges_with_data = [(e[0],e[1],e[2][field_to_map]) for e in G_edges]
-        edges1,edges2,data = zip(*edges_with_data)
-
-    # perform data transformations if necessaary
+    
+    edges_with_data = [(e[0],e[1],e[2][field_to_map]) for e in G.edges(data=True)]
+    
+    edges1,edges2,data = zip(*edges_with_data)
+    
+    
+    
+    
     if color_vals_transform == 'log':
-        nonzero_list = [d for d in data if d>(10**-18)]
-        if not nonzero_list:
-            data = [1 for d in data]
-        else:
-            min_dn0 = min([d for d in data if d>(10**-18)])
-            data = [np.log(max(d,min_dn0)) for d in data]  # set the zero d values to minimum non0 value
-            data = [(d-np.min(data)) for d in data] # shift so we don't have any negative values
-
+        data = [np.log(d) for d in data]
+        data = [(d-np.min(data)) for d in data] # shift so we don't have any negative values
+        edges_with_data = zip(zip(edges1,edges2),data)
+        
     elif color_vals_transform == 'sqrt':
         data = [np.sqrt(d) for d in data]
-
+        edges_with_data = zip(zip(edges1,edges2),data)
+        
     elif color_vals_transform == 'ceil':
         data = [max(d,ceil_val) for d in data]
-        
-    # check whether it is a multigraph or not
-    if (str(type(G)) == '<class \'networkx.classes.multigraph.MultiGraph\'>'):
-        edges_with_data = zip(zip(edges1,edges2,edges3),data)
-        G_edges = G.edges(keys = True)
-    else:
-        G_edges = G.edges()
         edges_with_data = zip(zip(edges1,edges2),data)
-
+    else:
+        
+        edges_with_data = zip(zip(edges1,edges2),data)
+        
+    # if vmin and vmax aren't set, set them to min and max of the data
+    if vmin == None:
+        vmin = np.nanmin(data)
+    if vmax == None:
+        vmax = np.nanmax(data)
+        
     edge_to_mapField = dict(edges_with_data)
-    color_list = [np.multiply(cmap(int(float(edge_to_mapField[d])/np.max(list(edge_to_mapField.values()))*256)),256) for d in G_edges]
+    
+    color_list = [np.multiply(cmap(int(float(edge_to_mapField[d]-vmin)/(vmax-vmin)*256)),256) for d in G.edges()]
+    
     color_list = [(int(c[0]),int(c[1]),int(c[2]),alpha) for c in color_list]
-
-    edge_to_color = dict(zip(list(G_edges),['rgba'+str(c) for c in color_list]))
+    
+    edge_to_color = dict(zip(G.edges(),['rgba'+str(c) for c in color_list]))
+    
     return edge_to_color
 
 
