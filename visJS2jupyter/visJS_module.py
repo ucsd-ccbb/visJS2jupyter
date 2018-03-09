@@ -707,26 +707,34 @@ def return_edge_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0, co
     
     '''
     
-    edges_with_data = [(e[0],e[1],e[2][field_to_map]) for e in G.edges(data=True)]
-    
-    edges1,edges2,data = zip(*edges_with_data)
-    
-    
-    
-    
-    if color_vals_transform == 'log':
-        data = [np.log(d) for d in data]
-        data = [(d-np.min(data)) for d in data] # shift so we don't have any negative values
-        edges_with_data = zip(zip(edges1,edges2),data)
+    # if this is a multigraph or multidigraph, we need to keep track of keys
+    if (type(G) == nx.classes.multigraph.MultiGraph) | (type(G) == nx.classes.multidigraph.MultiDiGraph):
         
-    elif color_vals_transform == 'sqrt':
-        data = [np.sqrt(d) for d in data]
-        edges_with_data = zip(zip(edges1,edges2),data)
-        
-    elif color_vals_transform == 'ceil':
-        data = [max(d,ceil_val) for d in data]
-        edges_with_data = zip(zip(edges1,edges2),data)
+        edges_with_data = [(e[0], e[1] , e[2], e[3][field_to_map]) for e in G.edges(keys = True, data=True)]
+        edges1, edges2, keys, data = zip(*edges_with_data)
+
+        if color_vals_transform == 'log': # log(data)
+            data = [np.log(d) for d in data]
+            data = [(d-np.min(data)) for d in data] # shift so we don't have any negative values
+        elif color_vals_transform == 'sqrt': # sqrt(data)
+            data = [np.sqrt(d) for d in data]
+        elif color_vals_transform == 'ceil': # ceil(data)
+            data = [max(d,ceil_val) for d in data]
+            
+        edges_with_data = zip(zip(edges1, edges2, keys), data) # map edges to modified data
+    
+    # otherwise perform operations normally
     else:
+        edges_with_data = [(e[0], e[1], e[2][field_to_map]) for e in G.edges(data=True)]
+        edges1, edges2, data = zip(*edges_with_data)
+
+        if color_vals_transform == 'log':
+            data = [np.log(d) for d in data]
+            data = [(d-np.min(data)) for d in data] # shift so we don't have any negative values
+        elif color_vals_transform == 'sqrt':
+            data = [np.sqrt(d) for d in data]
+        elif color_vals_transform == 'ceil':
+            data = [max(d,ceil_val) for d in data]
         
         edges_with_data = zip(zip(edges1,edges2),data)
         
@@ -735,17 +743,25 @@ def return_edge_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0, co
         vmin = np.nanmin(data)
     if vmax == None:
         vmax = np.nanmax(data)
-		
+	
+    # to avoid a "divide by zero" error
     if vmin == vmax:
         vmax = vmax + 0.01
+    
+    # if this is a multigraph or multidigraph, we need to keep track of keys
+    if (type(G) == nx.classes.multigraph.MultiGraph) | (type(G) == nx.classes.multidigraph.MultiDiGraph):
         
-    edge_to_mapField = dict(edges_with_data)
-    
-    color_list = [np.multiply(cmap(int(float(edge_to_mapField[d]-vmin)/(vmax-vmin)*256)),256) for d in G.edges()]
-    
-    color_list = [(int(c[0]),int(c[1]),int(c[2]),alpha) for c in color_list]
-    
-    edge_to_color = dict(zip(G.edges(),['rgba'+str(c) for c in color_list]))
+        edge_to_mapField = dict(edges_with_data)
+        color_list = [np.multiply(cmap(int(float(edge_to_mapField[d]-vmin)/(vmax-vmin)*256)),256) for d in G.edges(keys = True)]
+        color_list = [(int(c[0]),int(c[1]),int(c[2]),alpha) for c in color_list]
+        edge_to_color = dict(zip(G.edges(keys = True),['rgba'+str(c) for c in color_list]))
+        
+    else:
+        
+        edge_to_mapField = dict(edges_with_data)
+        color_list = [np.multiply(cmap(int(float(edge_to_mapField[d]-vmin)/(vmax-vmin)*256)),256) for d in G.edges()]
+        color_list = [(int(c[0]),int(c[1]),int(c[2]),alpha) for c in color_list]
+        edge_to_color = dict(zip(G.edges(),['rgba'+str(c) for c in color_list]))
     
     return edge_to_color
 
