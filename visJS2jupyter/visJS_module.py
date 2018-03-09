@@ -673,14 +673,14 @@ def return_node_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0, co
         vmin = np.nanmin(data)
     if vmax == None:
         vmax = np.nanmax(data)
+	
+    if vmin == vmax:
+        vmax = vmax + 0.01
         
     node_to_mapField = dict(nodes_with_data)
     
     color_to_mult = 256*(color_max_frac-color_min_frac)
     color_to_add = 256*color_min_frac
-    print(color_to_mult)
-    print(color_to_add)
-    print(np.nanmax(list(node_to_mapField.values())))
     
     color_list = [np.multiply(cmap(int(float(node_to_mapField[d]-vmin)/(vmax-vmin)*color_to_mult+color_to_add)),256) 
                   if ~np.isnan(node_to_mapField[d])
@@ -735,6 +735,9 @@ def return_edge_to_color(G,field_to_map='degree',cmap=mpl.cm.jet,alpha = 1.0, co
         vmin = np.nanmin(data)
     if vmax == None:
         vmax = np.nanmax(data)
+		
+    if vmin == vmax:
+        vmax = vmax + 0.01
         
     edge_to_mapField = dict(edges_with_data)
     
