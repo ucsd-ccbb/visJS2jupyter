@@ -17,8 +17,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 #import visJS_module # use this for local testing
-#import visJS2jupyter.visJS_module as visJS_module
-import visJS_module
+import visJS2jupyter.visJS_module as visJS_module
 import scipy_heatKernel
 
 def draw_graph_overlap(G1, G2,
