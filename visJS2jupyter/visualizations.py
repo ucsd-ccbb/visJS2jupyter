@@ -17,7 +17,9 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 #import visJS_module # use this for local testing
-import visJS2jupyter.visJS_module as visJS_module
+#import visJS2jupyter.visJS_module as visJS_module
+import visJS_module
+import scipy_heatKernel
 
 def draw_graph_overlap(G1, G2,
                        edge_cmap=plt.cm.coolwarm,
@@ -251,7 +253,7 @@ def create_graph_overlap(G1,G2,node_name_1,node_name_2):
     return overlap_graph
 
 
-def draw_heat_prop(G, seed_nodes,
+def draw_heat_prop(G, seed_nodes, random_walk = True,
                    edge_cmap=plt.cm.autumn_r,
                    export_file='heat_prop.json',
                    export_network=False,
@@ -270,7 +272,8 @@ def draw_heat_prop(G, seed_nodes,
 
     Inputs:
         - G: a networkX graph
-        - seed_nodes: nodes on which to initialize the simulation
+        - seed_nodes: nodes on which to initialize the simulation (must be a dict if random_walk = False)
+		- random_walk: True to perform a random walk style heat propagation, False to perform a diffusion style one.
         - edge_cmap: matplotlib colormap for edges, default: matplotlib.cm.autumn_r
         - export_file: JSON file to export graph data, default: 'graph_overlap.json'
         - export_network: export network to Cytoscape, default: False
@@ -296,10 +299,18 @@ def draw_heat_prop(G, seed_nodes,
         return
 
     # perform the network propagation
-    if Wprime is None:
-        Wprime = normalized_adj_matrix(G)
-    prop_graph = network_propagation(G, Wprime, seed_nodes).to_dict()
-    nx.set_node_attributes(G, name = 'node_heat', values = prop_graph)
+    if random_walk == True: # perform random walk style heat propagation
+        if Wprime is None:
+            Wprime = normalized_adj_matrix(G)    
+        prop_graph = network_propagation(G, Wprime, seed_nodes).to_dict()
+        nx.set_node_attributes(G, name = 'node_heat', values = prop_graph)
+    else: # perform diffusion style heat propagation
+        if type(seed_nodes) != dict:
+            print('When parameter random_walk = False, parameter seed_nodes must be a dict')
+            return -1
+        heat_kernel = scipy_heatKernel.SciPYKernel(G) # need a graph
+        diffused_heats = heat_kernel.diffuse(seed_nodes) # need seed_to_heat mapping
+        nx.set_node_attributes(G, name = 'node_heat', values = dict(diffused_heats))
 
     # find top num_nodes hottest nodes and connected component if requested
     G = set_num_nodes(G,num_nodes)
