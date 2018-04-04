@@ -177,7 +177,7 @@ class SciPYKernel:
 
 #
 # example use and test case:
-#
+"""
 G = nx.DiGraph()
 for line in open('pathway.sif', 'r'):
 	edge = line.rstrip().split('\t')
@@ -200,3 +200,4 @@ for key in diffused_heats:
 	diff_percent = abs(diffused_heats[key] - correct_diffused_heats[key])/correct_diffused_heats[key]
 	if (diff_percent > 0.1):
 		print ('\t'.join([str(val) for val in [key, diffused_heats[key], correct_diffused_heats[key]]]))
+"""
