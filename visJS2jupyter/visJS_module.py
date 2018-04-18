@@ -607,7 +607,7 @@ def export_to_cytoscape(nodes_dict = 0,
     # write node data
     for i in range(len(G.nodes())):
         to_string += str('{\"data\":')
-        to_string += str(dict(G.nodes(data=True)).values()[i])
+        to_string += str(list(dict(G.nodes(data=True)).values())[i])
         if (i == len(G.nodes()) - 1):
             to_string += str('}],\"edges\":[')
         else:
