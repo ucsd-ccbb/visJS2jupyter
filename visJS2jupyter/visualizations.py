@@ -4,6 +4,7 @@
 Authors:
     - Brin Rosenthal (sbrosenthal@ucsd.edu)
     - Julia Len (jlen@ucsd.edu)
+     - Mikayla Webster (13webstermj@gmail.com)
 
 --------------------------------------------------------
 '''
@@ -272,7 +273,7 @@ def draw_heat_prop(G, seed_nodes, random_walk = True,
     Inputs:
         - G: a networkX graph
         - seed_nodes: nodes on which to initialize the simulation (must be a dict if random_walk = False)
-		- random_walk: True to perform a random walk style heat propagation, False to perform a diffusion style one.
+          - random_walk: True to perform a random walk style heat propagation, False to perform a diffusion style one.
         - edge_cmap: matplotlib colormap for edges, default: matplotlib.cm.autumn_r
         - export_file: JSON file to export graph data, default: 'graph_overlap.json'
         - export_network: export network to Cytoscape, default: False
@@ -304,8 +305,11 @@ def draw_heat_prop(G, seed_nodes, random_walk = True,
         prop_graph = network_propagation(G, Wprime, seed_nodes).to_dict()
         nx.set_node_attributes(G, name = 'node_heat', values = prop_graph)
     else: # perform diffusion style heat propagation
-        if type(seed_nodes) != dict:
-            print('When parameter random_walk = False, parameter seed_nodes must be a dict')
+        if (type(seed_nodes) == list): # if the user supplies a list, convert to dict
+            one_list = [1]*len(seed_nodes) # all seed nodes get start value of 1
+            seed_nodes = dict(zip(seed_nodes, one_list))
+        elif (type(seed_nodes) != dict):
+            print('seed_nodes must be a list or a dict')
             return -1
         heat_kernel = scipy_heatKernel.SciPYKernel(G) # need a graph
         diffused_heats = heat_kernel.diffuse(seed_nodes) # need seed_to_heat mapping
