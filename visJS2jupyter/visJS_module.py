@@ -4,7 +4,7 @@
 Authors:
     - Brin Rosenthal (sbrosenthal@ucsd.edu)
     - Aaron Gary (agary@ucsd.edu)
-    - Mikayla Webster (m1webste@ucsd.edu)
+    - Mikayla Webster (13webstermj@gmail.com)
 
 --------------------------------------------------------
 '''
@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import networkx as nx
 
-Javascript("https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.js")
+Javascript("$.getScript('https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.js')")
 
 def visjs_network(nodes_dict, edges_dict,
 
