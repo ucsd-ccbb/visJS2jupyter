@@ -21,6 +21,7 @@ import numpy as np
 import networkx as nx
 
 Javascript("$.getScript('https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.js')")
+#Javascript("https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.js")
 
 def visjs_network(nodes_dict, edges_dict,
 
@@ -527,12 +528,20 @@ def export_to_cytoscape(nodes_dict = 0,
         # add node name as node attribute
         nx.set_node_attributes(G,'node_name',dict(zip(range(len(nodes)),[str(n) for n in nodes]))) # make sure node names are strings
         
-        edges_no_data = G.edges()
+        if G.is_multigraph():
+            edges_no_data = G.edges(keys = True)
+        else:
+            edges_no_data = G.edges()
+            
         edges_dict = []
         
         # SBR 01/22/18: update this for consistency with node id naming convention
         for i in range(len(edges_no_data)):
-            edges_dict.append({"source":edges_no_data[i][0],"target":edges_no_data[i][1]})   
+            if G.is_multigraph():
+                edges_dict.append({"source":edges_no_data[i][0], "target":edges_no_data[i][1], "key":edges_no_data[i][2]})
+            else:
+                edges_dict.append({"source":edges_no_data[i][0], "target":edges_no_data[i][1]})
+                
 #        for edge in list(G.edges(data=True)):
 #            if 'source' not in edge[2]: # ensure source is in edge dict
 #                edge[2]['source'] = edge[0]
@@ -541,13 +550,14 @@ def export_to_cytoscape(nodes_dict = 0,
 #            edges_dict.append(edge[2])   
 
         nodes = [node['id'] for node in nodes_dict] # nodes_dict must contain id
-        edges = [(edge['source'],edge['target']) for edge in edges_dict] # edges_dict must contain source and target
+        
+        if G.is_multigraph():
+            edges = [(edge['source'], edge['target'], edge['key']) for edge in edges_dict] # edges_dict must contain source and target
+        else:
+            edges = [(edge['source'], edge['target']) for edge in edges_dict] # edges_dict must contain source and target
     
     
     # iterate over nodes dict and add attributes to graph
-    print(len(nodes_dict))
-    print(len(G.nodes()))
-    
     for attribute in nodes_dict[0].keys(): # under the assumption that all nodes have the same attributes!!!!
     
         if attribute == 'x':
@@ -595,7 +605,10 @@ def export_to_cytoscape(nodes_dict = 0,
         elif attribute == 'target':
             k = 0 # do nothing
         else:
-            edge_att = {(edge['source'],edge['target']):edge[attribute] for edge in edges_dict}
+            if G.is_multigraph():
+                edge_att = {(edge['source'], edge['target'], edge['key']):edge[attribute] for edge in edges_dict}
+            else:
+                edge_att = {(edge['source'], edge['target']):edge[attribute] for edge in edges_dict}
             nx.set_edge_attributes(G, name = attribute, values = edge_att) 
     
     
