@@ -22,7 +22,7 @@ Install matplotlib before using visJS2jupyter. Visit [here](http://matplotlib.or
 To use the visualizations module, install [networkX](https://networkx.github.io/) and [py2cytoscape](https://github.com/idekerlab/py2cytoscape):
 
 ```
-pip install networkx
+pip install networkx==1.11
 pip install py2cytoscape
 ```
 
