@@ -55,7 +55,7 @@ import visJS2jupyter.visualizations
 ```
 
 ## Features and Examples
-A simple use example with default parameters may be found here http://bl.ocks.org/brinrosenthal/raw/cfb0e12f113d55551a45d530527baedf/.  In the example provided, we show how to display a graph created with NetworkX using visJS2jupyter.  The networks displayed within Jupyter notebook cells may be dragged, clicked, and hovered on, and zooming is enabled within the window.  
+A simple use example with default parameters may be found here http://bl.ocks.org/m1webste/raw/be7be9d1b2c88e5549cf79b7edbc8444/ .  In the example provided, we show how to display a graph created with NetworkX using visJS2jupyter.  The networks displayed within Jupyter notebook cells may be dragged, clicked, and hovered on, and zooming is enabled within the window.  
 
 For an example of how more complex styles may be added to a network, see http://bl.ocks.org/brinrosenthal/raw/658325f6e0db7419625a31c883313e9b/. Nodes and edges may be styled with properties available from vis.js networks (see http://visjs.org/docs/network/ for a list and description of properties).  The main function is 'visjs_network', which requires two inputs which describe the nodes and edges in the network- 'nodes_dict', and edges_dict'.  The other arguments are optional, and apply general styles to the graph, such as sizes, highlight colors, and physics properties of the graph.
 
