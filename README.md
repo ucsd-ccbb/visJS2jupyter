@@ -30,10 +30,10 @@ pip install py2cytoscape
 
 visJS2jupyter supports both Python 2.7 and 3.4.
 
-You can install visJS2jupyter using pip:
+You can install visJS2jupyter using pip github install (PyPI package upload is depricated and will not work):
 
 ```
-pip install visJS2jupyter
+pip install git+https://github.com/uscd-ccbb/visJS2jupyter
 ```
 
 In your Jupyter notebook, first import matplotlib:
