@@ -6,6 +6,8 @@ There's also an option to get the output in a format compatible with Zeppelin no
 
 For full documentation of the tool, see https://ucsd-ccbb.github.io/visJS2jupyter/
 
+Please note this tool is no longer actively maintained. Users may ipycytoscape to be a good alternative https://github.com/cytoscape/ipycytoscape 
+
 #### Please cite our accompanying paper:  
 Rosenthal, S. B., Len, J., Webster, M., Gary, A., Birmingham, A., & Fisch, K. M. (2017). Interactive network visualization in Jupyter notebooks: visJS2jupyter. Bioinformatics.
 
