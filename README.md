@@ -1,6 +1,6 @@
 # visJS2jupyter
 
-Please note this tool is no longer actively maintained. Users may find ipycytoscape to be a good alternative https://github.com/cytoscape/ipycytoscape 
+* Please note this tool is no longer actively maintained. Users may find ipycytoscape to be a good alternative https://github.com/cytoscape/ipycytoscape 
 
 visJS2jupyter is a tool to bring the interactivity of networks created with vis.js into jupyter notebook cells, authored by members of the [UCSD Center for Computational Biology & Bioinformatics](http://compbio.ucsd.edu)
 
